@@ -18,12 +18,13 @@ class MockUseCase : public ForExecutingLogin
 };
 } // namespace
 
-TEST(Unit_Bsgalone_Server_Domain_Adapters_Driving_LoginRequestConsumer, ThrowsWhenUseCaseIsNull)
+TEST(Unit_Bsgalone_Server_Domain_Adapters_Driving_Consumers_LoginRequestConsumer,
+     ThrowsWhenUseCaseIsNull)
 {
   EXPECT_THROW([]() { LoginRequestConsumer(nullptr); }(), std::invalid_argument);
 }
 
-TEST(Unit_Bsgalone_Server_Domain_Adapters_Driving_LoginRequestConsumer,
+TEST(Unit_Bsgalone_Server_Domain_Adapters_Driving_Consumers_LoginRequestConsumer,
      ConsidersLoginRequestEventAsRelevant)
 {
   LoginRequestConsumer consumer(std::make_unique<MockUseCase>());
@@ -31,7 +32,7 @@ TEST(Unit_Bsgalone_Server_Domain_Adapters_Driving_LoginRequestConsumer,
   EXPECT_TRUE(consumer.isEventRelevant(core::MessageType::LOGIN_REQUEST));
 }
 
-TEST(Unit_Bsgalone_Server_Domain_Adapters_Driving_LoginRequestConsumer,
+TEST(Unit_Bsgalone_Server_Domain_Adapters_Driving_Consumers_LoginRequestConsumer,
      IgnoresLoginRequestWhenClientIdIsNotSet)
 {
   auto usecase = std::make_unique<StrictMock<MockUseCase>>();
@@ -43,7 +44,7 @@ TEST(Unit_Bsgalone_Server_Domain_Adapters_Driving_LoginRequestConsumer,
   consumer.onEventReceived(request);
 }
 
-TEST(Unit_Bsgalone_Server_Domain_Adapters_Driving_LoginRequestConsumer,
+TEST(Unit_Bsgalone_Server_Domain_Adapters_Driving_Consumers_LoginRequestConsumer,
      DelegatesLoginToUseCaseWhenClientIdIsSet)
 {
   auto usecase = std::make_unique<StrictMock<MockUseCase>>();

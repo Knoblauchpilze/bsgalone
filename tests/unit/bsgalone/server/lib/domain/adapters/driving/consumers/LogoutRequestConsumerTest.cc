@@ -18,12 +18,13 @@ class MockUseCase : public ForExecutingLogout
 };
 } // namespace
 
-TEST(Unit_Bsgalone_Server_Domain_Adapters_Driving_LogoutRequestConsumer, ThrowsWhenUseCaseIsNull)
+TEST(Unit_Bsgalone_Server_Domain_Adapters_Driving_Consumers_LogoutRequestConsumer,
+     ThrowsWhenUseCaseIsNull)
 {
   EXPECT_THROW([]() { LogoutRequestConsumer(nullptr); }(), std::invalid_argument);
 }
 
-TEST(Unit_Bsgalone_Server_Domain_Adapters_Driving_LogoutRequestConsumer,
+TEST(Unit_Bsgalone_Server_Domain_Adapters_Driving_Consumers_LogoutRequestConsumer,
      ConsidersLogoutRequestEventAsRelevant)
 {
   LogoutRequestConsumer consumer(std::make_unique<MockUseCase>());
@@ -31,7 +32,8 @@ TEST(Unit_Bsgalone_Server_Domain_Adapters_Driving_LogoutRequestConsumer,
   EXPECT_TRUE(consumer.isEventRelevant(core::MessageType::LOGOUT_REQUEST));
 }
 
-TEST(Unit_Bsgalone_Server_Domain_Adapters_Driving_LogoutRequestConsumer, DelegatesLogoutToUseCase)
+TEST(Unit_Bsgalone_Server_Domain_Adapters_Driving_Consumers_LogoutRequestConsumer,
+     DelegatesLogoutToUseCase)
 {
   auto usecase = std::make_unique<StrictMock<MockUseCase>>();
   LogoutData captured{};

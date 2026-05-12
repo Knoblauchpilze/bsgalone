@@ -18,12 +18,13 @@ class MockUseCase : public ForExecutingSignup
 };
 } // namespace
 
-TEST(Unit_Bsgalone_Server_Domain_Adapters_Driving_SignupRequestConsumer, ThrowsWhenUseCaseIsNull)
+TEST(Unit_Bsgalone_Server_Domain_Adapters_Driving_Consumers_SignupRequestConsumer,
+     ThrowsWhenUseCaseIsNull)
 {
   EXPECT_THROW([]() { SignupRequestConsumer(nullptr); }(), std::invalid_argument);
 }
 
-TEST(Unit_Bsgalone_Server_Domain_Adapters_Driving_SignupRequestConsumer,
+TEST(Unit_Bsgalone_Server_Domain_Adapters_Driving_Consumers_SignupRequestConsumer,
      ConsidersSignupRequestEventAsRelevant)
 {
   SignupRequestConsumer consumer(std::make_unique<MockUseCase>());
@@ -31,7 +32,7 @@ TEST(Unit_Bsgalone_Server_Domain_Adapters_Driving_SignupRequestConsumer,
   EXPECT_TRUE(consumer.isEventRelevant(core::MessageType::SIGNUP_REQUEST));
 }
 
-TEST(Unit_Bsgalone_Server_Domain_Adapters_Driving_SignupRequestConsumer,
+TEST(Unit_Bsgalone_Server_Domain_Adapters_Driving_Consumers_SignupRequestConsumer,
      IgnoresSignupRequestWhenClientIdIsNotSet)
 {
   auto usecase = std::make_unique<StrictMock<MockUseCase>>();
@@ -43,7 +44,7 @@ TEST(Unit_Bsgalone_Server_Domain_Adapters_Driving_SignupRequestConsumer,
   consumer.onEventReceived(request);
 }
 
-TEST(Unit_Bsgalone_Server_Domain_Adapters_Driving_SignupRequestConsumer,
+TEST(Unit_Bsgalone_Server_Domain_Adapters_Driving_Consumers_SignupRequestConsumer,
      DelegatesSignupToUseCaseWhenClientIdIsSet)
 {
   auto usecase = std::make_unique<StrictMock<MockUseCase>>();

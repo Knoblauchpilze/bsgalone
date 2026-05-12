@@ -18,12 +18,13 @@ class MockUseCase : public ForExecutingUndock
 };
 } // namespace
 
-TEST(Unit_Bsgalone_Server_Domain_Adapters_Driving_UndockRequestConsumer, ThrowsWhenUseCaseIsNull)
+TEST(Unit_Bsgalone_Server_Domain_Adapters_Driving_Consumers_UndockRequestConsumer,
+     ThrowsWhenUseCaseIsNull)
 {
   EXPECT_THROW([]() { UndockRequestConsumer(nullptr); }(), std::invalid_argument);
 }
 
-TEST(Unit_Bsgalone_Server_Domain_Adapters_Driving_UndockRequestConsumer,
+TEST(Unit_Bsgalone_Server_Domain_Adapters_Driving_Consumers_UndockRequestConsumer,
      ConsidersUNdockRequestEventAsRelevant)
 {
   UndockRequestConsumer consumer(std::make_unique<MockUseCase>());
@@ -31,7 +32,8 @@ TEST(Unit_Bsgalone_Server_Domain_Adapters_Driving_UndockRequestConsumer,
   EXPECT_TRUE(consumer.isEventRelevant(core::MessageType::UNDOCK_REQUEST));
 }
 
-TEST(Unit_Bsgalone_Server_Domain_Adapters_Driving_UndockRequestConsumer, DelegatesUndockToUseCase)
+TEST(Unit_Bsgalone_Server_Domain_Adapters_Driving_Consumers_UndockRequestConsumer,
+     DelegatesUndockToUseCase)
 {
   auto usecase = std::make_unique<StrictMock<MockUseCase>>();
   UndockData captured{};
