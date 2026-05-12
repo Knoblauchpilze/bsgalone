@@ -14,3 +14,7 @@ add_subdirectory(
 add_subdirectory(
 	${CMAKE_CURRENT_SOURCE_DIR}/store
 	)
+
+add_subdirectory(
+	${CMAKE_CURRENT_SOURCE_DIR}/ui
+	)

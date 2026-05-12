@@ -17,7 +17,7 @@ class TestAbstractEventQueue : public messaging::IEventQueue<EventType, Event>
   using Base = messaging::IEventQueue<EventType, Event>;
 
   void pushEvent(Base::EventPtr message) override;
-  void addListener(Base::EventListenerPtr /*listener*/) override;
+  void addListener(Base::EventListenerPtr listener) override;
   bool empty() override;
   void processEvents() override;
 
