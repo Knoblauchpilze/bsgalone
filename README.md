@@ -345,6 +345,76 @@ In order to run and debug the executables created by the project you can use the
           "ignoreFailures": true
         }
       ]
+    },
+    {
+      "name": "Unit test",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/cmake-build/Debug/bin/unitTests",
+      "args": [
+        "--gtest_filter=Unit_Bsgalone_Client_Ui_Outpost_OutpostUiHandler.ThrowsWhenDataStoreIsNull"
+      ],
+      "stopAtEntry": false,
+      "cwd": "${workspaceFolder}",
+      "environment": [
+        {
+          "name": "PORT",
+          "value": "2323"
+        },
+        {
+          "name": "ASAN_OPTIONS",
+          "value": "detect_leaks=0"
+        }
+      ],
+      "externalConsole": false,
+      "MIMode": "gdb",
+      "setupCommands": [
+        {
+          "description": "Enable pretty-printing for gdb",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
+        },
+        {
+          "description": "Set Disassembly Flavor to Intel",
+          "text": "-gdb-set disassembly-flavor intel",
+          "ignoreFailures": true
+        }
+      ]
+    },
+    {
+      "name": "Integration test",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/cmake-build/Debug/bin/integrationTests",
+      "args": [
+        "--gtest_filter=Integration_Bsgalone_Server_Repositories_DbConnection.ExecuteQuery_ThrowsOnSqlError"
+      ],
+      "stopAtEntry": false,
+      "cwd": "${workspaceFolder}",
+      "environment": [
+        {
+          "name": "PORT",
+          "value": "2323"
+        },
+        {
+          "name": "ASAN_OPTIONS",
+          "value": "detect_leaks=0"
+        }
+      ],
+      "externalConsole": false,
+      "MIMode": "gdb",
+      "setupCommands": [
+        {
+          "description": "Enable pretty-printing for gdb",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
+        },
+        {
+          "description": "Set Disassembly Flavor to Intel",
+          "text": "-gdb-set disassembly-flavor intel",
+          "ignoreFailures": true
+        }
+      ]
     }
   ]
 }
@@ -353,6 +423,8 @@ In order to run and debug the executables created by the project you can use the
 This should allow you to pick the `Server` configuration win the `RUN AND DEBUG` tab:
 
 ![Launch config](resources/launch-config.png)
+
+The other targets aim at launching the client and tests. For test targets, the leak sanitizer is disabled as it conflicts with the usage of `ptrace` by `gdb` (see [source](https://maxnilz.com/posts/021-santitizer/)).
 
 # Setting up the DB
 
