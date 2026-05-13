@@ -6,7 +6,7 @@ namespace pge {
 TiledBackground::TiledBackground(const Vec2i &offset,
                                  const int pixelSize,
                                  const float slowdownRatio,
-                                 sprites::TexturePack &texturesLoader)
+                                 sprites::ITexturePack &texturesLoader)
   : m_offset(offset)
   , m_pixelSize(pixelSize)
   , m_slowdownRatio(slowdownRatio)
@@ -37,7 +37,7 @@ void TiledBackground::render(Renderer &engine, const RenderState &state)
   }
 }
 
-void TiledBackground::loadDecal(sprites::TexturePack &texturesLoader)
+void TiledBackground::loadDecal(sprites::ITexturePack &texturesLoader)
 {
   constexpr auto BACKGROUND_TEXTURE_PACK_FILE_PATH = "assets/system_bg.png";
   constexpr auto BACKGROUND_TILE_WIDTH_PIXELS      = 768;

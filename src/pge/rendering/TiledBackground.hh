@@ -1,9 +1,9 @@
 
 #pragma once
 
+#include "ITexturePack.hh"
 #include "RenderState.hh"
 #include "Renderer.hh"
-#include "TexturePack.hh"
 #include "Vector2d.hh"
 #include <memory>
 #include <optional>
@@ -17,7 +17,7 @@ class TiledBackground
   TiledBackground(const Vec2i &offset,
                   const int pixelSize,
                   const float slowdownRatio,
-                  sprites::TexturePack &texturesLoader);
+                  sprites::ITexturePack &texturesLoader);
 
   void render(Renderer &engine, const RenderState &state);
 
@@ -34,7 +34,7 @@ class TiledBackground
   std::optional<Vec2f> m_savedTileDimension{};
   Vec2f m_accumulatedTranslation{};
 
-  void loadDecal(sprites::TexturePack &texturesLoader);
+  void loadDecal(sprites::ITexturePack &texturesLoader);
   void updateBackgroundOffset(const CoordinateFrame &frame);
   void renderBackgroundTile(const Vec2i &pixelPosition,
                             Renderer &engine,

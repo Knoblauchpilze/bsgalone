@@ -3,6 +3,7 @@
 #include "AsyncUiCommandQueue.hh"
 #include "AsyncUiEventQueue.hh"
 #include "DecalRenderer.hh"
+#include "GameRenderer.hh"
 #include "IUiCommandListener.hh"
 #include "IUiEventListener.hh"
 #include "LoadingUiHandler.hh"
@@ -268,7 +269,6 @@ namespace {
 constexpr auto LOGIN_TEXTURE_FILE_PATH   = "assets/login_bg.png";
 constexpr auto LOADING_TEXTURE_FILE_PATH = "assets/loading_bg.png";
 constexpr auto OUTPOST_TEXTURE_FILE_PATH = "assets/outpost_bg.png";
-constexpr auto GAME_TEXTURE_FILE_PATH    = "assets/game_bg.png";
 } // namespace
 
 void App::generateRenderers(const pge::Vec2i &dimensions, pge::sprites::ITexturePack &texturesLoader)
@@ -285,7 +285,7 @@ void App::generateRenderers(const pge::Vec2i &dimensions, pge::sprites::ITexture
   outpost->loadResources(dimensions, texturesLoader);
   m_renderers[Screen::OUTPOST] = std::move(outpost);
 
-  auto game = std::make_unique<DecalRenderer>(GAME_TEXTURE_FILE_PATH);
+  auto game = std::make_unique<GameRenderer>();
   game->loadResources(dimensions, texturesLoader);
   m_renderers[Screen::GAME] = std::move(game);
 }
