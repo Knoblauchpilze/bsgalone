@@ -54,7 +54,7 @@ struct TestCaseIsInsideAabb
 {
   std::string name{};
   Eigen::Vector3f center{1.0f, 2.0f, -3.0f};
-  Eigen::Vector3f dims{0.5f, 0.6f, 0.7f};
+  Eigen::Vector3f dims{1.0f, 1.2f, 1.4f};
   Eigen::Vector3f position{};
   bool isInside{false};
 };
