@@ -5,4 +5,5 @@ target_include_directories(bsgalone_core_lib PUBLIC
 
 target_sources(bsgalone_core_lib PUBLIC
 	${CMAKE_CURRENT_SOURCE_DIR}/HealthComponent.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/TransformComponent.cc
 	)
