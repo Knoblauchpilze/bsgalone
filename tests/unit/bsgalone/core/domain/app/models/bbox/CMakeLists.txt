@@ -4,5 +4,6 @@ target_include_directories(unitTests PUBLIC
 	)
 
 target_sources(unitTests PRIVATE
+	${CMAKE_CURRENT_SOURCE_DIR}/AxisAlignedBoxTest.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/CircleBoxTest.cc
 	)

@@ -1,30 +1,29 @@
 
-#include "AxisAlignedBoundingBox.hh"
+#include "AxisAlignedBox.hh"
 
 namespace bsgalone::core {
 
-AxisAlignedBoundingBox::AxisAlignedBoundingBox(const Eigen::Vector3f &center,
-                                               const Eigen::Vector3f &dims) noexcept
+AxisAlignedBox::AxisAlignedBox(const Eigen::Vector3f &center, const Eigen::Vector3f &dims) noexcept
   : m_center(center)
   , m_dims(dims)
 {}
 
-auto AxisAlignedBoundingBox::dims() const -> Eigen::Vector3f
+auto AxisAlignedBox::dims() const -> Eigen::Vector3f
 {
   return m_dims;
 }
 
-auto AxisAlignedBoundingBox::position() const -> Eigen::Vector3f
+auto AxisAlignedBox::position() const -> Eigen::Vector3f
 {
   return m_center;
 }
 
-void AxisAlignedBoundingBox::moveTo(const Eigen::Vector3f &position)
+void AxisAlignedBox::moveTo(const Eigen::Vector3f &position)
 {
   m_center = position;
 }
 
-bool AxisAlignedBoundingBox::isInside(const Eigen::Vector3f &pos) const noexcept
+bool AxisAlignedBox::isInside(const Eigen::Vector3f &pos) const noexcept
 {
   Eigen::Vector3f frontBottomLeft = m_center - m_dims / 2.0f;
   Eigen::Vector3f backTopRight    = m_center + m_dims / 2.0f;
@@ -59,7 +58,7 @@ bool AxisAlignedBoundingBox::isInside(const Eigen::Vector3f &pos) const noexcept
   return true;
 }
 
-void AxisAlignedBoundingBox::translate(const Eigen::Vector3f &delta)
+void AxisAlignedBox::translate(const Eigen::Vector3f &delta)
 {
   m_center += delta;
 }

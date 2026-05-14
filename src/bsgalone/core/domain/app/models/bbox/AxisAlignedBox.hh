@@ -5,11 +5,11 @@
 
 namespace bsgalone::core {
 
-class AxisAlignedBoundingBox : public IBoundingBox
+class AxisAlignedBox : public IBoundingBox
 {
   public:
-  AxisAlignedBoundingBox(const Eigen::Vector3f &center, const Eigen::Vector3f &dims) noexcept;
-  ~AxisAlignedBoundingBox() override = default;
+  AxisAlignedBox(const Eigen::Vector3f &center, const Eigen::Vector3f &dims) noexcept;
+  ~AxisAlignedBox() override = default;
 
   auto dims() const -> Eigen::Vector3f;
 
