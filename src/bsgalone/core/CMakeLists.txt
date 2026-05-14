@@ -8,10 +8,6 @@ target_include_directories(bsgalone_core_lib PUBLIC
 	)
 
 add_subdirectory(
-	${CMAKE_CURRENT_SOURCE_DIR}/components
-	)
-
-add_subdirectory(
 	${CMAKE_CURRENT_SOURCE_DIR}/domain
 	)
 
