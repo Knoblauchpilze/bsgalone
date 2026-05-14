@@ -1,6 +1,7 @@
 
 #include "EntityManager.hh"
 #include "CreateAsteroidUseCase.hh"
+#include "FetchAsteroidUseCase.hh"
 
 namespace bsgalone::server {
 
@@ -19,9 +20,15 @@ auto EntityManager::createAsteroid(const core::Asteroid &asteroid) -> core::Uuid
   return m_asteroidCreator->create(asteroid);
 }
 
+auto EntityManager::getAsteroids() const -> std::vector<core::Asteroid>
+{
+  return m_asteroidFetcher->getAllAsteroids();
+}
+
 void EntityManager::initialize(core::EntityRegistryShPtr registry)
 {
   m_asteroidCreator = std::make_unique<core::CreateAsteroidUseCase>(registry);
+  m_asteroidFetcher = std::make_unique<core::FetchAsteroidUseCase>(registry);
 }
 
 } // namespace bsgalone::server

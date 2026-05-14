@@ -6,6 +6,7 @@
 #include "TransformComponent.hh"
 
 namespace bsgalone::core {
+
 CreateAsteroidUseCase::CreateAsteroidUseCase(EntityRegistryShPtr entityRegistry)
   : m_entityRegistry(std::move(entityRegistry))
 {
