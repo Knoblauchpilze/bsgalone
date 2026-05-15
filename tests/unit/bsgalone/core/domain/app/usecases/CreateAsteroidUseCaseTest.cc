@@ -115,8 +115,7 @@ TEST_F(Unit_Bsgalone_Core_Domain_App_Usecases_CreateAsteroidUseCase,
 TEST_F(Unit_Bsgalone_Core_Domain_App_Usecases_CreateAsteroidUseCase,
        RegistersLootComponentWhenProvided)
 {
-  auto asteroid = generateAsteroid();
-  asteroid.loot = Loot{.resource = Uuid{}, .amount = 17};
+  auto asteroid = generateAsteroid(true);
 
   const auto expectedEntityId = usecase->create(asteroid);
 

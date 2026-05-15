@@ -5,6 +5,6 @@
 
 namespace test {
 
-auto generateAsteroid() -> bsgalone::core::Asteroid;
+auto generateAsteroid(const bool withLoot = false) -> bsgalone::core::Asteroid;
 
 } // namespace test

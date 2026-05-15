@@ -63,20 +63,8 @@ TEST_F(Unit_Bsgalone_Server_Domain_App_Usecases_InitializeSystemUseCase,
 {
   core::Uuid systemDbId{};
 
-  const auto asteroid1 = core::Asteroid{
-    .dbId      = core::Uuid{},
-    .position  = Eigen::Vector3f(-2.0f, 4.0f, -3.85f),
-    .radius    = 0.58f,
-    .health    = 45.25f,
-    .maxHealth = 62.21f,
-  };
-  const auto asteroid2 = core::Asteroid{
-    .dbId      = core::Uuid{},
-    .position  = Eigen::Vector3f(1.0f, -3.0f, 9.5f),
-    .radius    = 1.78f,
-    .health    = 17.8f,
-    .maxHealth = 58.2f,
-  };
+  const auto asteroid1 = generateAsteroid();
+  const auto asteroid2 = generateAsteroid();
 
   EXPECT_CALL(*mockAsteroidRepo, findAllBySystem(systemDbId))
     .Times(1)
