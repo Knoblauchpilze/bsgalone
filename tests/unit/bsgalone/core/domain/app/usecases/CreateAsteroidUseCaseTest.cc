@@ -34,12 +34,11 @@ class Unit_Bsgalone_Core_Domain_App_Usecases_CreateAsteroidUseCase : public Test
 auto generateAsteroid() -> Asteroid
 {
   return Asteroid{
-    .dbId       = Uuid{},
-    .systemDbId = Uuid{},
-    .position   = Eigen::Vector3f(1.0f, -3.0f, 9.5f),
-    .radius     = 1.78f,
-    .health     = 17.8f,
-    .maxHealth  = 58.2f,
+    .dbId      = Uuid{},
+    .position  = Eigen::Vector3f(1.0f, -3.0f, 9.5f),
+    .radius    = 1.78f,
+    .health    = 17.8f,
+    .maxHealth = 58.2f,
   };
 }
 } // namespace

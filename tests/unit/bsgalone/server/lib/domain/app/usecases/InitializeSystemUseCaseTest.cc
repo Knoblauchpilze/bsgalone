@@ -31,15 +31,14 @@ class Unit_Bsgalone_Server_Domain_App_Usecases_InitializeSystemUseCase : public 
   std::unique_ptr<InitializeSystemUseCase> usecase{};
 };
 
-auto generateAsteroid(const float seed, const core::Uuid systemDbId) -> core::Asteroid
+auto generateAsteroid(const float seed) -> core::Asteroid
 {
   return core::Asteroid{
-    .dbId       = core::Uuid{},
-    .systemDbId = systemDbId,
-    .position   = Eigen::Vector3f(1.0f * seed, -3.0f * seed, 9.5f * seed),
-    .radius     = 1.78f * seed,
-    .health     = 17.8f * seed,
-    .maxHealth  = 58.2f * seed,
+    .dbId      = core::Uuid{},
+    .position  = Eigen::Vector3f(1.0f * seed, -3.0f * seed, 9.5f * seed),
+    .radius    = 1.78f * seed,
+    .health    = 17.8f * seed,
+    .maxHealth = 58.2f * seed,
   };
 }
 } // namespace
@@ -74,8 +73,8 @@ TEST_F(Unit_Bsgalone_Server_Domain_App_Usecases_InitializeSystemUseCase,
 {
   core::Uuid systemDbId{};
 
-  const auto asteroid1 = generateAsteroid(1.0f, systemDbId);
-  const auto asteroid2 = generateAsteroid(2.0f, systemDbId);
+  const auto asteroid1 = generateAsteroid(1.0f);
+  const auto asteroid2 = generateAsteroid(2.0f);
 
   EXPECT_CALL(*mockAsteroidRepo, findAllBySystem(systemDbId))
     .Times(1)

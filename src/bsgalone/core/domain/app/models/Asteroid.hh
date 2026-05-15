@@ -10,7 +10,6 @@ namespace bsgalone::core {
 struct Asteroid
 {
   Uuid dbId{};
-  Uuid systemDbId{};
   // https://stackoverflow.com/questions/59839281/the-default-initial-state-of-eigen-matrices-with-dynamic-size
   Eigen::Vector3f position{Eigen::Vector3f::Zero()};
   float radius{};

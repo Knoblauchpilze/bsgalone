@@ -24,14 +24,12 @@ auto FetchAsteroidUseCase::getAllAsteroids() const -> std::vector<Asteroid>
            const HealthComponent &health,
            const TransformComponent &transform) {
       out.emplace_back(Asteroid{
-        .dbId = db.dbId,
-        // TODO: Should come from somewhere
-        .systemDbId = Uuid{},
-        .position   = transform.bbox->position(),
-        .radius     = transform.size(),
-        .health     = health.value,
-        .maxHealth  = health.max,
-        .loot       = {},
+        .dbId      = db.dbId,
+        .position  = transform.bbox->position(),
+        .radius    = transform.size(),
+        .health    = health.value,
+        .maxHealth = health.max,
+        .loot      = {},
       });
     });
 

@@ -12,7 +12,6 @@ constexpr auto FIND_ALL_BY_SYSTEM_QUERY_NAME = "asteroid_find_all_by_system";
 constexpr auto FIND_ALL_BY_SYSTEM_QUERY      = R"(
 SELECT
   a.id,
-  a.system,
   a.health,
   a.max_health,
   a.radius,
@@ -40,17 +39,16 @@ void AsteroidRepository::initialize()
 namespace {
 auto fromDbRow(const pqxx::row_ref &record) -> core::Asteroid
 {
-  const auto x = record[5].as<float>();
-  const auto y = record[6].as<float>();
-  const auto z = record[7].as<float>();
+  const auto x = record[4].as<float>();
+  const auto y = record[5].as<float>();
+  const auto z = record[6].as<float>();
 
   return core::Asteroid{
-    .dbId       = core::Uuid::fromDbId(record[0].view()),
-    .systemDbId = core::Uuid::fromDbId(record[1].view()),
-    .position   = Eigen::Vector3f(x, y, z),
-    .radius     = record[4].as<float>(),
-    .health     = record[2].as<float>(),
-    .maxHealth  = record[3].as<float>(),
+    .dbId      = core::Uuid::fromDbId(record[0].view()),
+    .position  = Eigen::Vector3f(x, y, z),
+    .radius    = record[3].as<float>(),
+    .health    = record[1].as<float>(),
+    .maxHealth = record[2].as<float>(),
   };
 }
 } // namespace

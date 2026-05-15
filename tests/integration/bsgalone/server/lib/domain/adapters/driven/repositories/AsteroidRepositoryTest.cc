@@ -28,12 +28,11 @@ auto insertTestAsteroid(DbConnection &dbConnection, const core::Uuid systemDbId)
   dbConnection.executeQuery(query);
 
   return core::Asteroid{
-    .dbId       = uuid,
-    .systemDbId = systemDbId,
-    .position   = Eigen::Vector3f(1.0f, 2.87f, -32.14f),
-    .radius     = 7.41f,
-    .health     = 18.0,
-    .maxHealth  = 147.0,
+    .dbId      = uuid,
+    .position  = Eigen::Vector3f(1.0f, 2.87f, -32.14f),
+    .radius    = 7.41f,
+    .health    = 18.0,
+    .maxHealth = 147.0,
   };
 }
 
@@ -100,7 +99,6 @@ TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_AsteroidR
 
   EXPECT_EQ(1u, actual.size());
   EXPECT_EQ(asteroid.dbId, actual[0].dbId);
-  EXPECT_EQ(asteroid.systemDbId, actual[0].systemDbId);
   EXPECT_EQ(asteroid.position, actual[0].position);
   EXPECT_EQ(asteroid.radius, actual[0].radius);
   EXPECT_EQ(asteroid.dbId, actual[0].dbId);

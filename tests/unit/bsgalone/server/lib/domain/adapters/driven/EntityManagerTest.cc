@@ -18,12 +18,11 @@ TEST(Unit_Bsgalone_Server_Domain_Adapters_Driven_EntityManager, CreatesEntityFor
   EntityManager manager(registry);
 
   core::Asteroid asteroid{
-    .dbId       = core::Uuid{},
-    .systemDbId = core::Uuid{},
-    .position   = Eigen::Vector3f(1.2f, 3.4f, 5.6f),
-    .radius     = 7.87f,
-    .health     = 9.56f,
-    .maxHealth  = 10.0f,
+    .dbId      = core::Uuid{},
+    .position  = Eigen::Vector3f(1.2f, 3.4f, 5.6f),
+    .radius    = 7.87f,
+    .health    = 9.56f,
+    .maxHealth = 10.0f,
   };
   auto expectedEntityId = manager.createAsteroid(asteroid);
 
