@@ -2,6 +2,7 @@
 #include "InitializeSystemUseCase.hh"
 #include "MockAsteroidRepository.hh"
 #include "MockEntityManager.hh"
+#include "TestDataFactory.hh"
 #include <gtest/gtest.h>
 
 using namespace test;
@@ -30,17 +31,6 @@ class Unit_Bsgalone_Server_Domain_App_Usecases_InitializeSystemUseCase : public 
 
   std::unique_ptr<InitializeSystemUseCase> usecase{};
 };
-
-auto generateAsteroid(const float seed) -> core::Asteroid
-{
-  return core::Asteroid{
-    .dbId      = core::Uuid{},
-    .position  = Eigen::Vector3f(1.0f * seed, -3.0f * seed, 9.5f * seed),
-    .radius    = 1.78f * seed,
-    .health    = 17.8f * seed,
-    .maxHealth = 58.2f * seed,
-  };
-}
 } // namespace
 
 TEST_F(Unit_Bsgalone_Server_Domain_App_Usecases_InitializeSystemUseCase,
@@ -73,8 +63,20 @@ TEST_F(Unit_Bsgalone_Server_Domain_App_Usecases_InitializeSystemUseCase,
 {
   core::Uuid systemDbId{};
 
-  const auto asteroid1 = generateAsteroid(1.0f);
-  const auto asteroid2 = generateAsteroid(2.0f);
+  const auto asteroid1 = core::Asteroid{
+    .dbId      = core::Uuid{},
+    .position  = Eigen::Vector3f(-2.0f, 4.0f, -3.85f),
+    .radius    = 0.58f,
+    .health    = 45.25f,
+    .maxHealth = 62.21f,
+  };
+  const auto asteroid2 = core::Asteroid{
+    .dbId      = core::Uuid{},
+    .position  = Eigen::Vector3f(1.0f, -3.0f, 9.5f),
+    .radius    = 1.78f,
+    .health    = 17.8f,
+    .maxHealth = 58.2f,
+  };
 
   EXPECT_CALL(*mockAsteroidRepo, findAllBySystem(systemDbId))
     .Times(1)

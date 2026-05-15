@@ -5,9 +5,11 @@
 #include "EntityRegistry.hh"
 #include "HealthComponent.hh"
 #include "ResourceComponent.hh"
+#include "TestDataFactory.hh"
 #include "TransformComponent.hh"
 #include <gtest/gtest.h>
 
+using namespace test;
 using namespace ::testing;
 
 namespace bsgalone::core {
@@ -31,16 +33,6 @@ class Unit_Bsgalone_Core_Domain_App_Usecases_CreateAsteroidUseCase : public Test
   std::unique_ptr<CreateAsteroidUseCase> usecase{};
 };
 
-auto generateAsteroid() -> Asteroid
-{
-  return Asteroid{
-    .dbId      = Uuid{},
-    .position  = Eigen::Vector3f(1.0f, -3.0f, 9.5f),
-    .radius    = 1.78f,
-    .health    = 17.8f,
-    .maxHealth = 58.2f,
-  };
-}
 } // namespace
 
 TEST_F(Unit_Bsgalone_Core_Domain_App_Usecases_CreateAsteroidUseCase, ThrowsWhenEntityRegistryIsNull)
