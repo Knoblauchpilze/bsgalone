@@ -3,6 +3,7 @@
 #include "CircleBox.hh"
 #include "DbComponent.hh"
 #include "HealthComponent.hh"
+#include "ResourceComponent.hh"
 #include "TransformComponent.hh"
 
 namespace bsgalone::core {
@@ -30,6 +31,12 @@ auto CreateAsteroidUseCase::create(const Asteroid &asteroid) -> Uuid
   auto box = std::make_unique<CircleBox>(asteroid.position, asteroid.radius);
   m_entityRegistry->addComponent(entityId,
                                  TransformComponent{.bbox = std::move(box), .heading = 0.0f});
+  if (asteroid.loot)
+  {
+    m_entityRegistry->addComponent(entityId,
+                                   ResourceComponent{.resource = asteroid.loot->resource,
+                                                     .amount   = asteroid.loot->amount});
+  }
 
   return entityId;
 }

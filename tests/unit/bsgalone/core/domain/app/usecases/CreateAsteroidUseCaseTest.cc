@@ -4,6 +4,7 @@
 #include "DbComponent.hh"
 #include "EntityRegistry.hh"
 #include "HealthComponent.hh"
+#include "ResourceComponent.hh"
 #include "TransformComponent.hh"
 #include <gtest/gtest.h>
 
@@ -100,6 +101,40 @@ TEST_F(Unit_Bsgalone_Core_Domain_App_Usecases_CreateAsteroidUseCase, RegistersTr
       EXPECT_EQ(asteroid.position, circleBox->position());
       EXPECT_EQ(asteroid.radius, circleBox->radius());
       EXPECT_EQ(0.0f, component.heading);
+      EXPECT_EQ(expectedEntityId, entityId);
+
+      ++counter;
+    });
+  EXPECT_EQ(1, counter);
+}
+
+TEST_F(Unit_Bsgalone_Core_Domain_App_Usecases_CreateAsteroidUseCase,
+       DoesNotRegisterLootComponentWhenAsteroidHasNoResource)
+{
+  auto asteroid = generateAsteroid();
+
+  const auto expectedEntityId = usecase->create(asteroid);
+
+  int counter{0};
+  entityRegistry->apply<ResourceComponent>(
+    [&counter](const ResourceComponent & /*component*/) { ++counter; });
+  EXPECT_EQ(0, counter);
+}
+
+TEST_F(Unit_Bsgalone_Core_Domain_App_Usecases_CreateAsteroidUseCase,
+       RegistersLootComponentWhenProvided)
+{
+  auto asteroid = generateAsteroid();
+  asteroid.loot = Loot{.resource = Uuid{}, .amount = 17};
+
+  const auto expectedEntityId = usecase->create(asteroid);
+
+  int counter{0};
+  entityRegistry->applyWithId<ResourceComponent>(
+    [&counter, &asteroid, &expectedEntityId](const Uuid entityId,
+                                             const ResourceComponent &component) {
+      EXPECT_EQ(asteroid.loot->resource, component.resource);
+      EXPECT_EQ(asteroid.loot->amount, component.amount);
       EXPECT_EQ(expectedEntityId, entityId);
 
       ++counter;
