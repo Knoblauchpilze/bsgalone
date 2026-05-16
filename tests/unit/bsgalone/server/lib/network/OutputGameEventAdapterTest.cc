@@ -8,6 +8,7 @@
 #include "PlayerSignupEvent.hh"
 #include "PlayerUndockEvent.hh"
 #include "SignupMessage.hh"
+#include "TestDataFactory.hh"
 #include "TestMessageQueue.hh"
 #include "UndockMessage.hh"
 #include <gmock/gmock.h>
@@ -164,8 +165,8 @@ TEST_F(Unit_Bsgalone_Server_Events_OutputGameEventAdapter,
 TEST_F(Unit_Bsgalone_Server_Events_OutputGameEventAdapter, ForwardsUndockMessage)
 {
   const core::Uuid playerDbId;
-
-  PlayerUndockEvent event(playerDbId);
+  std::vector<core::Asteroid> asteroids{generateAsteroid(true), generateAsteroid()};
+  PlayerUndockEvent event(playerDbId, std::move(asteroids));
   auto clientManager = std::make_shared<ClientManager>();
   clientManager->registerClient(net::ClientId{12});
   clientManager->registerPlayer(net::ClientId{12}, playerDbId, core::Uuid{});
@@ -184,5 +185,7 @@ TEST_F(Unit_Bsgalone_Server_Events_OutputGameEventAdapter, ForwardsUndockMessage
   EXPECT_EQ(core::MessageType::UNDOCK, captured->type());
   EXPECT_EQ(playerDbId, captured->as<core::UndockMessage>().getPlayerDbId());
 }
+
+// TODO: Add tests for the creation of a system data message
 
 } // namespace bsgalone::server

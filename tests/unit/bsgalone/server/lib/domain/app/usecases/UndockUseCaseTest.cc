@@ -30,6 +30,8 @@ TEST(Unit_Bsgalone_Server_Domain_App_Usecases_UndockUseCase,
   EXPECT_EQ(GameEventType::PLAYER_UNDOCK, event->type());
   const auto &actual = event->as<PlayerUndockEvent>();
   EXPECT_EQ(data.playerDbId, actual.getPlayerDbId());
+  // TODO: Should verify that the asteroids come from the right system
+  EXPECT_EQ(std::vector<core::Asteroid>{}, actual.getAsteroids());
 }
 
 } // namespace bsgalone::server

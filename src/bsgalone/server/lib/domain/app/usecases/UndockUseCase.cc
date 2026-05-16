@@ -15,8 +15,8 @@ UndockUseCase::UndockUseCase(ForPublishingEventShPtr eventPublisher)
 
 void UndockUseCase::performUndock(const UndockData &data)
 {
-  auto event = std::make_unique<PlayerUndockEvent>(data.playerDbId);
-  // TODO: Should handle undock logic
+  // TODO: Asteroids should come from the entity manager for the right system
+  auto event = std::make_unique<PlayerUndockEvent>(data.playerDbId, std::vector<core::Asteroid>{});
   m_eventPublisher->publishEvent(std::move(event));
 }
 
