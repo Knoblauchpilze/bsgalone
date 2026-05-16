@@ -6,6 +6,7 @@
 #include "PlayerLogoutEvent.hh"
 #include "PlayerSignupEvent.hh"
 #include "SignupMessage.hh"
+#include "SystemDataMessage.hh"
 #include "UndockMessage.hh"
 
 namespace bsgalone::server {
@@ -97,10 +98,12 @@ void OutputGameEventAdapter::handleLogoutEvent(const PlayerLogoutEvent &event)
 
 void OutputGameEventAdapter::handleUndockEvent(const PlayerUndockEvent &event)
 {
-  core::UndockMessage message(event.getPlayerDbId());
+  core::UndockMessage undockMessage(event.getPlayerDbId());
+  core::SystemDataMessage systemMessage(event.getPlayerDbId(), event.getAsteroids());
 
   const auto clientId = m_clientManager->getClientIdForPlayer(event.getPlayerDbId());
-  m_networkClient->sendMessage(clientId, message);
+  m_networkClient->sendMessage(clientId, undockMessage);
+  m_networkClient->sendMessage(clientId, systemMessage);
 }
 
 } // namespace bsgalone::server

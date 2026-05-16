@@ -8,6 +8,7 @@
 #include "PlayerSignupEvent.hh"
 #include "PlayerUndockEvent.hh"
 #include "SignupMessage.hh"
+#include "SystemDataMessage.hh"
 #include "TestDataFactory.hh"
 #include "TestMessageQueue.hh"
 #include "UndockMessage.hh"
@@ -166,26 +167,32 @@ TEST_F(Unit_Bsgalone_Server_Events_OutputGameEventAdapter, ForwardsUndockMessage
 {
   const core::Uuid playerDbId;
   std::vector<core::Asteroid> asteroids{generateAsteroid(true), generateAsteroid()};
-  PlayerUndockEvent event(playerDbId, std::move(asteroids));
+  PlayerUndockEvent event(playerDbId, asteroids);
   auto clientManager = std::make_shared<ClientManager>();
   clientManager->registerClient(net::ClientId{12});
   clientManager->registerPlayer(net::ClientId{12}, playerDbId, core::Uuid{});
 
   auto networkClient = std::make_unique<StrictMock<MockOutputAdapter>>();
-  core::IMessagePtr captured;
+  core::IMessagePtr captured1{};
+  core::IMessagePtr captured2{};
   EXPECT_CALL(*networkClient, sendMessage(net::ClientId{12}, _))
-    .Times(1)
-    .WillOnce(Invoke([&captured](const net::ClientId /*clientId*/, const core::IMessage &message) {
-      captured = message.clone();
+    .Times(2)
+    .WillOnce(Invoke([&captured1](const net::ClientId /*clientId*/, const core::IMessage &message) {
+      captured1 = message.clone();
+    }))
+    .WillOnce(Invoke([&captured2](const net::ClientId /*clientId*/, const core::IMessage &message) {
+      captured2 = message.clone();
     }));
 
   OutputGameEventAdapter adapter(clientManager, std::move(networkClient));
   adapter.onEventReceived(event);
 
-  EXPECT_EQ(core::MessageType::UNDOCK, captured->type());
-  EXPECT_EQ(playerDbId, captured->as<core::UndockMessage>().getPlayerDbId());
-}
+  EXPECT_EQ(core::MessageType::UNDOCK, captured1->type());
+  EXPECT_EQ(playerDbId, captured1->as<core::UndockMessage>().getPlayerDbId());
 
-// TODO: Add tests for the creation of a system data message
+  EXPECT_EQ(core::MessageType::SYSTEM_DATA, captured2->type());
+  EXPECT_EQ(playerDbId, captured2->as<core::SystemDataMessage>().getPlayerDbId());
+  EXPECT_EQ(asteroids, captured2->as<core::SystemDataMessage>().getAsteroids());
+}
 
 } // namespace bsgalone::server
