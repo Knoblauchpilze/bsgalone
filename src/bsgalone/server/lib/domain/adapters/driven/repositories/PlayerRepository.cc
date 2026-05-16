@@ -15,12 +15,16 @@ SELECT
   p.account,
   p.name,
   p.faction,
-  pr.role
+  pr.role,
+  ss.system
 FROM
   player AS p
   INNER JOIN player_role AS pr ON pr.player = p.id
+  INNER JOIN player_ship AS ps ON ps.player = p.id
+  INNER JOIN ship_system AS ss ON ss.ship = ps.id
 WHERE
   p.id = $1
+  AND ps.active = true
 )";
 
 constexpr auto FIND_ONE_BY_ACCOUNT_QUERY_NAME = "player_find_one_by_account";
@@ -30,12 +34,16 @@ SELECT
   p.account,
   p.name,
   p.faction,
-  pr.role
+  pr.role,
+  ss.system
 FROM
   player AS p
   INNER JOIN player_role AS pr ON pr.player = p.id
+  INNER JOIN player_ship AS ps ON ps.player = p.id
+  INNER JOIN ship_system AS ss ON ss.ship = ps.id
 WHERE
   p.account = $1
+  AND ps.active = true
 )";
 
 constexpr auto UPDATE_PLAYER_QUERY_NAME = "player_update";
@@ -75,11 +83,12 @@ auto buildPlayerFromDbRow(const pqxx::row &record) -> Player
   }
 
   return Player{
-    .dbId    = core::Uuid::fromDbId(record[0].view()),
-    .account = maybeAccountDbId,
-    .name    = record[2].as<std::string>(),
-    .faction = core::fromDbFaction(record[3].as<std::string>()),
-    .role    = core::fromDbGameRole(record[4].as<std::string>()),
+    .dbId       = core::Uuid::fromDbId(record[0].view()),
+    .account    = maybeAccountDbId,
+    .name       = record[2].as<std::string>(),
+    .faction    = core::fromDbFaction(record[3].as<std::string>()),
+    .role       = core::fromDbGameRole(record[4].as<std::string>()),
+    .systemDbId = core::Uuid::fromDbId(record[5].as<std::string>()),
   };
 }
 } // namespace

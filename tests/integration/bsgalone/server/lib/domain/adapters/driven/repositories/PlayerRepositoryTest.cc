@@ -14,6 +14,8 @@ using Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_PlayerRepo
   = DbConnectionFixture;
 
 namespace {
+const core::Uuid MUNNIN_UUID = core::Uuid::fromDbId("52863732-d4a0-4835-a19a-c423d23f0e9d");
+
 void insertTestPlayerRole(DbConnection &dbConnection, Player &player)
 {
   constexpr auto QUERY = R"(
@@ -111,10 +113,30 @@ TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_PlayerRep
 }
 
 TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_PlayerRepository,
+       FindOneById_FailsWhenPlayerDoesNotDefineActiveShip)
+{
+  const auto account        = insertTestAccount(*this->dbConnection());
+  const auto expectedPlayer = insertTestPlayer(*this->dbConnection(), account.dbId, false);
+  insertTestShip(*this->dbConnection(), expectedPlayer.dbId, expectedPlayer.faction, false, {});
+
+  PlayerRepository repo(this->dbConnection());
+  repo.initialize();
+  const auto function = [&repo, &expectedPlayer]() { repo.findOneById(expectedPlayer.dbId); };
+  EXPECT_THAT(function,
+              ThrowsMessage<::core::CoreException>(
+                "Failed to execute sql query returning single row"));
+}
+
+TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_PlayerRepository,
        FindOneById_FetchesExistingPlayer)
 {
   const auto account        = insertTestAccount(*this->dbConnection());
   const auto expectedPlayer = insertTestPlayer(*this->dbConnection(), account.dbId, true);
+  insertTestShip(*this->dbConnection(),
+                 expectedPlayer.dbId,
+                 expectedPlayer.faction,
+                 true,
+                 MUNNIN_UUID);
 
   PlayerRepository repo(this->dbConnection());
   repo.initialize();
@@ -125,6 +147,7 @@ TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_PlayerRep
   EXPECT_EQ(expectedPlayer.name, actual.name);
   EXPECT_EQ(expectedPlayer.faction, actual.faction);
   EXPECT_EQ(expectedPlayer.role, actual.role);
+  EXPECT_EQ(MUNNIN_UUID, actual.systemDbId);
 }
 
 TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_PlayerRepository,
@@ -155,10 +178,32 @@ TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_PlayerRep
 }
 
 TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_PlayerRepository,
+       FindOneByAccount_FailsWhenPlayerDoesNotDefineActiveShip)
+{
+  const auto account        = insertTestAccount(*this->dbConnection());
+  const auto expectedPlayer = insertTestPlayer(*this->dbConnection(), account.dbId, true);
+  insertTestShip(*this->dbConnection(), expectedPlayer.dbId, expectedPlayer.faction, false, {});
+
+  PlayerRepository repo(this->dbConnection());
+  repo.initialize();
+  const auto function = [&repo, &expectedPlayer]() {
+    repo.findOneByAccount(*expectedPlayer.account);
+  };
+  EXPECT_THAT(function,
+              ThrowsMessage<::core::CoreException>(
+                "Failed to execute sql query returning single row"));
+}
+
+TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_PlayerRepository,
        FindOneByAccount_FetchesExistingPlayer)
 {
   const auto account        = insertTestAccount(*this->dbConnection());
   const auto expectedPlayer = insertTestPlayer(*this->dbConnection(), account.dbId, true);
+  insertTestShip(*this->dbConnection(),
+                 expectedPlayer.dbId,
+                 expectedPlayer.faction,
+                 true,
+                 MUNNIN_UUID);
 
   PlayerRepository repo(this->dbConnection());
   repo.initialize();
@@ -187,6 +232,9 @@ TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_PlayerRep
   PlayerRepository repo(this->dbConnection());
   repo.initialize();
   repo.save(player);
+
+  // This is needed as the system is fetched with the player
+  insertTestShip(*this->dbConnection(), player.dbId, player.faction, true, MUNNIN_UUID);
 
   const auto dbPlayer = repo.findOneById(player.dbId);
   EXPECT_EQ(player.account, dbPlayer.account);
@@ -241,6 +289,7 @@ TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_PlayerRep
 {
   const auto account = insertTestAccount(*this->dbConnection());
   const auto player  = insertTestPlayer(*this->dbConnection(), account.dbId, true);
+  insertTestShip(*this->dbConnection(), player.dbId, player.faction, true, MUNNIN_UUID);
 
   auto updatedPlayer = player;
   updatedPlayer.name = std::format("random-player-{:%F%T}", ::core::now());
@@ -258,6 +307,7 @@ TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_PlayerRep
 {
   const auto account = insertTestAccount(*this->dbConnection());
   const auto player  = insertTestPlayer(*this->dbConnection(), account.dbId, true);
+  insertTestShip(*this->dbConnection(), player.dbId, player.faction, true, MUNNIN_UUID);
 
   auto updatedPlayer = player;
   ASSERT_NE(core::GameRole::GUNNER, player.role);
@@ -294,6 +344,8 @@ TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_PlayerRep
     .role    = core::GameRole::GUNNER,
   };
   repo.save(player2);
+
+  insertTestShip(*this->dbConnection(), player1.dbId, player1.faction, true, MUNNIN_UUID);
 
   const auto actual = repo.findOneById(player1.dbId);
   EXPECT_EQ(core::GameRole::PILOT, actual.role);
