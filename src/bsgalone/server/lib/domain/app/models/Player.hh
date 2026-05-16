@@ -17,7 +17,7 @@ struct Player
   core::Faction faction{};
   core::GameRole role{};
 
-  bool operator==(const Player &rhs) const;
+  bool operator==(const Player &rhs) const = default;
 };
 
 } // namespace bsgalone::server

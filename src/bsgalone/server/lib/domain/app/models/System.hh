@@ -17,7 +17,7 @@ struct System
   chrono::Tick currentTick{};
   chrono::TimeStep step{};
 
-  bool operator==(const System &rhs) const;
+  bool operator==(const System &rhs) const = default;
 };
 
 } // namespace bsgalone::server

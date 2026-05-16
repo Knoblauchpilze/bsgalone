@@ -12,7 +12,7 @@ struct Account
   std::string username{};
   std::string password{};
 
-  bool operator==(const Account &rhs) const;
+  bool operator==(const Account &rhs) const = default;
 };
 
 } // namespace bsgalone::server
