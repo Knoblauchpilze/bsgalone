@@ -7,6 +7,7 @@
 #include "SerializationUtils.hh"
 #include "SignupMessage.hh"
 #include "SignupRequest.hh"
+#include "SystemDataMessage.hh"
 #include "UndockMessage.hh"
 #include "UndockRequest.hh"
 #include <sstream>
@@ -97,6 +98,8 @@ auto MessageParser::tryReadMessage(const MessageType &type, std::istream &in)
       return SignupMessage::readFromStream(in);
     case MessageType::SIGNUP_REQUEST:
       return SignupRequest::readFromStream(in);
+    case MessageType::SYSTEM_DATA:
+      return SystemDataMessage::readFromStream(in);
     case MessageType::UNDOCK:
       return UndockMessage::readFromStream(in);
     case MessageType::UNDOCK_REQUEST:

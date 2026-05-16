@@ -6,6 +6,7 @@
 #include "LogoutRequest.hh"
 #include "SignupMessage.hh"
 #include "SignupRequest.hh"
+#include "SystemDataMessage.hh"
 #include "UndockMessage.hh"
 #include "UndockRequest.hh"
 #include <sstream>
@@ -43,6 +44,9 @@ auto MessageSerializer::serializeMessage(const IMessage &message) -> std::vector
       break;
     case MessageType::SIGNUP_REQUEST:
       serialize(out, message.as<SignupRequest>());
+      break;
+    case MessageType::SYSTEM_DATA:
+      serialize(out, message.as<SystemDataMessage>());
       break;
     case MessageType::UNDOCK:
       serialize(out, message.as<UndockMessage>());

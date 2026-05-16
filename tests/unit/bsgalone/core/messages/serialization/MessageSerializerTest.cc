@@ -7,9 +7,13 @@
 #include "LogoutRequest.hh"
 #include "SignupMessage.hh"
 #include "SignupRequest.hh"
+#include "SystemDataMessage.hh"
+#include "TestDataFactory.hh"
 #include "UndockMessage.hh"
 #include "UndockRequest.hh"
 #include <gtest/gtest.h>
+
+using namespace test;
 
 namespace bsgalone::core {
 
@@ -96,6 +100,22 @@ TEST(Unit_Bsgalone_Core_Messages_Serialization_MessageSerializer, SerializesSign
   MessageSerializer serializer{};
 
   SignupRequest message("player", "pwd", Faction::CYLON);
+
+  const auto actual = serializer.serializeMessage(message);
+
+  std::stringstream out;
+  out << message;
+  const auto serialized = out.str();
+  std::vector<char> expected(serialized.begin(), serialized.end());
+  EXPECT_EQ(expected, actual);
+}
+
+TEST(Unit_Bsgalone_Core_Messages_Serialization_MessageSerializer, SerializesSystemDataMessage)
+{
+  MessageSerializer serializer{};
+
+  SystemDataMessage message(Uuid{},
+                            std::vector<Asteroid>{generateAsteroid(), generateAsteroid(true)});
 
   const auto actual = serializer.serializeMessage(message);
 
