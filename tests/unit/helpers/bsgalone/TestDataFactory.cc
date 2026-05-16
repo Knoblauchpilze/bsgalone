@@ -1,5 +1,6 @@
 
 #include "TestDataFactory.hh"
+#include "TimeUtils.hh"
 
 namespace test {
 namespace {
@@ -16,6 +17,17 @@ auto randomFloat(const int min, const int max, const int decimals = 2) -> float
          + static_cast<float>(frac) / static_cast<float>(std::pow(10, decimals));
 }
 } // namespace
+
+auto generatePlayer(const std::optional<bsgalone::core::Uuid> &maybeAccount)
+  -> bsgalone::server::Player
+{
+  return bsgalone::server::Player{
+    .account = maybeAccount,
+    .name    = std::format("random-account-{:%F%T}", core::now()),
+    .faction = bsgalone::core::Faction::CYLON,
+    .role    = bsgalone::core::GameRole::PILOT,
+  };
+}
 
 auto generateAsteroid(const bool withLoot) -> bsgalone::core::Asteroid
 {
