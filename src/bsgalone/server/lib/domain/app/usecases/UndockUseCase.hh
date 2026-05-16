@@ -2,6 +2,7 @@
 #pragma once
 
 #include "ForExecutingUndock.hh"
+#include "ForManagingPlayer.hh"
 #include "ForPublishingEvent.hh"
 
 namespace bsgalone::server {
@@ -9,12 +10,13 @@ namespace bsgalone::server {
 class UndockUseCase : public ForExecutingUndock
 {
   public:
-  UndockUseCase(ForPublishingEventShPtr eventPublisher);
+  UndockUseCase(ForManagingPlayerShPtr playerRepo, ForPublishingEventShPtr eventPublisher);
   ~UndockUseCase() override = default;
 
   void performUndock(const UndockData &data) override;
 
   private:
+  ForManagingPlayerShPtr m_playerRepo{};
   ForPublishingEventShPtr m_eventPublisher{};
 };
 

@@ -42,7 +42,8 @@ auto Configurator::createLogoutDrivingAdapter(ForManagingClientShPtr clientManag
 auto Configurator::createUndockDrivingAdapter(ForPublishingEventShPtr publisher) const
   -> core::IMessageListenerPtr
 {
-  auto useCase = std::make_unique<UndockUseCase>(std::move(publisher));
+  auto useCase = std::make_unique<UndockUseCase>(m_repositories.playerRepository,
+                                                 std::move(publisher));
   return std::make_unique<UndockRequestConsumer>(std::move(useCase));
 }
 
