@@ -19,6 +19,8 @@ auto str(const MessageType &type) -> std::string
       return "signup";
     case MessageType::SIGNUP_REQUEST:
       return "signup_request";
+    case MessageType::SYSTEM_DATA:
+      return "system_data";
     case MessageType::UNDOCK:
       return "undock";
     case MessageType::UNDOCK_REQUEST:
@@ -37,6 +39,7 @@ auto allMessageTypesAsSet() -> std::unordered_set<MessageType>
     MessageType::LOGOUT_REQUEST,
     MessageType::SIGNUP,
     MessageType::SIGNUP_REQUEST,
+    MessageType::SYSTEM_DATA,
     MessageType::UNDOCK,
     MessageType::UNDOCK_REQUEST,
   };
