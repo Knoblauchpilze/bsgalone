@@ -85,6 +85,4 @@ TEST_F(Unit_Bsgalone_Core_Domain_App_Usecases_FetchAsteroidUseCase,
   EXPECT_EQ(asteroid, asteroids.at(0));
 }
 
-// TODO: Add more tests
-
 } // namespace bsgalone::core
