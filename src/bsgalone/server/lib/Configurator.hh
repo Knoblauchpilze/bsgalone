@@ -5,6 +5,7 @@
 #include "ForPublishingEvent.hh"
 #include "IMessageListener.hh"
 #include "Repositories.hh"
+#include "SystemsManager.hh"
 
 namespace bsgalone::server {
 
@@ -25,7 +26,8 @@ class Configurator
                                   ForPublishingEventShPtr publisher) const
     -> core::IMessageListenerPtr;
 
-  auto createUndockDrivingAdapter(ForPublishingEventShPtr publisher) const
+  auto createUndockDrivingAdapter(SystemsManagerShPtr systemsManager,
+                                  ForPublishingEventShPtr publisher) const
     -> core::IMessageListenerPtr;
 
   private:

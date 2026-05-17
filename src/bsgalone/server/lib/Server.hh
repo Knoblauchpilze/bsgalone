@@ -7,6 +7,7 @@
 #include "IGameEventQueue.hh"
 #include "ServerNetworkClient.hh"
 #include "SystemProcessor.hh"
+#include "SystemsManager.hh"
 #include <atomic>
 #include <condition_variable>
 #include <unordered_map>
@@ -40,6 +41,11 @@ class Server : public ::core::CoreObject
   ///     send to the client applications or to other use cases
   ///   - an input queue for use cases to receive updates from other use cases
   IGameEventQueueShPtr m_eventQueue{};
+
+  /// @brief - Holds the entity registries associated to each ststem. This is
+  /// the companion object to the system processors, defining the entities living
+  /// in each system.
+  SystemsManagerShPtr m_systemsManager{};
 
   /// @brief - Holds the list of processors responsible to simulate what happens
   /// in a system. Each element is independent and represent a distinct system

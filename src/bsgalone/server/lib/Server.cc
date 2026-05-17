@@ -4,12 +4,13 @@
 #include "AsyncGameEventQueue.hh"
 #include "ClientManager.hh"
 #include "Configurator.hh"
+#include "EcsCoordinator.hh"
 #include "GameEventPublisher.hh"
+#include "InitializeSystemUseCase.hh"
 #include "MessageSerializer.hh"
 #include "OutputGameEventAdapter.hh"
 #include "OutputNetworkAdapter.hh"
 #include "SynchronizedGameEventQueue.hh"
-#include "SystemInitializer.hh"
 
 namespace bsgalone::server {
 
@@ -49,18 +50,35 @@ void Server::initialize()
   initializeOutboundUseCases();
 }
 
+namespace {
+auto createSystemProcessor(const System &system, core::EntityRegistryShPtr entityRegistry)
+  -> core::SystemProcessorShPtr
+{
+  auto manager     = std::make_unique<chrono::TimeManager>(system.currentTick, system.step);
+  auto coordinator = std::make_unique<core::EcsCoordinator>(std::move(entityRegistry));
+  return std::make_shared<core::SystemProcessor>(system.name,
+                                                 std::move(coordinator),
+                                                 std::move(manager));
+}
+} // namespace
+
 void Server::initializeSystemProcessors()
 {
-  auto connection = std::make_shared<DbConnection>();
-  connection->connect();
-  SystemRepository repository(connection);
-  repository.initialize();
+  m_systemsManager = std::make_shared<SystemsManager>();
 
-  SystemInitializer initializer;
+  Repositories repositories{};
 
-  for (const auto &system : repository.findAll())
+  for (const auto &system : repositories.systemRepository->findAll())
   {
-    m_systemProcessors.emplace_back(initializer.initializeSystem(system));
+    auto registry  = std::make_shared<core::EntityRegistry>();
+    auto processor = createSystemProcessor(system, registry);
+    m_systemsManager->registerSystem(system.dbId, registry);
+
+    InitializeSystemUseCase usecase(repositories.asteroidRepository,
+                                    m_systemsManager->entityManagerFor(system.dbId));
+    usecase.initializeSystem(system.dbId);
+
+    m_systemProcessors.emplace_back(std::move(processor));
   }
 }
 
@@ -74,7 +92,7 @@ void Server::initializeInboundUseCases()
   m_networkClient->addListener(configurator.createSignupDrivingAdapter(publisher));
   m_networkClient->addListener(configurator.createLoginDrivingAdapter(m_clientManager, publisher));
   m_networkClient->addListener(configurator.createLogoutDrivingAdapter(m_clientManager, publisher));
-  m_networkClient->addListener(configurator.createUndockDrivingAdapter(publisher));
+  m_networkClient->addListener(configurator.createUndockDrivingAdapter(m_systemsManager, publisher));
 }
 
 void Server::initializeOutboundUseCases()

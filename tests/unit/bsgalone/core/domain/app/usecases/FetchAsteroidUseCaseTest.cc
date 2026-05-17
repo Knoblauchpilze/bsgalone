@@ -28,6 +28,7 @@ class Unit_Bsgalone_Core_Domain_App_Usecases_FetchAsteroidUseCase : public Test
     // Intentionally empty
   }
 
+  // TODO: Use the EntityRegistryFixture
   void registerAsteroid(const Asteroid &asteroid)
   {
     const auto entityId = entityRegistry->createEntity();

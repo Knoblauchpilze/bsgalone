@@ -5,13 +5,19 @@
 namespace bsgalone::server {
 
 UndockUseCase::UndockUseCase(ForManagingPlayerShPtr playerRepo,
+                             SystemsManagerShPtr systemsManager,
                              ForPublishingEventShPtr eventPublisher)
   : m_playerRepo(std::move(playerRepo))
+  , m_systemsManager(std::move(systemsManager))
   , m_eventPublisher(std::move(eventPublisher))
 {
   if (m_playerRepo == nullptr)
   {
     throw std::invalid_argument("Expected non null player repository");
+  }
+  if (m_systemsManager == nullptr)
+  {
+    throw std::invalid_argument("Expected non null systems manager");
   }
   if (m_eventPublisher == nullptr)
   {
