@@ -27,9 +27,9 @@ UndockUseCase::UndockUseCase(ForManagingPlayerShPtr playerRepo,
 
 void UndockUseCase::performUndock(const UndockData &data)
 {
-  const auto player = m_playerRepo->findOneById(data.playerDbId);
-  // TODO: Asteroids should come from the entity manager for the right system
-  auto event = std::make_unique<PlayerUndockEvent>(player.dbId, std::vector<core::Asteroid>{});
+  const auto player  = m_playerRepo->findOneById(data.playerDbId);
+  const auto manager = m_systemsManager->entityManagerFor(player.systemDbId);
+  auto event         = std::make_unique<PlayerUndockEvent>(player.dbId, manager->getAsteroids());
   m_eventPublisher->publishEvent(std::move(event));
 }
 

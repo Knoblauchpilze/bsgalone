@@ -56,6 +56,11 @@ TEST_F(Unit_Bsgalone_Server_Domain_App_Usecases_UndockUseCase,
   auto mockPlayerRepo = std::make_shared<StrictMock<MockPlayerRepository>>();
   EXPECT_CALL(*mockPlayerRepo, findOneById(player.dbId)).Times(1).WillOnce(Return(player));
 
+  core::Asteroid asteroid1 = generateAsteroid();
+  this->registerAsteroid(asteroid1);
+  core::Asteroid asteroid2 = generateAsteroid();
+  this->registerAsteroid(asteroid2);
+
   auto manager = std::make_shared<SystemsManager>();
   manager->registerSystem(player.systemDbId, this->entityRegistry());
 
@@ -71,8 +76,25 @@ TEST_F(Unit_Bsgalone_Server_Domain_App_Usecases_UndockUseCase,
   EXPECT_EQ(GameEventType::PLAYER_UNDOCK, event->type());
   const auto &actual = event->as<PlayerUndockEvent>();
   EXPECT_EQ(player.dbId, actual.getPlayerDbId());
-  // TODO: Should verify that the asteroids come from the right system
-  EXPECT_EQ(std::vector<core::Asteroid>{}, actual.getAsteroids());
+  std::vector<core::Asteroid> expectedAsteroids{asteroid2, asteroid1};
+  EXPECT_EQ(expectedAsteroids, actual.getAsteroids());
+}
+
+TEST_F(Unit_Bsgalone_Server_Domain_App_Usecases_UndockUseCase, FailsWhenPlayerIsInUnknownSystem)
+{
+  const auto player = generatePlayer({});
+
+  auto mockPlayerRepo = std::make_shared<StrictMock<MockPlayerRepository>>();
+  EXPECT_CALL(*mockPlayerRepo, findOneById(player.dbId)).Times(1).WillOnce(Return(player));
+
+  auto manager   = std::make_shared<SystemsManager>();
+  auto publisher = std::make_shared<TestGameEventPublisher>();
+  UndockUseCase usecase(mockPlayerRepo, std::move(manager), publisher);
+
+  UndockData data{.playerDbId = player.dbId};
+
+  auto code = [&data, &usecase]() { usecase.performUndock(data); };
+  EXPECT_THROW(code(), std::invalid_argument);
 }
 
 } // namespace bsgalone::server
