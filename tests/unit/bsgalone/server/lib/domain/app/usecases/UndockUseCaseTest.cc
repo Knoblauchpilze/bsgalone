@@ -95,6 +95,8 @@ TEST_F(Unit_Bsgalone_Server_Domain_App_Usecases_UndockUseCase, FailsWhenPlayerIs
 
   auto code = [&data, &usecase]() { usecase.performUndock(data); };
   EXPECT_THROW(code(), std::invalid_argument);
+
+  EXPECT_TRUE(publisher->queue().messages().empty());
 }
 
 } // namespace bsgalone::server
