@@ -12,9 +12,14 @@ namespace bsgalone::server {
 class SystemsManager
 {
   public:
-  SystemsManager();
-
+  /// @brief - Registers the input entity registry and attach it to the specified system.
+  /// This operation will fail in case there's already an entry for the system. It is not
+  /// thread safe andcalling it concurrently will lead to undefined behavior.
+  /// @param systemDbId - the identifier of the system for which the registry should be
+  /// registered
+  /// @param entityRegistry - the registry for the system
   void registerSystem(const core::Uuid systemDbId, core::EntityRegistryShPtr entityRegistry);
+
   auto entityManagerFor(const core::Uuid systemDbId) -> ForManagingEntityShPtr;
 
   private:
