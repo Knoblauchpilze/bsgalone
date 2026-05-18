@@ -29,7 +29,11 @@ void UndockRequestConsumer::onEventReceived(const core::IMessage &message)
     .playerDbId = request.getPlayerDbId(),
   };
 
-  m_useCase->performUndock(data);
+  auto success = withSafetyNet([this, &data]() { m_useCase->performUndock(data); }, "performUndock");
+  if (!success)
+  {
+    warn("Failed to process undock request for player " + data.playerDbId.str());
+  }
 }
 
 } // namespace bsgalone::server
