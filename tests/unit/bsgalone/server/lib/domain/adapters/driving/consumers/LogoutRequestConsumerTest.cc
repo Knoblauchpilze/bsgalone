@@ -50,4 +50,20 @@ TEST(Unit_Bsgalone_Server_Domain_Adapters_Driving_Consumers_LogoutRequestConsume
   EXPECT_EQ(playerDbId, captured.playerDbId);
 }
 
+TEST(Unit_Bsgalone_Server_Domain_Adapters_Driving_Consumers_LogoutRequestConsumer,
+     DoesNotThrowWhenUseCaseRaisesError)
+{
+  auto usecase = std::make_unique<StrictMock<MockUseCase>>();
+  EXPECT_CALL(*usecase, performLogout(_))
+    .Times(1)
+    .WillOnce(Throw(std::invalid_argument("Stubbed error")));
+
+  const core::Uuid playerDbId;
+  core::LogoutRequest request(playerDbId);
+
+  LogoutRequestConsumer consumer(std::move(usecase));
+
+  EXPECT_NO_THROW(consumer.onEventReceived(request));
+}
+
 } // namespace bsgalone::server

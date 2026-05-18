@@ -29,7 +29,11 @@ void LogoutRequestConsumer::onEventReceived(const core::IMessage &message)
     .playerDbId = request.getPlayerDbId(),
   };
 
-  m_useCase->performLogout(data);
+  auto success = withSafetyNet([this, &data]() { m_useCase->performLogout(data); }, "performLogout");
+  if (!success)
+  {
+    warn("Failed to process logout request for player " + data.playerDbId.str());
+  }
 }
 
 } // namespace bsgalone::server

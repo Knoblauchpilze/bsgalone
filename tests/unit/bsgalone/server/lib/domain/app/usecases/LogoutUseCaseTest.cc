@@ -78,7 +78,8 @@ TEST(Unit_Bsgalone_Server_Domain_App_Usecases_LogoutUseCase,
 
   LogoutData data{.playerDbId = core::Uuid{}};
 
-  usecase.performLogout(data);
+  auto code = [&usecase, &data] { usecase.performLogout(data); };
+  EXPECT_THROW(code(), ::core::CoreException);
 
   EXPECT_TRUE(publisher->queue().messages().empty());
 }
