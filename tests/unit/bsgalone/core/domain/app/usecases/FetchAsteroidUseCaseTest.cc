@@ -1,12 +1,8 @@
 
 #include "FetchAsteroidUseCase.hh"
-#include "CircleBox.hh"
-#include "DbComponent.hh"
 #include "EntityRegistry.hh"
-#include "HealthComponent.hh"
-#include "ResourceComponent.hh"
+#include "EntityRegistryFixture.hh"
 #include "TestDataFactory.hh"
-#include "TransformComponent.hh"
 #include <gtest/gtest.h>
 
 using namespace test;
@@ -14,42 +10,19 @@ using namespace ::testing;
 
 namespace bsgalone::core {
 namespace {
-class Unit_Bsgalone_Core_Domain_App_Usecases_FetchAsteroidUseCase : public Test
+class Unit_Bsgalone_Core_Domain_App_Usecases_FetchAsteroidUseCase : public EntityRegistryFixture
 {
   protected:
   void SetUp() override
   {
-    entityRegistry = std::make_shared<EntityRegistry>();
-    usecase        = std::make_unique<FetchAsteroidUseCase>(entityRegistry);
+    this->EntityRegistryFixture::SetUp();
+    usecase = std::make_unique<FetchAsteroidUseCase>(this->entityRegistry());
   }
 
   void TearDown() override
   {
-    // Intentionally empty
+    this->EntityRegistryFixture::TearDown();
   }
-
-  // TODO: Use the EntityRegistryFixture
-  void registerAsteroid(const Asteroid &asteroid)
-  {
-    const auto entityId = entityRegistry->createEntity();
-    entityRegistry->addComponent(entityId, DbComponent{.dbId = asteroid.dbId});
-    entityRegistry->addComponent(entityId,
-                                 HealthComponent{{
-                                   .value = asteroid.health,
-                                   .max   = asteroid.maxHealth,
-                                 }});
-    auto box = std::make_unique<CircleBox>(asteroid.position, asteroid.radius);
-    entityRegistry->addComponent(entityId,
-                                 TransformComponent{.bbox = std::move(box), .heading = 0.0f});
-    if (asteroid.loot)
-    {
-      entityRegistry->addComponent(entityId,
-                                   ResourceComponent{.resource = asteroid.loot->resource,
-                                                     .amount   = asteroid.loot->amount});
-    }
-  }
-
-  std::shared_ptr<EntityRegistry> entityRegistry{};
 
   std::unique_ptr<FetchAsteroidUseCase> usecase{};
 };
@@ -63,9 +36,9 @@ TEST_F(Unit_Bsgalone_Core_Domain_App_Usecases_FetchAsteroidUseCase, ThrowsWhenEn
 TEST_F(Unit_Bsgalone_Core_Domain_App_Usecases_FetchAsteroidUseCase, ReturnsAsteroidWhenAvailable)
 {
   const auto asteroid1 = generateAsteroid();
-  registerAsteroid(asteroid1);
+  this->registerAsteroid(asteroid1);
   const auto asteroid2 = generateAsteroid();
-  registerAsteroid(asteroid2);
+  this->registerAsteroid(asteroid2);
 
   const auto asteroids = usecase->getAllAsteroids();
 
@@ -78,7 +51,7 @@ TEST_F(Unit_Bsgalone_Core_Domain_App_Usecases_FetchAsteroidUseCase,
        ReturnsAsteroidWithLootWhenAvailable)
 {
   auto asteroid = generateAsteroid(true);
-  registerAsteroid(asteroid);
+  this->registerAsteroid(asteroid);
 
   const auto asteroids = usecase->getAllAsteroids();
 

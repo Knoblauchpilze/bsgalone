@@ -1,6 +1,7 @@
 
 #pragma once
 
+#include "Asteroid.hh"
 #include "EntityRegistry.hh"
 #include <gtest/gtest.h>
 
@@ -19,6 +20,8 @@ class EntityRegistryFixture : public ::testing::Test
   void TearDown() override;
 
   auto entityRegistry() const -> bsgalone::core::EntityRegistryShPtr;
+
+  void registerAsteroid(const bsgalone::core::Asteroid &asteroid);
 
   private:
   bsgalone::core::EntityRegistryShPtr m_entityRegistry{};
