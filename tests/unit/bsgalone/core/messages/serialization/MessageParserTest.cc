@@ -9,6 +9,7 @@
 #include "SignupRequest.hh"
 #include "SystemDataMessage.hh"
 #include "TestDataFactory.hh"
+#include "TestMessageFactory.hh"
 #include "UndockMessage.hh"
 #include "UndockRequest.hh"
 #include <gtest/gtest.h>
@@ -216,8 +217,8 @@ TEST(Unit_Bsgalone_Core_Messages_Serialization_MessageParser, DeserializesSystem
 {
   MessageParser parser{};
 
-  SystemDataMessage message(Uuid{},
-                            std::vector<Asteroid>{generateAsteroid(true), generateAsteroid()});
+  const auto message = generateSystemDataMessage(
+    std::vector<Asteroid>{generateAsteroid(true), generateAsteroid()});
   const auto bytes = serializeMessage(message);
 
   const auto maybeResult = parser.tryParseMessage(bytes);
@@ -227,6 +228,9 @@ TEST(Unit_Bsgalone_Core_Messages_Serialization_MessageParser, DeserializesSystem
   EXPECT_EQ(MessageType::SYSTEM_DATA, (*maybeResult.message)->type());
   const auto &actual = (*maybeResult.message)->as<SystemDataMessage>();
   EXPECT_EQ(message.getPlayerDbId(), actual.getPlayerDbId());
+  EXPECT_EQ(message.getName(), actual.getName());
+  EXPECT_EQ(message.getCurrentTick(), actual.getCurrentTick());
+  EXPECT_EQ(message.getTimeStep(), actual.getTimeStep());
   EXPECT_EQ(message.getAsteroids(), actual.getAsteroids());
 }
 

@@ -1,6 +1,7 @@
 
 #include "SystemDataMessage.hh"
 #include "SerializationUtils.hh"
+#include "SystemDataMessageBuilder.hh"
 
 namespace bsgalone::core {
 
@@ -8,15 +9,24 @@ SystemDataMessage::SystemDataMessage()
   : IMessage(MessageType::SYSTEM_DATA)
 {}
 
-SystemDataMessage::SystemDataMessage(const Uuid playerDbId, std::vector<Asteroid> asteroids)
-  : IMessage(MessageType::SYSTEM_DATA)
-  , m_playerDbId(playerDbId)
-  , m_asteroids(std::move(asteroids))
-{}
-
 auto SystemDataMessage::getPlayerDbId() const -> Uuid
 {
   return m_playerDbId;
+}
+
+auto SystemDataMessage::getName() const -> std::string
+{
+  return m_name;
+}
+
+auto SystemDataMessage::getCurrentTick() const -> chrono::Tick
+{
+  return m_currentTick;
+}
+
+auto SystemDataMessage::getTimeStep() const -> chrono::TimeStep
+{
+  return m_timeStep;
 }
 
 auto SystemDataMessage::getAsteroids() const -> const std::vector<Asteroid> &
@@ -24,9 +34,23 @@ auto SystemDataMessage::getAsteroids() const -> const std::vector<Asteroid> &
   return m_asteroids;
 }
 
+struct SystemDataMessage::ptrEnabler : public SystemDataMessage
+{
+  ptrEnabler()
+    : SystemDataMessage() {};
+};
+
 auto SystemDataMessage::clone() const -> IMessagePtr
 {
-  return std::make_unique<SystemDataMessage>(m_playerDbId, m_asteroids);
+  auto out = std::make_unique<ptrEnabler>();
+
+  out->m_playerDbId  = m_playerDbId;
+  out->m_name        = m_name;
+  out->m_currentTick = m_currentTick;
+  out->m_timeStep    = m_timeStep;
+  out->m_asteroids   = m_asteroids;
+
+  return out;
 }
 
 bool operator>>(std::istream &in, Loot &loot)
@@ -58,6 +82,9 @@ auto SystemDataMessage::readFromStream(std::istream &in) -> std::optional<IMessa
   bool ok{true};
   ok &= ::core::deserialize(in, message.m_type);
   ok &= ::core::deserialize(in, message.m_playerDbId);
+  ok &= ::core::deserialize(in, message.m_name);
+  ok &= ::core::deserialize(in, message.m_currentTick);
+  ok &= ::core::deserialize(in, message.m_timeStep);
   ok &= ::core::deserialize(in, message.m_asteroids);
 
   if (!ok)
@@ -92,6 +119,9 @@ auto operator<<(std::ostream &out, const SystemDataMessage &message) -> std::ost
 {
   ::core::serialize(out, message.m_type);
   ::core::serialize(out, message.m_playerDbId);
+  ::core::serialize(out, message.m_name);
+  ::core::serialize(out, message.m_currentTick);
+  ::core::serialize(out, message.m_timeStep);
   ::core::serialize(out, message.m_asteroids);
 
   return out;

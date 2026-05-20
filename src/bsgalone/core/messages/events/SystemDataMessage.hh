@@ -3,18 +3,24 @@
 
 #include "Asteroid.hh"
 #include "IMessage.hh"
+#include "Tick.hh"
+#include "TimeStep.hh"
 #include "Uuid.hh"
 #include <vector>
 
 namespace bsgalone::core {
 
+class SystemDataMessageBuilder;
+
 class SystemDataMessage : public IMessage
 {
   public:
-  SystemDataMessage(const Uuid playerDbId, std::vector<Asteroid> asteroids);
   ~SystemDataMessage() override = default;
 
   auto getPlayerDbId() const -> Uuid;
+  auto getName() const -> std::string;
+  auto getCurrentTick() const -> chrono::Tick;
+  auto getTimeStep() const -> chrono::TimeStep;
   auto getAsteroids() const -> const std::vector<Asteroid> &;
 
   auto clone() const -> IMessagePtr override;
@@ -30,10 +36,20 @@ class SystemDataMessage : public IMessage
 
   private:
   Uuid m_playerDbId{};
+
+  std::string m_name{};
+  chrono::Tick m_currentTick{};
+  chrono::TimeStep m_timeStep{};
+
   std::vector<Asteroid> m_asteroids{};
 
   SystemDataMessage();
 
+  // https://stackoverflow.com/questions/8147027/how-do-i-call-stdmake-shared-on-a-class-with-only-protected-or-private-const/8147213#8147213
+  struct ptrEnabler;
+  friend class ptrEnabler;
+
+  friend class SystemDataMessageBuilder;
   friend auto operator<<(std::ostream &out, const SystemDataMessage &message) -> std::ostream &;
 };
 

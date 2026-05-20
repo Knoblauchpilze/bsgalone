@@ -2,6 +2,7 @@
 #include "SystemDataMessage.hh"
 #include "SerializationHelper.hh"
 #include "TestDataFactory.hh"
+#include "TestMessageFactory.hh"
 #include <gtest/gtest.h>
 
 using namespace test;
@@ -12,13 +13,17 @@ void assertMessagesAreEqual(const SystemDataMessage &actual, const SystemDataMes
 {
   EXPECT_EQ(actual.type(), expected.type());
   EXPECT_EQ(actual.getPlayerDbId(), expected.getPlayerDbId());
+  EXPECT_EQ(actual.getName(), expected.getName());
+  EXPECT_EQ(actual.getCurrentTick(), expected.getCurrentTick());
+  EXPECT_EQ(actual.getTimeStep(), expected.getTimeStep());
+  EXPECT_EQ(actual.getAsteroids(), expected.getAsteroids());
 }
 } // namespace
 
 TEST(Unit_Bsgalone_Core_Messages_Events_SystemDataMessage, SerializationDeserialization)
 {
   std::vector<Asteroid> asteroids{generateAsteroid(), generateAsteroid(true)};
-  SystemDataMessage expected(Uuid{}, std::move(asteroids));
+  const auto expected = generateSystemDataMessage(std::move(asteroids));
 
   const auto actual = serializeAndDeserializeMessage(expected);
 
@@ -28,7 +33,7 @@ TEST(Unit_Bsgalone_Core_Messages_Events_SystemDataMessage, SerializationDeserial
 TEST(Unit_Bsgalone_Core_Messages_Events_SystemDataMessage, Clone)
 {
   std::vector<Asteroid> asteroids{generateAsteroid(), generateAsteroid(true)};
-  SystemDataMessage expected(Uuid{}, std::move(asteroids));
+  const auto expected = generateSystemDataMessage(std::move(asteroids));
 
   const auto cloned = expected.clone();
 

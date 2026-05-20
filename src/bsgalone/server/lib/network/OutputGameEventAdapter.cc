@@ -6,7 +6,7 @@
 #include "PlayerLogoutEvent.hh"
 #include "PlayerSignupEvent.hh"
 #include "SignupMessage.hh"
-#include "SystemDataMessage.hh"
+#include "SystemDataMessageBuilder.hh"
 #include "UndockMessage.hh"
 
 namespace bsgalone::server {
@@ -99,7 +99,14 @@ void OutputGameEventAdapter::handleLogoutEvent(const PlayerLogoutEvent &event)
 void OutputGameEventAdapter::handleUndockEvent(const PlayerUndockEvent &event)
 {
   core::UndockMessage undockMessage(event.getPlayerDbId());
-  core::SystemDataMessage systemMessage(event.getPlayerDbId(), event.getAsteroids());
+
+  const auto system  = event.getSystem();
+  auto systemMessage = core::SystemDataMessageBuilder(event.getPlayerDbId())
+                         .withSystemName(system.name)
+                         .withCurrentTick(system.currentTick)
+                         .withTimeStep(system.step)
+                         .withAsteroids(event.getAsteroids())
+                         .build();
 
   const auto clientId = m_clientManager->getClientIdForPlayer(event.getPlayerDbId());
   m_networkClient->sendMessage(clientId, undockMessage);
