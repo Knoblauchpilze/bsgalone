@@ -5,6 +5,12 @@
 
 namespace bsgalone::core {
 
+struct SystemDataMessage::ptrEnabler : public SystemDataMessage
+{
+  ptrEnabler()
+    : SystemDataMessage() {};
+};
+
 SystemDataMessage::SystemDataMessage()
   : IMessage(MessageType::SYSTEM_DATA)
 {}
@@ -33,12 +39,6 @@ auto SystemDataMessage::getAsteroids() const -> const std::vector<Asteroid> &
 {
   return m_asteroids;
 }
-
-struct SystemDataMessage::ptrEnabler : public SystemDataMessage
-{
-  ptrEnabler()
-    : SystemDataMessage() {};
-};
 
 auto SystemDataMessage::clone() const -> IMessagePtr
 {
