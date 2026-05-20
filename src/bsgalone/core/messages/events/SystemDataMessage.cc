@@ -8,7 +8,7 @@ namespace bsgalone::core {
 struct SystemDataMessage::ptrEnabler : public SystemDataMessage
 {
   ptrEnabler()
-    : SystemDataMessage() {};
+    : SystemDataMessage(){};
 };
 
 SystemDataMessage::SystemDataMessage()
