@@ -95,6 +95,7 @@ TEST_F(Unit_Bsgalone_Server_Domain_App_Usecases_UndockUseCase,
   EXPECT_EQ(GameEventType::PLAYER_UNDOCK, event->type());
   const auto &actual = event->as<PlayerUndockEvent>();
   EXPECT_EQ(player.dbId, actual.getPlayerDbId());
+  EXPECT_EQ(system, actual.getSystem());
   std::vector<core::Asteroid> expectedAsteroids{asteroid2, asteroid1};
   EXPECT_EQ(expectedAsteroids, actual.getAsteroids());
 }

@@ -166,8 +166,9 @@ TEST_F(Unit_Bsgalone_Server_Events_OutputGameEventAdapter,
 TEST_F(Unit_Bsgalone_Server_Events_OutputGameEventAdapter, ForwardsUndockMessage)
 {
   const core::Uuid playerDbId;
+  const auto system = generateSystem({});
   std::vector<core::Asteroid> asteroids{generateAsteroid(true), generateAsteroid()};
-  PlayerUndockEvent event(playerDbId, asteroids);
+  PlayerUndockEvent event(playerDbId, system, asteroids);
   auto clientManager = std::make_shared<ClientManager>();
   clientManager->registerClient(net::ClientId{12});
   clientManager->registerPlayer(net::ClientId{12}, playerDbId, core::Uuid{});
@@ -192,6 +193,7 @@ TEST_F(Unit_Bsgalone_Server_Events_OutputGameEventAdapter, ForwardsUndockMessage
 
   EXPECT_EQ(core::MessageType::SYSTEM_DATA, captured2->type());
   EXPECT_EQ(playerDbId, captured2->as<core::SystemDataMessage>().getPlayerDbId());
+  // TODO: Should assert the system data when provided
   EXPECT_EQ(asteroids, captured2->as<core::SystemDataMessage>().getAsteroids());
 }
 

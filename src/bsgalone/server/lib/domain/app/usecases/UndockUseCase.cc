@@ -33,11 +33,12 @@ UndockUseCase::UndockUseCase(ForManagingPlayerShPtr playerRepo,
 
 void UndockUseCase::performUndock(const UndockData &data)
 {
-  const auto player = m_playerRepo->findOneById(data.playerDbId);
-  // TODO: Use the system in the event
-  /*const auto system  = */ m_systemRepo->findOneById(player.systemDbId);
+  const auto player  = m_playerRepo->findOneById(data.playerDbId);
+  const auto system  = m_systemRepo->findOneById(player.systemDbId);
   const auto manager = m_systemsManager->entityManagerFor(player.systemDbId);
-  auto event         = std::make_unique<PlayerUndockEvent>(player.dbId, manager->getAsteroids());
+  auto event         = std::make_unique<PlayerUndockEvent>(player.dbId,
+                                                   std::move(system),
+                                                   manager->getAsteroids());
   m_eventPublisher->publishEvent(std::move(event));
 }
 
