@@ -126,11 +126,12 @@ TEST_F(Unit_Bsgalone_Server_Domain_App_Usecases_LoginUseCase,
   EXPECT_CALL(*mockAccountRepo, findOneByName("player")).Times(1).WillOnce(Return(account));
 
   Player player{
-    .dbId    = core::Uuid{},
-    .account = account.dbId,
-    .name    = "player",
-    .faction = core::Faction::COLONIAL,
-    .role    = core::GameRole::GUNNER,
+    .dbId       = core::Uuid{},
+    .account    = account.dbId,
+    .name       = "player",
+    .faction    = core::Faction::COLONIAL,
+    .role       = core::GameRole::GUNNER,
+    .systemDbId = core::Uuid{},
   };
   EXPECT_CALL(*mockPlayerRepo, findOneByAccount(account.dbId)).Times(1).WillOnce(Return(player));
 
@@ -138,10 +139,7 @@ TEST_F(Unit_Bsgalone_Server_Domain_App_Usecases_LoginUseCase,
   expectedPlayer.role   = core::GameRole::PILOT;
   EXPECT_CALL(*mockPlayerRepo, save(expectedPlayer)).Times(1);
 
-  EXPECT_CALL(*mockClientManager,
-              registerPlayer(net::ClientId{12},
-                             player.dbId,
-                             core::Uuid::fromDbId("7b83bcfe-2785-40e9-894a-04f21a6346ac")))
+  EXPECT_CALL(*mockClientManager, registerPlayer(net::ClientId{12}, player.dbId, player.systemDbId))
     .Times(1);
 
   this->executeTestCase();
@@ -167,11 +165,12 @@ TEST_F(Unit_Bsgalone_Server_Domain_App_Usecases_LoginUseCase, RegistersPlayerWhe
   EXPECT_CALL(*mockAccountRepo, findOneByName("player")).WillOnce(Return(account));
 
   Player player{
-    .dbId    = core::Uuid{},
-    .account = account.dbId,
-    .name    = "player",
-    .faction = core::Faction::COLONIAL,
-    .role    = core::GameRole::GUNNER,
+    .dbId       = core::Uuid{},
+    .account    = account.dbId,
+    .name       = "player",
+    .faction    = core::Faction::COLONIAL,
+    .role       = core::GameRole::GUNNER,
+    .systemDbId = core::Uuid{},
   };
   EXPECT_CALL(*mockPlayerRepo, findOneByAccount(account.dbId)).WillOnce(Return(player));
 
@@ -179,10 +178,7 @@ TEST_F(Unit_Bsgalone_Server_Domain_App_Usecases_LoginUseCase, RegistersPlayerWhe
   expectedPlayer.role   = core::GameRole::PILOT;
   EXPECT_CALL(*mockPlayerRepo, save(expectedPlayer)).Times(1);
 
-  EXPECT_CALL(*mockClientManager,
-              registerPlayer(net::ClientId{12},
-                             player.dbId,
-                             core::Uuid::fromDbId("7b83bcfe-2785-40e9-894a-04f21a6346ac")))
+  EXPECT_CALL(*mockClientManager, registerPlayer(net::ClientId{12}, player.dbId, player.systemDbId))
     .Times(1);
 
   this->executeTestCase();
