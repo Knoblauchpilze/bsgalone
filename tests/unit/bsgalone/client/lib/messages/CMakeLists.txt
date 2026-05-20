@@ -7,5 +7,6 @@ target_sources(unitTests PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/LoginMessageConsumerTest.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/LogoutMessageConsumerTest.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/SignupMessageConsumerTest.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/SystemDataMessageConsumerTest.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/UndockMessageConsumerTest.cc
 	)

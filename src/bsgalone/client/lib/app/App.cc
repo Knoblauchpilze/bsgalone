@@ -17,6 +17,7 @@
 #include "StatusUiHandler.hh"
 #include "SynchronizedUiCommandQueue.hh"
 #include "SynchronizedUiEventQueue.hh"
+#include "SystemDataMessageConsumer.hh"
 #include "UndockMessageConsumer.hh"
 
 namespace bsgalone::client {
@@ -231,6 +232,7 @@ void App::initializeIncomingMessageSystem()
   m_networkClient->addListener(std::make_unique<LoginMessageConsumer>(m_dataStore, m_uiEventQueue));
   m_networkClient->addListener(std::make_unique<LogoutMessageConsumer>(m_dataStore, m_uiEventQueue));
   m_networkClient->addListener(std::make_unique<UndockMessageConsumer>(m_dataStore, m_uiEventQueue));
+  m_networkClient->addListener(std::make_unique<SystemDataMessageConsumer>(m_dataStore));
 }
 
 void App::initializeOutgoingMessageSystem()
