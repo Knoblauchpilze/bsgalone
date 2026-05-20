@@ -3,6 +3,7 @@
 
 #include "ForExecutingUndock.hh"
 #include "ForManagingPlayer.hh"
+#include "ForManagingSystem.hh"
 #include "ForPublishingEvent.hh"
 #include "SystemsManager.hh"
 
@@ -12,6 +13,7 @@ class UndockUseCase : public ForExecutingUndock
 {
   public:
   UndockUseCase(ForManagingPlayerShPtr playerRepo,
+                ForManagingSystemShPtr systemRepo,
                 SystemsManagerShPtr systemsManager,
                 ForPublishingEventShPtr eventPublisher);
   ~UndockUseCase() override = default;
@@ -20,6 +22,7 @@ class UndockUseCase : public ForExecutingUndock
 
   private:
   ForManagingPlayerShPtr m_playerRepo{};
+  ForManagingSystemShPtr m_systemRepo{};
   SystemsManagerShPtr m_systemsManager{};
   ForPublishingEventShPtr m_eventPublisher{};
 };

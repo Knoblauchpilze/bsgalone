@@ -2,6 +2,7 @@
 #include "UndockUseCase.hh"
 #include "EntityRegistryFixture.hh"
 #include "MockPlayerRepository.hh"
+#include "MockSystemRepository.hh"
 #include "PlayerUndockEvent.hh"
 #include "SystemsManager.hh"
 #include "TestDataFactory.hh"
@@ -20,6 +21,19 @@ TEST_F(Unit_Bsgalone_Server_Domain_App_Usecases_UndockUseCase, ThrowsWhenPlayerR
   EXPECT_THROW(
     []() {
       UndockUseCase(nullptr,
+                    std::make_shared<MockSystemRepository>(),
+                    std::make_shared<SystemsManager>(),
+                    std::make_shared<TestGameEventPublisher>());
+    }(),
+    std::invalid_argument);
+}
+
+TEST_F(Unit_Bsgalone_Server_Domain_App_Usecases_UndockUseCase, ThrowsWhenSystemRepositoryIsNull)
+{
+  EXPECT_THROW(
+    []() {
+      UndockUseCase(std::make_shared<MockPlayerRepository>(),
+                    nullptr,
                     std::make_shared<SystemsManager>(),
                     std::make_shared<TestGameEventPublisher>());
     }(),
@@ -31,6 +45,7 @@ TEST_F(Unit_Bsgalone_Server_Domain_App_Usecases_UndockUseCase, ThrowsWhenSystems
   EXPECT_THROW(
     []() {
       UndockUseCase(std::make_shared<MockPlayerRepository>(),
+                    std::make_shared<MockSystemRepository>(),
                     nullptr,
                     std::make_shared<TestGameEventPublisher>());
     }(),
@@ -42,6 +57,7 @@ TEST_F(Unit_Bsgalone_Server_Domain_App_Usecases_UndockUseCase, ThrowsWhenEventPu
   EXPECT_THROW(
     []() {
       UndockUseCase(std::make_shared<MockPlayerRepository>(),
+                    std::make_shared<MockSystemRepository>(),
                     std::make_shared<SystemsManager>(),
                     nullptr);
     }(),
@@ -51,10 +67,13 @@ TEST_F(Unit_Bsgalone_Server_Domain_App_Usecases_UndockUseCase, ThrowsWhenEventPu
 TEST_F(Unit_Bsgalone_Server_Domain_App_Usecases_UndockUseCase,
        PublishesPlayerUndockEventWhenUndockSucceeds)
 {
-  const auto player = generatePlayer({});
-
+  const auto player   = generatePlayer({});
   auto mockPlayerRepo = std::make_shared<StrictMock<MockPlayerRepository>>();
   EXPECT_CALL(*mockPlayerRepo, findOneById(player.dbId)).Times(1).WillOnce(Return(player));
+
+  const auto system   = generateSystem(player.systemDbId);
+  auto mockSystemRepo = std::make_shared<StrictMock<MockSystemRepository>>();
+  EXPECT_CALL(*mockSystemRepo, findOneById(player.systemDbId)).Times(1).WillOnce(Return(system));
 
   core::Asteroid asteroid1 = generateAsteroid();
   this->registerAsteroid(asteroid1);
@@ -65,7 +84,7 @@ TEST_F(Unit_Bsgalone_Server_Domain_App_Usecases_UndockUseCase,
   manager->registerSystem(player.systemDbId, this->entityRegistry());
 
   auto publisher = std::make_shared<TestGameEventPublisher>();
-  UndockUseCase usecase(mockPlayerRepo, std::move(manager), publisher);
+  UndockUseCase usecase(mockPlayerRepo, mockSystemRepo, std::move(manager), publisher);
 
   UndockData data{.playerDbId = player.dbId};
 
@@ -87,9 +106,13 @@ TEST_F(Unit_Bsgalone_Server_Domain_App_Usecases_UndockUseCase, FailsWhenPlayerIs
   auto mockPlayerRepo = std::make_shared<StrictMock<MockPlayerRepository>>();
   EXPECT_CALL(*mockPlayerRepo, findOneById(player.dbId)).Times(1).WillOnce(Return(player));
 
+  const auto system   = generateSystem(player.systemDbId);
+  auto mockSystemRepo = std::make_shared<StrictMock<MockSystemRepository>>();
+  EXPECT_CALL(*mockSystemRepo, findOneById(player.systemDbId)).Times(1).WillOnce(Return(system));
+
   auto manager   = std::make_shared<SystemsManager>();
   auto publisher = std::make_shared<TestGameEventPublisher>();
-  UndockUseCase usecase(mockPlayerRepo, std::move(manager), publisher);
+  UndockUseCase usecase(mockPlayerRepo, mockSystemRepo, std::move(manager), publisher);
 
   UndockData data{.playerDbId = player.dbId};
 

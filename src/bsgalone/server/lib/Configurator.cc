@@ -44,6 +44,7 @@ auto Configurator::createUndockDrivingAdapter(SystemsManagerShPtr systemsManager
   -> core::IMessageListenerPtr
 {
   auto useCase = std::make_unique<UndockUseCase>(m_repositories.playerRepository,
+                                                 m_repositories.systemRepository,
                                                  std::move(systemsManager),
                                                  std::move(publisher));
   return std::make_unique<UndockRequestConsumer>(std::move(useCase));

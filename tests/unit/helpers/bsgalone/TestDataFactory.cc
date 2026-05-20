@@ -23,9 +23,20 @@ auto generatePlayer(const std::optional<bsgalone::core::Uuid> &maybeAccount)
 {
   return bsgalone::server::Player{
     .account = maybeAccount,
-    .name    = std::format("random-account-{:%F%T}", core::now()),
+    .name    = std::format("random-player-{:%F%T}", core::now()),
     .faction = bsgalone::core::Faction::CYLON,
     .role    = bsgalone::core::GameRole::PILOT,
+  };
+}
+
+auto generateSystem(const std::optional<bsgalone::core::Uuid> &maybeId) -> bsgalone::server::System
+{
+  return bsgalone::server::System{
+    .dbId        = maybeId.has_value() ? *maybeId : bsgalone::core::Uuid{},
+    .name        = std::format("random-system-{:%F%T}", core::now()),
+    .position    = Eigen::Vector3f::Random(),
+    .currentTick = chrono::Tick::fromInt(randomInt(1, 78)),
+    .step        = chrono::TimeStep(randomInt(3, 17), chrono::Duration::fromSeconds(2)),
   };
 }
 
