@@ -107,6 +107,9 @@ jobs:
     runs-on: ubuntu-latest
     container: totocorpsoftwareinc/ci-cpp-build-image:0253182
     needs: [build]
+    # Some tests can hang, this timeout allows to fail faster than the
+    # default timeout of 360 minutes.
+    timeout-minutes: 10
     services:
       postgres:
         image: postgres:16
