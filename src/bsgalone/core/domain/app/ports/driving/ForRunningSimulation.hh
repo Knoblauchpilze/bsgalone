@@ -6,10 +6,10 @@
 
 namespace bsgalone::core {
 
-class IEcsCoordinator
+class ForRunningSimulation
 {
   public:
-  virtual ~IEcsCoordinator() = default;
+  virtual ~ForRunningSimulation() = default;
 
   /// @brief - Defines an interface to update the systems registered in the ECS. This
   /// allows to abstract the simulation process and propose a general processing
@@ -18,6 +18,6 @@ class IEcsCoordinator
   virtual void update(const chrono::TickData &data) = 0;
 };
 
-using IEcsCoordinatorPtr = std::unique_ptr<IEcsCoordinator>;
+using ForRunningSimulationPtr = std::unique_ptr<ForRunningSimulation>;
 
 } // namespace bsgalone::core

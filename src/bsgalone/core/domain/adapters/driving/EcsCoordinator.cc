@@ -5,7 +5,7 @@
 namespace bsgalone::core {
 
 EcsCoordinator::EcsCoordinator(EntityRegistryShPtr entityRegistry)
-  : IEcsCoordinator()
+  : ForRunningSimulation()
 {
   if (entityRegistry == nullptr)
   {

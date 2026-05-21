@@ -7,7 +7,7 @@ using namespace ::testing;
 
 namespace bsgalone::core {
 namespace {
-class MockEcsCoordinator : public IEcsCoordinator
+class MockEcsCoordinator : public ForRunningSimulation
 {
   public:
   MockEcsCoordinator()           = default;

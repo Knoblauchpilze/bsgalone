@@ -3,11 +3,11 @@
 
 #include "EntityRegistry.hh"
 #include "ForManagingHealth.hh"
-#include "IEcsCoordinator.hh"
+#include "ForRunningSimulation.hh"
 
 namespace bsgalone::core {
 
-class EcsCoordinator : public IEcsCoordinator
+class EcsCoordinator : public ForRunningSimulation
 {
   public:
   EcsCoordinator(EntityRegistryShPtr entityRegistry);

@@ -5,7 +5,7 @@
 namespace bsgalone::core {
 
 SystemProcessor::SystemProcessor(const std::string &name,
-                                 IEcsCoordinatorPtr coordinator,
+                                 ForRunningSimulationPtr coordinator,
                                  chrono::ITimeManagerPtr timeManager)
   : ::core::CoreObject("processor")
   , m_coordinator(std::move(coordinator))

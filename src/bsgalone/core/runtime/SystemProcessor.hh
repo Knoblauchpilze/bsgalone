@@ -2,7 +2,7 @@
 #pragma once
 
 #include "CoreObject.hh"
-#include "IEcsCoordinator.hh"
+#include "ForRunningSimulation.hh"
 #include "TimeManager.hh"
 #include "Uuid.hh"
 #include <atomic>
@@ -16,7 +16,7 @@ class SystemProcessor : public ::core::CoreObject
 {
   public:
   SystemProcessor(const std::string &name,
-                  IEcsCoordinatorPtr coordinator,
+                  ForRunningSimulationPtr coordinator,
                   chrono::ITimeManagerPtr timeManager);
   ~SystemProcessor() override;
 
@@ -30,7 +30,7 @@ class SystemProcessor : public ::core::CoreObject
   bool m_running{false};
   std::thread m_processingThread{};
 
-  IEcsCoordinatorPtr m_coordinator{};
+  ForRunningSimulationPtr m_coordinator{};
   chrono::ITimeManagerPtr m_timeManager{};
 
   void asyncProcessing();
