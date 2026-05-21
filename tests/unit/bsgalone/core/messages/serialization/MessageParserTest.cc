@@ -228,7 +228,7 @@ TEST(Unit_Bsgalone_Core_Messages_Serialization_MessageParser, DeserializesSystem
   EXPECT_EQ(MessageType::SYSTEM_DATA, (*maybeResult.message)->type());
   const auto &actual = (*maybeResult.message)->as<SystemDataMessage>();
   EXPECT_EQ(message.getPlayerDbId(), actual.getPlayerDbId());
-  EXPECT_EQ(message.getName(), actual.getName());
+  EXPECT_EQ(message.getSystemName(), actual.getSystemName());
   EXPECT_EQ(message.getCurrentTick(), actual.getCurrentTick());
   EXPECT_EQ(message.getTimeStep(), actual.getTimeStep());
   EXPECT_EQ(message.getAsteroids(), actual.getAsteroids());

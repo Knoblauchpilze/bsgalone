@@ -193,7 +193,7 @@ TEST_F(Unit_Bsgalone_Server_Events_OutputGameEventAdapter, ForwardsUndockMessage
 
   EXPECT_EQ(core::MessageType::SYSTEM_DATA, captured2->type());
   EXPECT_EQ(playerDbId, captured2->as<core::SystemDataMessage>().getPlayerDbId());
-  EXPECT_EQ(system.name, captured2->as<core::SystemDataMessage>().getName());
+  EXPECT_EQ(system.name, captured2->as<core::SystemDataMessage>().getSystemName());
   EXPECT_EQ(system.currentTick, captured2->as<core::SystemDataMessage>().getCurrentTick());
   EXPECT_EQ(system.step, captured2->as<core::SystemDataMessage>().getTimeStep());
   EXPECT_EQ(asteroids, captured2->as<core::SystemDataMessage>().getAsteroids());

@@ -13,7 +13,7 @@ void assertMessagesAreEqual(const SystemDataMessage &actual, const SystemDataMes
 {
   EXPECT_EQ(actual.type(), expected.type());
   EXPECT_EQ(actual.getPlayerDbId(), expected.getPlayerDbId());
-  EXPECT_EQ(actual.getName(), expected.getName());
+  EXPECT_EQ(actual.getSystemName(), expected.getSystemName());
   EXPECT_EQ(actual.getCurrentTick(), expected.getCurrentTick());
   EXPECT_EQ(actual.getTimeStep(), expected.getTimeStep());
   EXPECT_EQ(actual.getAsteroids(), expected.getAsteroids());

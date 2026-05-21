@@ -18,7 +18,7 @@ class SystemDataMessage : public IMessage
   ~SystemDataMessage() override = default;
 
   auto getPlayerDbId() const -> Uuid;
-  auto getName() const -> std::string;
+  auto getSystemName() const -> std::string;
   auto getCurrentTick() const -> chrono::Tick;
   auto getTimeStep() const -> chrono::TimeStep;
   auto getAsteroids() const -> const std::vector<Asteroid> &;

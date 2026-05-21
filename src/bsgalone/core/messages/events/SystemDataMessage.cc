@@ -20,7 +20,7 @@ auto SystemDataMessage::getPlayerDbId() const -> Uuid
   return m_playerDbId;
 }
 
-auto SystemDataMessage::getName() const -> std::string
+auto SystemDataMessage::getSystemName() const -> std::string
 {
   return m_name;
 }
