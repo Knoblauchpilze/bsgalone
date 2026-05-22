@@ -2,6 +2,7 @@
 #pragma once
 
 #include "CoreObject.hh"
+#include "ForManagingSimulation.hh"
 #include "ForRunningSimulation.hh"
 #include "TimeManager.hh"
 #include "Uuid.hh"
@@ -10,27 +11,27 @@
 #include <thread>
 #include <unordered_map>
 
-namespace bsgalone::core {
+namespace bsgalone::server {
 
-class SystemProcessor : public ::core::CoreObject
+class SystemProcessor : public ForManagingSimulation, public ::core::CoreObject
 {
   public:
   SystemProcessor(const std::string &name,
-                  ForRunningSimulationPtr coordinator,
+                  core::ForRunningSimulationPtr coordinator,
                   chrono::ITimeManagerPtr timeManager);
   ~SystemProcessor() override;
 
-  void start();
-  void stop();
+  void start() override;
+  void stop() override;
 
   private:
-  Uuid m_systemDbId{};
+  core::Uuid m_systemDbId{};
 
   std::mutex m_locker{};
   bool m_running{false};
   std::thread m_processingThread{};
 
-  ForRunningSimulationPtr m_coordinator{};
+  core::ForRunningSimulationPtr m_coordinator{};
   chrono::ITimeManagerPtr m_timeManager{};
 
   void asyncProcessing();
@@ -45,4 +46,4 @@ class SystemProcessor : public ::core::CoreObject
 
 using SystemProcessorShPtr = std::shared_ptr<SystemProcessor>;
 
-} // namespace bsgalone::core
+} // namespace bsgalone::server

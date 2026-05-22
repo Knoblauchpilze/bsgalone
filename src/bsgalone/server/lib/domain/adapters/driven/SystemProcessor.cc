@@ -2,12 +2,13 @@
 #include "SystemProcessor.hh"
 #include "TimeUtils.hh"
 
-namespace bsgalone::core {
+namespace bsgalone::server {
 
 SystemProcessor::SystemProcessor(const std::string &name,
-                                 ForRunningSimulationPtr coordinator,
+                                 core::ForRunningSimulationPtr coordinator,
                                  chrono::ITimeManagerPtr timeManager)
-  : ::core::CoreObject("processor")
+  : ForManagingSimulation()
+  , ::core::CoreObject("processor")
   , m_coordinator(std::move(coordinator))
   , m_timeManager(std::move(timeManager))
 {
@@ -100,4 +101,4 @@ bool SystemProcessor::tryStopProcessing()
   return true;
 }
 
-} // namespace bsgalone::core
+} // namespace bsgalone::server

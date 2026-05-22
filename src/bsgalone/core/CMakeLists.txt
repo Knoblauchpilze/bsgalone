@@ -15,10 +15,6 @@ add_subdirectory(
 	${CMAKE_CURRENT_SOURCE_DIR}/messages
 	)
 
-add_subdirectory(
-	${CMAKE_CURRENT_SOURCE_DIR}/runtime
-	)
-
 target_link_libraries(bsgalone_core_lib PUBLIC
 	bsgalone-interface-library
 	net_lib

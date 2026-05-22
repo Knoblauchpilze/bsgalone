@@ -14,4 +14,5 @@ add_subdirectory(
 target_sources(bsgalone_server_lib PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/EntityManager.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/GameEventPublisher.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/SystemProcessor.cc
 	)

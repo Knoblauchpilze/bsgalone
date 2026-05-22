@@ -50,7 +50,7 @@ class Server : public ::core::CoreObject
   /// @brief - Holds the list of processors responsible to simulate what happens
   /// in a system. Each element is independent and represent a distinct system
   /// in the game.
-  std::vector<core::SystemProcessorShPtr> m_systemProcessors{};
+  std::vector<SystemProcessorShPtr> m_systemProcessors{};
 
   void initialize();
   void initializeSystemProcessors();

@@ -5,9 +5,9 @@
 
 using namespace ::testing;
 
-namespace bsgalone::core {
+namespace bsgalone::server {
 namespace {
-class MockEcsCoordinator : public ForRunningSimulation
+class MockEcsCoordinator : public core::ForRunningSimulation
 {
   public:
   MockEcsCoordinator()           = default;
@@ -37,21 +37,21 @@ void runSystemProcessor(SystemProcessor &processor)
 }
 } // namespace
 
-TEST(Unit_Bsgalone_Core_Runtime_SystemProcessor, ThrowsWhenEcsCoordinatorIsNull)
+TEST(Unit_Bsgalone_Server_Domain_Adapters_Driven_SystemProcessor, ThrowsWhenEcsCoordinatorIsNull)
 {
   EXPECT_THROW(
     []() { SystemProcessor("test-system", nullptr, std::make_unique<MockTimeManager>()); }(),
     std::invalid_argument);
 }
 
-TEST(Unit_Bsgalone_Core_Runtime_SystemProcessor, ThrowsWhenTimeManagerIsNull)
+TEST(Unit_Bsgalone_Server_Domain_Adapters_Driven_SystemProcessor, ThrowsWhenTimeManagerIsNull)
 {
   EXPECT_THROW(
     []() { SystemProcessor("test-system", std::make_unique<MockEcsCoordinator>(), nullptr); }(),
     std::invalid_argument);
 }
 
-TEST(Unit_Bsgalone_Core_Runtime_SystemProcessor, ProvidesElapsedTimeInMilliseconds)
+TEST(Unit_Bsgalone_Server_Domain_Adapters_Driven_SystemProcessor, ProvidesElapsedTimeInMilliseconds)
 {
   auto manager = std::make_unique<StrictMock<MockTimeManager>>();
   std::vector<chrono::Duration> captured{};
@@ -77,7 +77,8 @@ TEST(Unit_Bsgalone_Core_Runtime_SystemProcessor, ProvidesElapsedTimeInMillisecon
   }
 }
 
-TEST(Unit_Bsgalone_Core_Runtime_SystemProcessor, TriggersSimulationUpdatePeriodically)
+TEST(Unit_Bsgalone_Server_Domain_Adapters_Driven_SystemProcessor,
+     TriggersSimulationUpdatePeriodically)
 {
   auto manager = std::make_unique<StrictMock<MockTimeManager>>();
   chrono::TickData testTickData{
@@ -94,4 +95,4 @@ TEST(Unit_Bsgalone_Core_Runtime_SystemProcessor, TriggersSimulationUpdatePeriodi
   runSystemProcessor(processor);
 }
 
-} // namespace bsgalone::core
+} // namespace bsgalone::server

@@ -52,13 +52,11 @@ void Server::initialize()
 
 namespace {
 auto createSystemProcessor(const System &system, core::EntityRegistryShPtr entityRegistry)
-  -> core::SystemProcessorShPtr
+  -> SystemProcessorShPtr
 {
   auto manager     = std::make_unique<chrono::TimeManager>(system.currentTick, system.step);
   auto coordinator = std::make_unique<core::EcsCoordinator>(std::move(entityRegistry));
-  return std::make_shared<core::SystemProcessor>(system.name,
-                                                 std::move(coordinator),
-                                                 std::move(manager));
+  return std::make_shared<SystemProcessor>(system.name, std::move(coordinator), std::move(manager));
 }
 } // namespace
 
