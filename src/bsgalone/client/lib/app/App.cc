@@ -3,6 +3,7 @@
 #include "AsyncUiCommandQueue.hh"
 #include "AsyncUiEventQueue.hh"
 #include "DecalRenderer.hh"
+#include "EcsCoordinator.hh"
 #include "GameRenderer.hh"
 #include "IUiCommandListener.hh"
 #include "IUiEventListener.hh"
@@ -21,15 +22,16 @@
 #include "UndockMessageConsumer.hh"
 
 namespace bsgalone::client {
-
 App::App(const pge::AppDesc &desc, const NetworkConfig &config)
   : PGEApp(desc)
   , m_config(config)
 {}
 
-bool App::onFrame(const float /*elapsedSeconds*/)
+bool App::onFrame(const float elapsedSeconds)
 {
   m_networkClient->processEvents();
+
+  m_game->update(elapsedSeconds);
 
   const auto maybeHandler = m_uiHandlers.find(m_screen);
   if (maybeHandler != m_uiHandlers.end())
@@ -69,6 +71,7 @@ void App::loadResources(const pge::Vec2i &screenDims, pge::Renderer &engine)
 {
   setLayerTint(Layer::DRAW, semiOpaque(pge::colors::WHITE));
 
+  // TODO: Those queues should not be async
   m_uiCommandQueue = createAsyncUiCommandQueue(createSynchronizedUiCommandQueue());
   m_uiEventQueue   = createAsyncUiEventQueue(createSynchronizedUiEventQueue());
 
@@ -83,6 +86,10 @@ void App::loadResources(const pge::Vec2i &screenDims, pge::Renderer &engine)
   generateRenderers(screenDims, engine.getTextureHandler());
 
   m_networkClient->start(m_config.port);
+
+  auto coordinator = std::make_unique<core::EcsCoordinator>(
+    std::make_shared<core::EntityRegistry>());
+  m_game = std::make_unique<Game>(std::move(coordinator));
 }
 
 void App::cleanResources()
@@ -98,6 +105,8 @@ void App::cleanResources()
   m_uiCommandQueue.reset();
 
   m_networkClient.reset();
+
+  m_game.reset();
 }
 
 void App::drawDecal(const pge::RenderState &state)

@@ -1,6 +1,7 @@
 
 #pragma once
 
+#include "Game.hh"
 #include "GameNetworkClient.hh"
 #include "IDataStore.hh"
 #include "IInputHandler.hh"
@@ -82,6 +83,11 @@ class App : public pge::PGEApp
   /// of the application. It allows to gate access to certain UI elements until the
   /// data has been received from the server.
   IDataStoreShPtr m_dataStore{};
+
+  /// @brief - Holds the game displayed in the app. The app orchestrates the communication
+  /// between the UI (menus, buttons, etc.) and the game itself. It also wires the game so
+  /// that it can receive updates from and publish updates to the network (and the server).
+  GamePtr m_game{};
 
   void initializeIncomingMessageSystem();
   void initializeOutgoingMessageSystem();
