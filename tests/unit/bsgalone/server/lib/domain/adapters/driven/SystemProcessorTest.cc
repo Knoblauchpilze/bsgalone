@@ -1,21 +1,14 @@
 
 #include "SystemProcessor.hh"
+#include "MockSimulationRunner.hh"
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
+using namespace test;
 using namespace ::testing;
 
 namespace bsgalone::server {
 namespace {
-class MockEcsCoordinator : public core::ForRunningSimulation
-{
-  public:
-  MockEcsCoordinator()           = default;
-  ~MockEcsCoordinator() override = default;
-
-  MOCK_METHOD(void, update, (const chrono::TickData &), (override));
-};
-
 class MockTimeManager : public chrono::ITimeManager
 {
   public:
@@ -47,7 +40,7 @@ TEST(Unit_Bsgalone_Server_Domain_Adapters_Driven_SystemProcessor, ThrowsWhenEcsC
 TEST(Unit_Bsgalone_Server_Domain_Adapters_Driven_SystemProcessor, ThrowsWhenTimeManagerIsNull)
 {
   EXPECT_THROW(
-    []() { SystemProcessor("test-system", std::make_unique<MockEcsCoordinator>(), nullptr); }(),
+    []() { SystemProcessor("test-system", std::make_unique<MockSimulationRunner>(), nullptr); }(),
     std::invalid_argument);
 }
 
@@ -63,7 +56,7 @@ TEST(Unit_Bsgalone_Server_Domain_Adapters_Driven_SystemProcessor, ProvidesElapse
     }));
 
   SystemProcessor processor("test-system",
-                            std::make_unique<NiceMock<MockEcsCoordinator>>(),
+                            std::make_unique<NiceMock<MockSimulationRunner>>(),
                             std::move(manager));
 
   runSystemProcessor(processor);
@@ -87,7 +80,7 @@ TEST(Unit_Bsgalone_Server_Domain_Adapters_Driven_SystemProcessor,
   };
   EXPECT_CALL(*manager, tick(_)).Times(AtLeast(1)).WillRepeatedly(Return(testTickData));
 
-  auto coordinator = std::make_unique<StrictMock<MockEcsCoordinator>>();
+  auto coordinator = std::make_unique<StrictMock<MockSimulationRunner>>();
   EXPECT_CALL(*coordinator, update(testTickData)).Times(AtLeast(1));
 
   SystemProcessor processor("test-system", std::move(coordinator), std::move(manager));
