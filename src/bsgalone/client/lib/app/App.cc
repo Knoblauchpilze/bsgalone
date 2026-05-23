@@ -30,6 +30,7 @@ App::App(const pge::AppDesc &desc, const NetworkConfig &config)
 bool App::onFrame(const float elapsedSeconds)
 {
   m_networkClient->processEvents();
+  m_uiEventQueue->processEvents();
 
   m_game->update(elapsedSeconds);
 
@@ -38,6 +39,8 @@ bool App::onFrame(const float elapsedSeconds)
   {
     maybeHandler->second->updateUi();
   }
+
+  m_uiCommandQueue->processEvents();
 
   return m_screen == Screen::EXIT;
 }
@@ -71,9 +74,8 @@ void App::loadResources(const pge::Vec2i &screenDims, pge::Renderer &engine)
 {
   setLayerTint(Layer::DRAW, semiOpaque(pge::colors::WHITE));
 
-  // TODO: Those queues should not be async
-  m_uiCommandQueue = createAsyncUiCommandQueue(createSynchronizedUiCommandQueue());
-  m_uiEventQueue   = createAsyncUiEventQueue(createSynchronizedUiEventQueue());
+  m_uiCommandQueue = createSynchronizedUiCommandQueue();
+  m_uiEventQueue   = createSynchronizedUiEventQueue();
 
   m_dataStore = std::make_shared<ServerDataStore>();
 
