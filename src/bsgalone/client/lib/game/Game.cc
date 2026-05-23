@@ -6,7 +6,8 @@
 namespace bsgalone::client {
 
 Game::Game(core::ForRunningSimulationPtr coordinator)
-  : ::core::CoreObject("game")
+  : IGame()
+  , ::core::CoreObject("game")
   , m_coordinator(std::move(coordinator))
 {
   if (m_coordinator == nullptr)

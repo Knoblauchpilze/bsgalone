@@ -1,9 +1,9 @@
 
 #pragma once
 
-#include "Game.hh"
 #include "GameNetworkClient.hh"
 #include "IDataStore.hh"
+#include "IGame.hh"
 #include "IInputHandler.hh"
 #include "IRenderer.hh"
 #include "IUiCommandQueue.hh"
@@ -87,7 +87,7 @@ class App : public pge::PGEApp
   /// @brief - Holds the game displayed in the app. The app orchestrates the communication
   /// between the UI (menus, buttons, etc.) and the game itself. It also wires the game so
   /// that it can receive updates from and publish updates to the network (and the server).
-  GamePtr m_game{};
+  IGamePtr m_game{};
 
   void initializeIncomingMessageSystem();
   void initializeOutgoingMessageSystem();

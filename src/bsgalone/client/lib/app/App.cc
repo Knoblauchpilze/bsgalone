@@ -4,6 +4,7 @@
 #include "AsyncUiEventQueue.hh"
 #include "DecalRenderer.hh"
 #include "EcsCoordinator.hh"
+#include "Game.hh"
 #include "GameRenderer.hh"
 #include "IUiCommandListener.hh"
 #include "IUiEventListener.hh"
