@@ -221,6 +221,7 @@ class UiCommandListenerProxy : public IUiCommandListener
 };
 
 const std::unordered_set<UiEventType> RELEVANT_UI_EVENT_TYPES = {
+  UiEventType::GAME_READY,
   UiEventType::LOGIN_SUCCEEDED,
   UiEventType::LOGIN_FAILED,
   UiEventType::LOGOUT,
@@ -246,6 +247,9 @@ class UiEventListenerProxy : public IUiEventListener
   {
     switch (event.type())
     {
+      case UiEventType::GAME_READY:
+        m_app.onScreenChanged(Screen::GAME);
+        break;
       case UiEventType::LOGIN_SUCCEEDED:
         m_app.onScreenChanged(Screen::OUTPOST);
         break;
@@ -274,7 +278,7 @@ void App::initializeIncomingMessageSystem()
   m_networkClient->addListener(std::make_unique<LoginMessageConsumer>(m_dataStore, m_uiEventQueue));
   m_networkClient->addListener(std::make_unique<LogoutMessageConsumer>(m_dataStore, m_uiEventQueue));
   m_networkClient->addListener(std::make_unique<UndockMessageConsumer>(m_dataStore, m_uiEventQueue));
-  m_networkClient->addListener(std::make_unique<SystemDataMessageConsumer>(m_game));
+  m_networkClient->addListener(std::make_unique<SystemDataMessageConsumer>(m_game, m_uiEventQueue));
 }
 
 void App::initializeOutgoingMessageSystem()

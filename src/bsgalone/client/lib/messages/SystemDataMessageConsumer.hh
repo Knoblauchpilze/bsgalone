@@ -11,7 +11,7 @@ namespace bsgalone::client {
 class SystemDataMessageConsumer : public core::IMessageListener
 {
   public:
-  SystemDataMessageConsumer(IGameShPtr game);
+  SystemDataMessageConsumer(IGameShPtr game, IUiEventQueueShPtr queue);
   ~SystemDataMessageConsumer() override = default;
 
   bool isEventRelevant(const core::MessageType &type) const override;
@@ -19,6 +19,7 @@ class SystemDataMessageConsumer : public core::IMessageListener
 
   private:
   IGameShPtr m_game{};
+  IUiEventQueueShPtr m_queue{};
 };
 
 } // namespace bsgalone::client

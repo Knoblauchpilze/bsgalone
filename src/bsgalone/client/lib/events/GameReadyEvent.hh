@@ -5,11 +5,11 @@
 
 namespace bsgalone::client {
 
-class LoadingFinishedEvent : public IUiEvent
+class GameReadyEvent : public IUiEvent
 {
   public:
-  LoadingFinishedEvent();
-  ~LoadingFinishedEvent() override = default;
+  GameReadyEvent();
+  ~GameReadyEvent() override = default;
 
   auto clone() const -> IUiEventPtr override;
 };

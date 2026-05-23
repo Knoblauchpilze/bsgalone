@@ -1,17 +1,21 @@
 
 #include "SystemDataMessageConsumer.hh"
+#include "GameReadyEvent.hh"
 #include "SystemDataMessage.hh"
-
-#include <iostream>
 
 namespace bsgalone::client {
 
-SystemDataMessageConsumer::SystemDataMessageConsumer(IGameShPtr game)
+SystemDataMessageConsumer::SystemDataMessageConsumer(IGameShPtr game, IUiEventQueueShPtr queue)
   : m_game(std::move(game))
+  , m_queue(std::move(queue))
 {
   if (m_game == nullptr)
   {
     throw std::invalid_argument("Expected non null game");
+  }
+  if (m_queue == nullptr)
+  {
+    throw std::invalid_argument("Expected non null event queue");
   }
 }
 
@@ -30,6 +34,8 @@ void SystemDataMessageConsumer::onEventReceived(const core::IMessage &event)
   };
 
   m_game->onSystemDataReceived(data);
+
+  m_queue->pushEvent(std::make_unique<GameReadyEvent>());
 }
 
 } // namespace bsgalone::client

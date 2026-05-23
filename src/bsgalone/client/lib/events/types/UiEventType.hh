@@ -8,7 +8,7 @@ namespace bsgalone::client {
 
 enum class UiEventType
 {
-  LOADING_FINISHED,
+  GAME_READY,
   LOGIN_FAILED,
   LOGIN_SUCCEEDED,
   LOGOUT,
