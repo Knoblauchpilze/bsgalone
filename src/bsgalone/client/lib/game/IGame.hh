@@ -24,6 +24,6 @@ class IGame
   virtual void update(const float elapsedSeconds) = 0;
 };
 
-using IGamePtr = std::unique_ptr<IGame>;
+using IGameShPtr = std::shared_ptr<IGame>;
 
 } // namespace bsgalone::client

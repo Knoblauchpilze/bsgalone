@@ -87,7 +87,7 @@ class App : public pge::PGEApp
   /// @brief - Holds the game displayed in the app. The app orchestrates the communication
   /// between the UI (menus, buttons, etc.) and the game itself. It also wires the game so
   /// that it can receive updates from and publish updates to the network (and the server).
-  IGamePtr m_game{};
+  IGameShPtr m_game{};
 
   void initializeIncomingMessageSystem();
   void initializeOutgoingMessageSystem();

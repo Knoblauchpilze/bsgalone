@@ -85,6 +85,10 @@ void App::loadResources(const pge::Vec2i &screenDims, pge::Renderer &engine)
 
   m_dataStore = std::make_shared<ServerDataStore>();
 
+  auto coordinator = std::make_unique<core::EcsCoordinator>(
+    std::make_shared<core::EntityRegistry>());
+  m_game = std::make_shared<Game>(std::move(coordinator));
+
   m_networkClient = std::make_shared<GameNetworkClient>();
   initializeIncomingMessageSystem();
   initializeOutgoingMessageSystem();
@@ -94,10 +98,6 @@ void App::loadResources(const pge::Vec2i &screenDims, pge::Renderer &engine)
   generateRenderers(screenDims, engine.getTextureHandler());
 
   m_networkClient->start(m_config.port);
-
-  auto coordinator = std::make_unique<core::EcsCoordinator>(
-    std::make_shared<core::EntityRegistry>());
-  m_game = std::make_unique<Game>(std::move(coordinator));
 }
 
 void App::cleanResources()
@@ -274,7 +274,7 @@ void App::initializeIncomingMessageSystem()
   m_networkClient->addListener(std::make_unique<LoginMessageConsumer>(m_dataStore, m_uiEventQueue));
   m_networkClient->addListener(std::make_unique<LogoutMessageConsumer>(m_dataStore, m_uiEventQueue));
   m_networkClient->addListener(std::make_unique<UndockMessageConsumer>(m_dataStore, m_uiEventQueue));
-  m_networkClient->addListener(std::make_unique<SystemDataMessageConsumer>(m_dataStore));
+  m_networkClient->addListener(std::make_unique<SystemDataMessageConsumer>(m_game));
 }
 
 void App::initializeOutgoingMessageSystem()

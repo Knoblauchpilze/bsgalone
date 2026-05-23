@@ -2,14 +2,16 @@
 #include "SystemDataMessageConsumer.hh"
 #include "SystemDataMessage.hh"
 
+#include <iostream>
+
 namespace bsgalone::client {
 
-SystemDataMessageConsumer::SystemDataMessageConsumer(IDataStoreShPtr store)
-  : m_store(std::move(store))
+SystemDataMessageConsumer::SystemDataMessageConsumer(IGameShPtr game)
+  : m_game(std::move(game))
 {
-  if (m_store == nullptr)
+  if (m_game == nullptr)
   {
-    throw std::invalid_argument("Expected non null data store");
+    throw std::invalid_argument("Expected non null game");
   }
 }
 
@@ -20,8 +22,14 @@ bool SystemDataMessageConsumer::isEventRelevant(const core::MessageType &type) c
 
 void SystemDataMessageConsumer::onEventReceived(const core::IMessage &event)
 {
-  // TODO: Should handle message
-  /*const auto &data = */ event.as<core::SystemDataMessage>();
+  const auto &serverData = event.as<core::SystemDataMessage>();
+  SystemData data{
+    .name        = serverData.getSystemName(),
+    .currentTick = serverData.getCurrentTick(),
+    .step        = serverData.getTimeStep(),
+  };
+
+  m_game->onSystemDataReceived(data);
 }
 
 } // namespace bsgalone::client
