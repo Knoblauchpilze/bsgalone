@@ -27,12 +27,15 @@ App::App(const pge::AppDesc &desc, const NetworkConfig &config)
   , m_config(config)
 {}
 
-bool App::onFrame(const float elapsedSeconds)
+bool App::onFrame(const float /*elapsedSeconds*/)
 {
   m_networkClient->processEvents();
   m_uiEventQueue->processEvents();
 
-  m_game->update(elapsedSeconds);
+  // TODO: This call currently crashes the client because the system data is not
+  // received from the start. A mechanism to detect that the player is in the game
+  // screen and that all data has been received is needed.
+  // m_game->update(elapsedSeconds);
 
   const auto maybeHandler = m_uiHandlers.find(m_screen);
   if (maybeHandler != m_uiHandlers.end())
@@ -169,6 +172,13 @@ void App::drawDebug(const pge::RenderState &state, const pge::Vec2f &mouseScreen
 }
 
 namespace {
+
+const std::unordered_set<UiCommandType> RELEVANT_UI_COMMAND_TYPES = {
+  UiCommandType::EXIT_REQUESTED,
+  UiCommandType::LOGIN_REQUESTED,
+  UiCommandType::UNDOCK_REQUESTED,
+};
+
 class UiCommandListenerProxy : public IUiCommandListener
 {
   public:
@@ -181,12 +191,26 @@ class UiCommandListenerProxy : public IUiCommandListener
 
   bool isEventRelevant(const UiCommandType &type) const override
   {
-    return type == UiCommandType::EXIT_REQUESTED;
+    return RELEVANT_UI_COMMAND_TYPES.contains(type);
   }
 
-  void onEventReceived(const IUiCommand & /*event*/) override
+  void onEventReceived(const IUiCommand &command) override
   {
-    m_app.onScreenChanged(Screen::EXIT);
+    switch (command.type())
+    {
+      case UiCommandType::EXIT_REQUESTED:
+        m_app.onScreenChanged(Screen::EXIT);
+        break;
+      case UiCommandType::LOGIN_REQUESTED:
+        m_app.onScreenChanged(Screen::LOADING);
+        break;
+      case UiCommandType::UNDOCK_REQUESTED:
+        m_app.onScreenChanged(Screen::LOADING);
+        break;
+        break;
+      default:
+        throw std::invalid_argument("Unsupported UI command type " + str(command.type()));
+    }
   }
 
   private:
@@ -195,6 +219,7 @@ class UiCommandListenerProxy : public IUiCommandListener
 
 const std::unordered_set<UiEventType> RELEVANT_UI_EVENT_TYPES = {
   UiEventType::LOGIN_SUCCEEDED,
+  UiEventType::LOGIN_FAILED,
   UiEventType::LOGOUT,
   UiEventType::UNDOCK,
 };
@@ -221,11 +246,14 @@ class UiEventListenerProxy : public IUiEventListener
       case UiEventType::LOGIN_SUCCEEDED:
         m_app.onScreenChanged(Screen::OUTPOST);
         break;
+      case UiEventType::LOGIN_FAILED:
+        m_app.onScreenChanged(Screen::LOGIN);
+        break;
       case UiEventType::LOGOUT:
         m_app.onScreenChanged(Screen::LOGIN);
         break;
       case UiEventType::UNDOCK:
-        m_app.onScreenChanged(Screen::GAME);
+        m_app.onScreenChanged(Screen::LOADING);
         break;
       default:
         throw std::invalid_argument("Unsupported UI event type " + str(event.type()));
