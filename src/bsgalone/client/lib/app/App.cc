@@ -28,15 +28,17 @@ App::App(const pge::AppDesc &desc, const NetworkConfig &config)
   , m_config(config)
 {}
 
-bool App::onFrame(const float /*elapsedSeconds*/)
+bool App::onFrame(const float elapsedSeconds)
 {
   m_networkClient->processEvents();
   m_uiEventQueue->processEvents();
 
-  // TODO: This call currently crashes the client because the system data is not
-  // received from the start. A mechanism to detect that the player is in the game
+  // TODO: A mechanism to detect that the player is in the game
   // screen and that all data has been received is needed.
-  // m_game->update(elapsedSeconds);
+  if (m_screen == Screen::GAME)
+  {
+    m_game->update(elapsedSeconds);
+  }
 
   const auto maybeHandler = m_uiHandlers.find(m_screen);
   if (maybeHandler != m_uiHandlers.end())
