@@ -53,16 +53,15 @@ void ServerDataStore::onPlayerLoggedIn(const core::Uuid playerDbId,
         + core::str(role));
 }
 
-void ServerDataStore::onPlayerLoggedOut(const core::Uuid playerDbId)
+void ServerDataStore::onPlayerLoggedOut()
 {
-  if (!m_playerData.has_value() || m_playerData->playerDbId != playerDbId)
+  if (!m_playerData.has_value())
   {
-    return;
+    error("Unexpected player logout", "Not logged in");
   }
 
+  debug("Logged out from session with " + m_playerData->playerDbId.str());
   m_playerData.reset();
-
-  debug("Logged out from session with " + playerDbId.str());
 }
 
 } // namespace bsgalone::client

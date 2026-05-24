@@ -23,7 +23,7 @@ class MockDataStore : public bsgalone::client::IDataStore
                const bsgalone::core::Faction,
                const bsgalone::core::GameRole),
               (override));
-  MOCK_METHOD(void, onPlayerLoggedOut, (const bsgalone::core::Uuid), (override));
+  MOCK_METHOD(void, onPlayerLoggedOut, (), (override));
 };
 
 } // namespace test

@@ -34,7 +34,10 @@ class IDataStore
                                 const core::Faction faction,
                                 const core::GameRole role)
     = 0;
-  virtual void onPlayerLoggedOut(const core::Uuid playerDbId) = 0;
+
+  /// @brief - Performs the logout of a player. In case the player identifier does
+  /// not match the player  currently logged in, an error will be raised.
+  virtual void onPlayerLoggedOut() = 0;
 };
 
 using IDataStoreShPtr = std::shared_ptr<IDataStore>;

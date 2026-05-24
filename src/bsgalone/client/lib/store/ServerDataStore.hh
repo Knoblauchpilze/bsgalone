@@ -20,7 +20,7 @@ class ServerDataStore : public IDataStore, public ::core::CoreObject
   void onPlayerLoggedIn(const core::Uuid playerDbId,
                         const core::Faction faction,
                         const core::GameRole role) override;
-  void onPlayerLoggedOut(const core::Uuid playerDbId) override;
+  void onPlayerLoggedOut() override;
 
   private:
   /// @brief - Holds the data representing the player currently logged in.

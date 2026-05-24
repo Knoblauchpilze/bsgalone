@@ -28,14 +28,13 @@ void LogoutMessageConsumer::onEventReceived(const core::IMessage &event)
 {
   const auto &login = event.as<core::LogoutMessage>();
 
-  m_store->onPlayerLoggedOut(login.getPlayerDbId());
-
-  // TODO: This probably does not account for cases where a logout event
-  // is received when the player is still in the login page.
-  if (!m_store->isLoggedIn())
+  if (!m_store->isLoggedIn() || m_store->getPlayerDbId() != login.getPlayerDbId())
   {
-    m_queue->pushEvent(std::make_unique<LogoutEvent>());
+    return;
   }
+
+  m_store->onPlayerLoggedOut();
+  m_queue->pushEvent(std::make_unique<LogoutEvent>());
 }
 
 } // namespace bsgalone::client

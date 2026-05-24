@@ -50,7 +50,7 @@ TEST(Unit_Bsgalone_Client_Store_ServerDataStore, ThrowsAfterLogoutForLoggedInPla
   store.onPlayerLoggedIn(expectedPlayerDbId, core::Faction::CYLON, core::GameRole::GUNNER);
   EXPECT_EQ(expectedPlayerDbId, store.getPlayerDbId());
 
-  store.onPlayerLoggedOut(expectedPlayerDbId);
+  store.onPlayerLoggedOut();
   EXPECT_THROW([&store]() { store.getPlayerDbId(); }(), ::core::CoreException);
 }
 
@@ -62,36 +62,15 @@ TEST(Unit_Bsgalone_Client_Store_ServerDataStore, DoesNotIndicateLoginWhenPlayerL
   store.onPlayerLoggedIn(expectedPlayerDbId, core::Faction::CYLON, core::GameRole::GUNNER);
   EXPECT_TRUE(store.isLoggedIn());
 
-  store.onPlayerLoggedOut(expectedPlayerDbId);
+  store.onPlayerLoggedOut();
   EXPECT_FALSE(store.isLoggedIn());
 }
 
-TEST(Unit_Bsgalone_Client_Store_ServerDataStore,
-     PreservesPlayerIdWhenLogoutForAnotherPlayerIsReceived)
+TEST(Unit_Bsgalone_Client_Store_ServerDataStore, ThrowsWhenLogoutIsCalledWithoutLogin)
 {
   ServerDataStore store;
 
-  const core::Uuid playerDbId1;
-  store.onPlayerLoggedIn(playerDbId1, core::Faction::CYLON, core::GameRole::GUNNER);
-  EXPECT_EQ(playerDbId1, store.getPlayerDbId());
-
-  const core::Uuid playerDbId2;
-  store.onPlayerLoggedOut(playerDbId2);
-  EXPECT_EQ(playerDbId1, store.getPlayerDbId());
-}
-
-TEST(Unit_Bsgalone_Client_Store_ServerDataStore,
-     PreservesLoginStatusWhenLogoutForAnotherPlayerIsReceived)
-{
-  ServerDataStore store;
-
-  const core::Uuid playerDbId1;
-  store.onPlayerLoggedIn(playerDbId1, core::Faction::CYLON, core::GameRole::GUNNER);
-  EXPECT_TRUE(store.isLoggedIn());
-
-  const core::Uuid playerDbId2;
-  store.onPlayerLoggedOut(playerDbId2);
-  EXPECT_TRUE(store.isLoggedIn());
+  EXPECT_THROW([&store]() { store.onPlayerLoggedOut(); }(), ::core::CoreException);
 }
 
 } // namespace bsgalone::client

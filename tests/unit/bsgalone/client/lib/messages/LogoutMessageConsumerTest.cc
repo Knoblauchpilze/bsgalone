@@ -30,15 +30,31 @@ TEST(Unit_Bsgalone_Client_Messages_LogoutMessageConsumer, ConsidersLogoutMessage
   EXPECT_TRUE(consumer.isEventRelevant(core::MessageType::LOGOUT));
 }
 
-TEST(Unit_Bsgalone_Client_Messages_LogoutMessageConsumer, ForwardsToStore)
+TEST(Unit_Bsgalone_Client_Messages_LogoutMessageConsumer, ChecksLoginStatusFromStore)
 {
   auto mockStore = std::make_shared<NiceMock<MockDataStore>>();
-  const core::Uuid playerDbId;
-  EXPECT_CALL(*mockStore, onPlayerLoggedOut(playerDbId)).Times(1);
+  EXPECT_CALL(*mockStore, isLoggedIn()).Times(1).WillOnce(Return(false));
 
   LogoutMessageConsumer consumer(mockStore, std::make_shared<TestUiEventQueue>());
 
-  core::LogoutMessage message(playerDbId);
+  core::LogoutMessage message(core::Uuid{});
+
+  consumer.onEventReceived(message);
+}
+
+TEST(Unit_Bsgalone_Client_Messages_LogoutMessageConsumer,
+     ChecksPlayerIdentifierWhenStatusIndicatesLogin)
+{
+  const core::Uuid playerDbId;
+
+  auto mockStore = std::make_shared<NiceMock<MockDataStore>>();
+  EXPECT_CALL(*mockStore, isLoggedIn()).Times(1).WillOnce(Return(true));
+  EXPECT_CALL(*mockStore, getPlayerDbId()).Times(1).WillOnce(Return(playerDbId));
+
+  LogoutMessageConsumer consumer(mockStore, std::make_shared<TestUiEventQueue>());
+
+  const core::Uuid playerDbId2;
+  core::LogoutMessage message(playerDbId2);
 
   consumer.onEventReceived(message);
 }
@@ -46,10 +62,13 @@ TEST(Unit_Bsgalone_Client_Messages_LogoutMessageConsumer, ForwardsToStore)
 TEST(Unit_Bsgalone_Client_Messages_LogoutMessageConsumer,
      PublishesLogoutEventWhenPlayerIsNoLongerLoggedin)
 {
-  auto mockStore = std::make_shared<StrictMock<MockDataStore>>();
   const core::Uuid playerDbId;
-  EXPECT_CALL(*mockStore, onPlayerLoggedOut(playerDbId)).Times(1);
-  EXPECT_CALL(*mockStore, isLoggedIn()).Times(1).WillOnce(Return(false));
+
+  auto mockStore = std::make_shared<StrictMock<MockDataStore>>();
+  EXPECT_CALL(*mockStore, isLoggedIn()).Times(1).WillOnce(Return(true));
+  EXPECT_CALL(*mockStore, getPlayerDbId()).Times(1).WillOnce(Return(playerDbId));
+
+  EXPECT_CALL(*mockStore, onPlayerLoggedOut()).Times(1);
 
   auto queue = std::make_shared<TestUiEventQueue>();
   LogoutMessageConsumer consumer(mockStore, queue);
@@ -62,17 +81,20 @@ TEST(Unit_Bsgalone_Client_Messages_LogoutMessageConsumer,
 }
 
 TEST(Unit_Bsgalone_Client_Messages_LogoutMessageConsumer,
-     DoesNotPublishEventWhenPlayerIsStillLoggedIn)
+     DoesNotPublishEventWhenLogoutIsNotForCurrentPlayer)
 {
+  const core::Uuid playerDbId1;
+
   auto mockStore = std::make_shared<StrictMock<MockDataStore>>();
-  const core::Uuid playerDbId;
-  EXPECT_CALL(*mockStore, onPlayerLoggedOut(playerDbId)).Times(1);
   EXPECT_CALL(*mockStore, isLoggedIn()).Times(1).WillOnce(Return(true));
+  EXPECT_CALL(*mockStore, getPlayerDbId()).Times(1).WillOnce(Return(playerDbId1));
+
+  const core::Uuid playerDbId2;
 
   auto queue = std::make_shared<TestUiEventQueue>();
   LogoutMessageConsumer consumer(mockStore, queue);
 
-  core::LogoutMessage message(playerDbId);
+  core::LogoutMessage message(playerDbId2);
   consumer.onEventReceived(message);
 
   EXPECT_TRUE(queue->messages().empty());
