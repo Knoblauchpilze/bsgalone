@@ -33,8 +33,6 @@ bool App::onFrame(const float elapsedSeconds)
   m_networkClient->processEvents();
   m_uiEventQueue->processEvents();
 
-  // TODO: A mechanism to detect that the player is in the game
-  // screen and that all data has been received is needed.
   if (m_screen == Screen::GAME)
   {
     m_game->update(elapsedSeconds);
