@@ -6,13 +6,14 @@ namespace bsgalone::core {
 
 EcsCoordinator::EcsCoordinator(EntityRegistryShPtr entityRegistry)
   : ForRunningSimulation()
+  , m_entityRegistry(std::move(entityRegistry))
 {
-  if (entityRegistry == nullptr)
+  if (m_entityRegistry == nullptr)
   {
     throw std::invalid_argument("Expected non null entity registry");
   }
 
-  initialize(std::move(entityRegistry));
+  initialize();
 }
 
 void EcsCoordinator::update(const chrono::TickData &data)
@@ -22,12 +23,12 @@ void EcsCoordinator::update(const chrono::TickData &data)
 
 void EcsCoordinator::clear()
 {
-  /// TODO: Handle the reset of the ECS
+  m_entityRegistry->clear();
 }
 
-void EcsCoordinator::initialize(EntityRegistryShPtr entityRegistry)
+void EcsCoordinator::initialize()
 {
-  m_healthSystem = std::make_unique<HealthSystem>(entityRegistry);
+  m_healthSystem = std::make_unique<HealthSystem>(m_entityRegistry);
 }
 
 } // namespace bsgalone::core

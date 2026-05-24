@@ -1,6 +1,7 @@
 
 #pragma once
 
+#include "CoreObject.hh"
 #include "EntityRegistry.hh"
 #include "ForManagingHealth.hh"
 #include "ForRunningSimulation.hh"
@@ -17,9 +18,10 @@ class EcsCoordinator : public ForRunningSimulation
   void clear() override;
 
   private:
+  EntityRegistryShPtr m_entityRegistry{};
   ForManagingHealthPtr m_healthSystem{};
 
-  void initialize(EntityRegistryShPtr entityRegistry);
+  void initialize();
 };
 
 } // namespace bsgalone::core

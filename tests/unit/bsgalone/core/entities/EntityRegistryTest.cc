@@ -36,4 +36,22 @@ TEST(Unit_Bsgalone_Core_Entities_EntityRegistry, RegistersComponentForEntity)
   EXPECT_EQ(1, counter);
 }
 
+TEST(Unit_Bsgalone_Core_Entities_EntityRegistry, ClearsAllEntitiesOnReset)
+{
+  EntityRegistry registry;
+
+  const auto entityId = registry.createEntity();
+
+  FactionComponent component{.faction = Faction::CYLON};
+  registry.addComponent(entityId, std::move(component));
+
+  registry.clear();
+
+  int counter = 0;
+  registry.apply<FactionComponent>(
+    [&counter](const FactionComponent & /*component*/) { ++counter; });
+
+  EXPECT_EQ(0, counter);
+}
+
 } // namespace bsgalone::core

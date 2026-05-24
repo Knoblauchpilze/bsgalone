@@ -33,4 +33,21 @@ TEST(Unit_Bsgalone_Core_Runtime_EcsCoordinator, UpdatesHealthOfEntity)
   EXPECT_EQ(1, count);
 }
 
+TEST(Unit_Bsgalone_Core_Runtime_EcsCoordinator, ClearsAllEntitiesOnReset)
+{
+  auto registry       = std::make_shared<EntityRegistry>();
+  const auto entityId = registry->createEntity();
+  registry->addComponent(entityId,
+                         HealthComponent{{.value = 0.5f, .max = 1.5f, .regenPerTick = 0.5f}});
+
+  EcsCoordinator coordinator(registry);
+
+  coordinator.clear();
+
+  auto count = 0;
+  registry->apply<const HealthComponent>(
+    [&count](const HealthComponent & /*component*/) { ++count; });
+  EXPECT_EQ(0, count);
+}
+
 } // namespace bsgalone::core

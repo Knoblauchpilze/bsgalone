@@ -14,4 +14,12 @@ auto EntityRegistry::createEntity() -> Uuid
   return uuid;
 }
 
+void EntityRegistry::clear()
+{
+  m_entityToId.clear();
+  m_idToEntity.clear();
+
+  m_registry.clear();
+}
+
 } // namespace bsgalone::core

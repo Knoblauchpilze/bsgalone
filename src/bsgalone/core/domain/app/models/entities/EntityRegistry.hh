@@ -48,6 +48,10 @@ class EntityRegistry
   template<typename... Components, typename Func>
   void applyWithId(Func &&modifier);
 
+  /// @brief - Clears all the registered entities and components. This essentially brings
+  /// the registry back to an empty container.
+  void clear();
+
   private:
   /// @brief - The registry used by entt to store entities.
   entt::registry m_registry{};
