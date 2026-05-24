@@ -40,7 +40,7 @@ void Game::update(const float elapsedSeconds)
 void Game::reset()
 {
   m_timeManager.reset();
-  // TODO: Should also reset the coordinator
+  m_coordinator->clear();
 }
 
 } // namespace bsgalone::client

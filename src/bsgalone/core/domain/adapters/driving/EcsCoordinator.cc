@@ -20,6 +20,11 @@ void EcsCoordinator::update(const chrono::TickData &data)
   m_healthSystem->updateHealth(data);
 }
 
+void EcsCoordinator::clear()
+{
+  /// TODO: Handle the reset of the ECS
+}
+
 void EcsCoordinator::initialize(EntityRegistryShPtr entityRegistry)
 {
   m_healthSystem = std::make_unique<HealthSystem>(entityRegistry);

@@ -13,6 +13,7 @@ class MockSimulationRunner : public bsgalone::core::ForRunningSimulation
   ~MockSimulationRunner() override = default;
 
   MOCK_METHOD(void, update, (const chrono::TickData &), (override));
+  MOCK_METHOD(void, clear, (), (override));
 };
 
 } // namespace test

@@ -40,4 +40,31 @@ TEST(Unit_Bsgalone_Client_Game_Game, TriggersSimulationRunnerUpdate)
   game.update(1.0f);
 }
 
+TEST(Unit_Bsgalone_Client_Game_Game, ForwardsResetCallToSimulationRunner)
+{
+  auto runner = std::make_unique<StrictMock<MockSimulationRunner>>();
+  EXPECT_CALL(*runner, clear()).Times(1);
+
+  Game game(std::move(runner));
+  game.reset();
+}
+
+TEST(Unit_Bsgalone_Client_Game_Game, RequiresSystemDataAgainWhenResetHasBeenCalled)
+{
+  SystemData data{
+    .name        = "test-system",
+    .currentTick = chrono::Tick::fromInt(2),
+    .step        = chrono::TimeStep{2, chrono::Duration::fromSeconds(0.5f)},
+  };
+
+  Game game(std::make_unique<NiceMock<MockSimulationRunner>>());
+  game.onSystemDataReceived(data);
+
+  EXPECT_NO_THROW([&game]() { game.update(1.0); });
+
+  game.reset();
+
+  EXPECT_THROW([&game]() { game.update(1.0); }(), std::invalid_argument);
+}
+
 } // namespace bsgalone::client
