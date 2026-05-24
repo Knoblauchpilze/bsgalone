@@ -37,4 +37,10 @@ void Game::update(const float elapsedSeconds)
   m_coordinator->update(data);
 }
 
+void Game::reset()
+{
+  m_timeManager.reset();
+  // TODO: Should also reset the coordinator
+}
+
 } // namespace bsgalone::client

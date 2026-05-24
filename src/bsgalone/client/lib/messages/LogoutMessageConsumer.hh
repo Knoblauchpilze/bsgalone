@@ -2,6 +2,7 @@
 #pragma once
 
 #include "IDataStore.hh"
+#include "IGame.hh"
 #include "IMessageListener.hh"
 #include "IUiEventQueue.hh"
 
@@ -16,9 +17,11 @@ class LogoutMessageConsumer : public core::IMessageListener
   /// corresponding events to the queue so that the UI is informed.
   /// In case the message is received for a different player than the one
   /// currently logged in, no UI message will be puslibhed.
+  /// The game will be informed as well.
   /// @param store - the data store where logout information should be stored
+  /// @param game - the game running in the client application
   /// @param queue - a queue to publish UI relevant updates
-  LogoutMessageConsumer(IDataStoreShPtr store, IUiEventQueueShPtr queue);
+  LogoutMessageConsumer(IDataStoreShPtr store, IGameShPtr game, IUiEventQueueShPtr queue);
   ~LogoutMessageConsumer() override = default;
 
   bool isEventRelevant(const core::MessageType &type) const override;
@@ -26,6 +29,7 @@ class LogoutMessageConsumer : public core::IMessageListener
 
   private:
   IDataStoreShPtr m_store{};
+  IGameShPtr m_game{};
   IUiEventQueueShPtr m_queue{};
 };
 

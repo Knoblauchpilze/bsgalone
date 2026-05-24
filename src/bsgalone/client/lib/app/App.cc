@@ -274,7 +274,8 @@ void App::initializeIncomingMessageSystem()
 {
   m_networkClient->addListener(std::make_unique<SignupMessageConsumer>(m_uiEventQueue));
   m_networkClient->addListener(std::make_unique<LoginMessageConsumer>(m_dataStore, m_uiEventQueue));
-  m_networkClient->addListener(std::make_unique<LogoutMessageConsumer>(m_dataStore, m_uiEventQueue));
+  m_networkClient->addListener(
+    std::make_unique<LogoutMessageConsumer>(m_dataStore, m_game, m_uiEventQueue));
   m_networkClient->addListener(std::make_unique<UndockMessageConsumer>(m_dataStore, m_uiEventQueue));
   m_networkClient->addListener(std::make_unique<SystemDataMessageConsumer>(m_game, m_uiEventQueue));
 }

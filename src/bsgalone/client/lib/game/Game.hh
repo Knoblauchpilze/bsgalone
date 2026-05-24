@@ -15,6 +15,7 @@ class Game : public IGame, public ::core::CoreObject
 
   void onSystemDataReceived(const SystemData &data) override;
   void update(const float elapsedSeconds) override;
+  void reset() override;
 
   private:
   core::ForRunningSimulationPtr m_coordinator{};

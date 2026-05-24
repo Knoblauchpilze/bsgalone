@@ -14,6 +14,7 @@ class MockGame : public bsgalone::client::IGame
 
   MOCK_METHOD(void, onSystemDataReceived, (const bsgalone::client::SystemData &), (override));
   MOCK_METHOD(void, update, (const float), (override));
+  MOCK_METHOD(void, reset, (), (override));
 };
 
 } // namespace test

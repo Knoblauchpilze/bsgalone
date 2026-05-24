@@ -5,13 +5,20 @@
 
 namespace bsgalone::client {
 
-LogoutMessageConsumer::LogoutMessageConsumer(IDataStoreShPtr store, IUiEventQueueShPtr queue)
+LogoutMessageConsumer::LogoutMessageConsumer(IDataStoreShPtr store,
+                                             IGameShPtr game,
+                                             IUiEventQueueShPtr queue)
   : m_store(std::move(store))
+  , m_game(std::move(game))
   , m_queue(std::move(queue))
 {
   if (m_store == nullptr)
   {
     throw std::invalid_argument("Expected non null data store");
+  }
+  if (m_game == nullptr)
+  {
+    throw std::invalid_argument("Expected non null game");
   }
   if (m_queue == nullptr)
   {
@@ -34,6 +41,7 @@ void LogoutMessageConsumer::onEventReceived(const core::IMessage &event)
   }
 
   m_store->onPlayerLoggedOut();
+  m_game->reset();
   m_queue->pushEvent(std::make_unique<LogoutEvent>());
 }
 

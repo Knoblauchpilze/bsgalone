@@ -22,6 +22,10 @@ class IGame
   /// @param elapsedSeconds - defines how many real world seconds passed since the last
   /// call to this function
   virtual void update(const float elapsedSeconds) = 0;
+
+  /// @brief - Used to ask the game to reset the simulation. This can typically be called
+  /// when the user jumps from one system to the next or when a docking operation happens.
+  virtual void reset() = 0;
 };
 
 using IGameShPtr = std::shared_ptr<IGame>;
