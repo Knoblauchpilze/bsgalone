@@ -4,7 +4,7 @@
 #include "AsyncUiEventQueue.hh"
 #include "DecalRenderer.hh"
 #include "EcsCoordinator.hh"
-#include "Game.hh"
+#include "GameBuilder.hh"
 #include "GameRenderer.hh"
 #include "IUiCommandListener.hh"
 #include "IUiEventListener.hh"
@@ -85,7 +85,11 @@ void App::loadResources(const pge::Vec2i &screenDims, pge::Renderer &engine)
 
   auto entityRegistry = std::make_shared<core::EntityRegistry>();
   auto coordinator    = std::make_unique<core::EcsCoordinator>(entityRegistry);
-  m_game              = std::make_shared<Game>(std::move(entityRegistry), std::move(coordinator));
+
+  m_game = GameBuilder()
+             .withEntityRegistry(std::move(entityRegistry))
+             .withSimulationRunner(std::move(coordinator))
+             .build();
 
   m_networkClient = std::make_shared<GameNetworkClient>();
   initializeIncomingMessageSystem();

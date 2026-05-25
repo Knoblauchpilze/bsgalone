@@ -5,21 +5,10 @@
 
 namespace bsgalone::client {
 
-Game::Game(core::EntityRegistryShPtr entityRegistry, core::ForRunningSimulationPtr coordinator)
+Game::Game()
   : IGame()
   , ::core::CoreObject("game")
-  , m_entityRegistry(std::move(entityRegistry))
-  , m_coordinator(std::move(coordinator))
-{
-  if (m_entityRegistry == nullptr)
-  {
-    throw std::invalid_argument("Expected non null entity registry");
-  }
-  if (m_coordinator == nullptr)
-  {
-    throw std::invalid_argument("Expected non null coordinator");
-  }
-}
+{}
 
 void Game::onSystemDataReceived(const SystemData &data)
 {

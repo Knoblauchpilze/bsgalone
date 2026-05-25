@@ -1,6 +1,7 @@
 
 #include "Game.hh"
 #include "EntityRegistryFixture.hh"
+#include "GameBuilder.hh"
 #include "MockSimulationRunner.hh"
 #include "TestDataFactory.hh"
 #include <gtest/gtest.h>
@@ -11,21 +12,14 @@ using namespace ::testing;
 namespace bsgalone::client {
 using Unit_Bsgalone_Client_Game_Game = EntityRegistryFixture;
 
-TEST_F(Unit_Bsgalone_Client_Game_Game, ThrowsWhenEntityRegistryIsNull)
-{
-  EXPECT_THROW([]() { Game(nullptr, std::make_unique<MockSimulationRunner>()); }(),
-               std::invalid_argument);
-}
-
-TEST_F(Unit_Bsgalone_Client_Game_Game, ThrowsWhenSimulationRunnerIsNull)
-{
-  EXPECT_THROW([this]() { Game(this->entityRegistry(), nullptr); }(), std::invalid_argument);
-}
-
 TEST_F(Unit_Bsgalone_Client_Game_Game, ThrowsWhenSystemDataHasNotBeenReceived)
 {
-  Game game(this->entityRegistry(), std::make_unique<MockSimulationRunner>());
-  EXPECT_THROW([&game]() { game.update(1.0f); }(), std::invalid_argument);
+  auto game = GameBuilder()
+                .withEntityRegistry(this->entityRegistry())
+                .withSimulationRunner(std::make_unique<MockSimulationRunner>())
+                .build();
+
+  EXPECT_THROW([&game]() { game->update(1.0f); }(), std::invalid_argument);
 }
 
 TEST_F(Unit_Bsgalone_Client_Game_Game, TriggersSimulationRunnerUpdate)
@@ -43,10 +37,13 @@ TEST_F(Unit_Bsgalone_Client_Game_Game, TriggersSimulationRunnerUpdate)
   };
   EXPECT_CALL(*runner, update(expectedData)).Times(1);
 
-  Game game(this->entityRegistry(), std::move(runner));
-  game.onSystemDataReceived(data);
+  auto game = GameBuilder()
+                .withEntityRegistry(this->entityRegistry())
+                .withSimulationRunner(std::move(runner))
+                .build();
+  game->onSystemDataReceived(data);
 
-  game.update(1.0f);
+  game->update(1.0f);
 }
 
 TEST_F(Unit_Bsgalone_Client_Game_Game, DeletesAllExistingEntitiesOnReset)
@@ -54,8 +51,11 @@ TEST_F(Unit_Bsgalone_Client_Game_Game, DeletesAllExistingEntitiesOnReset)
   this->registerAsteroid(generateAsteroid(true));
   this->entityRegistry()->clear();
 
-  Game game(this->entityRegistry(), std::make_unique<StrictMock<MockSimulationRunner>>());
-  game.reset();
+  auto game = GameBuilder()
+                .withEntityRegistry(this->entityRegistry())
+                .withSimulationRunner(std::make_unique<StrictMock<MockSimulationRunner>>())
+                .build();
+  game->reset();
 
   this->assertRegistryEmpty();
 }
@@ -68,14 +68,33 @@ TEST_F(Unit_Bsgalone_Client_Game_Game, RequiresSystemDataAgainWhenResetHasBeenCa
     .step        = chrono::TimeStep{2, chrono::Duration::fromSeconds(0.5f)},
   };
 
-  Game game(this->entityRegistry(), std::make_unique<NiceMock<MockSimulationRunner>>());
-  game.onSystemDataReceived(data);
+  auto game = GameBuilder()
+                .withEntityRegistry(this->entityRegistry())
+                .withSimulationRunner(std::make_unique<NiceMock<MockSimulationRunner>>())
+                .build();
+  game->onSystemDataReceived(data);
 
-  EXPECT_NO_THROW([&game]() { game.update(1.0); });
+  EXPECT_NO_THROW([&game]() { game->update(1.0); });
 
-  game.reset();
+  game->reset();
 
-  EXPECT_THROW([&game]() { game.update(1.0); }(), std::invalid_argument);
+  EXPECT_THROW([&game]() { game->update(1.0); }(), std::invalid_argument);
+}
+
+TEST_F(Unit_Bsgalone_Client_Game_Game, RegistersAsteroidWhenReceivingSystemData)
+{
+  SystemData data{.name        = "test-system",
+                  .currentTick = chrono::Tick::fromInt(2),
+                  .step        = chrono::TimeStep{2, chrono::Duration::fromSeconds(0.5f)},
+                  .asteroids   = {generateAsteroid(true), generateAsteroid()}};
+
+  auto game = GameBuilder()
+                .withEntityRegistry(this->entityRegistry())
+                .withSimulationRunner(std::make_unique<NiceMock<MockSimulationRunner>>())
+                .build();
+  game->onSystemDataReceived(data);
+
+  // TODO: Should have a create use case and assert that it's called
 }
 
 } // namespace bsgalone::client

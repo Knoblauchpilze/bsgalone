@@ -8,10 +8,11 @@
 
 namespace bsgalone::client {
 
+class GameBuilder;
+
 class Game : public IGame, public ::core::CoreObject
 {
   public:
-  Game(core::EntityRegistryShPtr entityRegistry, core::ForRunningSimulationPtr coordinator);
   ~Game() override = default;
 
   void onSystemDataReceived(const SystemData &data) override;
@@ -23,8 +24,12 @@ class Game : public IGame, public ::core::CoreObject
   core::ForRunningSimulationPtr m_coordinator{};
   chrono::ITimeManagerPtr m_timeManager{};
 
+  Game();
+
   void createEntities(const SystemData &data);
   void createAsteroids(const std::vector<core::Asteroid> &asteroids);
+
+  friend class GameBuilder;
 };
 
 } // namespace bsgalone::client

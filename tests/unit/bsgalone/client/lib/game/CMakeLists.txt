@@ -5,4 +5,5 @@ target_include_directories(unitTests PUBLIC
 
 target_sources(unitTests PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/GameTest.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/GameBuilderTest.cc
 	)
