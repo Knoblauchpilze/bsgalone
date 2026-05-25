@@ -31,6 +31,7 @@ void SystemDataMessageConsumer::onEventReceived(const core::IMessage &event)
     .name        = serverData.getSystemName(),
     .currentTick = serverData.getCurrentTick(),
     .step        = serverData.getTimeStep(),
+    .asteroids   = serverData.getAsteroids(),
   };
 
   m_game->onSystemDataReceived(data);

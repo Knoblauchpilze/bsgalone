@@ -1,6 +1,7 @@
 
 #include "SystemDataMessageConsumer.hh"
 #include "MockGame.hh"
+#include "TestDataFactory.hh"
 #include "TestMessageFactory.hh"
 #include "TestUiEventQueue.hh"
 #include <gtest/gtest.h>
@@ -32,7 +33,7 @@ TEST(Unit_Bsgalone_Client_Messages_SystemDataMessageConsumer, ConsidersSystemDat
 
 TEST(Unit_Bsgalone_Client_Messages_SystemDataMessageConsumer, ForwardsSystemDataToGame)
 {
-  auto message = generateSystemDataMessage({});
+  auto message = generateSystemDataMessage({generateAsteroid(false), generateAsteroid(true)});
 
   auto mockGame = std::make_shared<StrictMock<MockGame>>();
   EXPECT_CALL(*mockGame,
@@ -40,7 +41,7 @@ TEST(Unit_Bsgalone_Client_Messages_SystemDataMessageConsumer, ForwardsSystemData
                 .name        = message.getSystemName(),
                 .currentTick = message.getCurrentTick(),
                 .step        = message.getTimeStep(),
-
+                .asteroids   = message.getAsteroids(),
               }))
     .Times(1);
 
