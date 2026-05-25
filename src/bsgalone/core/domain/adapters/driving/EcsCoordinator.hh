@@ -15,7 +15,6 @@ class EcsCoordinator : public ForRunningSimulation
   ~EcsCoordinator() override = default;
 
   void update(const chrono::TickData &data) override;
-  void clear() override;
 
   private:
   EntityRegistryShPtr m_entityRegistry{};

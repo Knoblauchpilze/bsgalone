@@ -21,6 +21,13 @@ class EntityRegistryFixture : public ::testing::Test
 
   void registerAsteroid(const bsgalone::core::Asteroid &asteroid);
 
+  /// @brief - Verifies that the registry attached to this fixture does not contain
+  /// any entity. The process is as described below:
+  ///   - iterate over all entities with a DbComponent
+  ///   - verify that no entity were found
+  /// This approach works **as long as all entities have a DbComponent**.
+  void assertRegistryEmpty();
+
   private:
   bsgalone::core::EntityRegistryShPtr m_entityRegistry{};
 };

@@ -44,4 +44,12 @@ void EntityRegistryFixture::registerAsteroid(const bsgalone::core::Asteroid &ast
   }
 }
 
+void EntityRegistryFixture::assertRegistryEmpty()
+{
+  int counter{0};
+  m_entityRegistry->apply<bsgalone::core::DbComponent>(
+    [&counter](const bsgalone::core::DbComponent & /*component*/) { ++counter; });
+  EXPECT_EQ(0, counter) << "Expected no entity in registry";
+}
+
 } // namespace test

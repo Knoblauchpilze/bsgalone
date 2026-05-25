@@ -2,6 +2,7 @@
 #include "Game.hh"
 #include "EntityRegistryFixture.hh"
 #include "MockSimulationRunner.hh"
+#include "TestDataFactory.hh"
 #include <gtest/gtest.h>
 
 using namespace test;
@@ -48,22 +49,15 @@ TEST_F(Unit_Bsgalone_Client_Game_Game, TriggersSimulationRunnerUpdate)
   game.update(1.0f);
 }
 
-TEST_F(Unit_Bsgalone_Client_Game_Game, ForwardsResetCallToSimulationRunner)
-{
-  auto runner = std::make_unique<StrictMock<MockSimulationRunner>>();
-  EXPECT_CALL(*runner, clear()).Times(1);
-
-  Game game(this->entityRegistry(), std::move(runner));
-  game.reset();
-}
-
 TEST_F(Unit_Bsgalone_Client_Game_Game, DeletesAllExistingEntitiesOnReset)
 {
-  auto runner = std::make_unique<StrictMock<MockSimulationRunner>>();
-  EXPECT_CALL(*runner, clear()).Times(1);
+  this->registerAsteroid(generateAsteroid(true));
+  this->entityRegistry()->clear();
 
-  Game game(this->entityRegistry(), std::move(runner));
+  Game game(this->entityRegistry(), std::make_unique<StrictMock<MockSimulationRunner>>());
   game.reset();
+
+  this->assertRegistryEmpty();
 }
 
 TEST_F(Unit_Bsgalone_Client_Game_Game, RequiresSystemDataAgainWhenResetHasBeenCalled)

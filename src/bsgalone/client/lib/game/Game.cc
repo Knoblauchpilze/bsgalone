@@ -46,7 +46,7 @@ void Game::update(const float elapsedSeconds)
 void Game::reset()
 {
   m_timeManager.reset();
-  m_coordinator->clear();
+  m_entityRegistry->clear();
 }
 
 void Game::createEntities(const SystemData &data)
