@@ -1,5 +1,6 @@
 
 #include "SystemDataMessageConsumer.hh"
+#include "GameReadyEvent.hh"
 #include "MockGame.hh"
 #include "TestDataFactory.hh"
 #include "TestMessageFactory.hh"
@@ -60,6 +61,8 @@ TEST(Unit_Bsgalone_Client_Messages_SystemDataMessageConsumer, PublishesLoadingFi
 
   EXPECT_EQ(1u, queue->messages().size());
   EXPECT_EQ(UiEventType::GAME_READY, queue->messages().at(0)->type());
+  const auto &actual = queue->messages().at(0)->as<GameReadyEvent>();
+  EXPECT_EQ(message.getSystemName(), actual.getSystemName());
 }
 
 } // namespace bsgalone::client

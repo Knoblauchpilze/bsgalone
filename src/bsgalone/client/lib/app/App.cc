@@ -320,7 +320,7 @@ void App::generateUiHandlers(const pge::Vec2i &screenDims,
   outpost->initializeMenus(screenDims, texturesLoader);
   m_uiHandlers[Screen::OUTPOST] = std::move(outpost);
 
-  auto status = std::make_unique<StatusUiHandler>(m_uiCommandQueue);
+  auto status = std::make_unique<StatusUiHandler>(m_uiEventQueue, m_uiCommandQueue);
   status->initializeMenus(screenDims, texturesLoader);
   m_uiHandlers[Screen::GAME] = std::move(status);
 }

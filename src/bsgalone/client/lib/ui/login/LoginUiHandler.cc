@@ -196,6 +196,10 @@ void LoginUiHandler::updateUi()
 
 void LoginUiHandler::registerToQueue(IUiEventQueueShPtr inputQueue)
 {
+  if (inputQueue == nullptr)
+  {
+    throw std::invalid_argument("Expected non null UI event queue");
+  }
   inputQueue->addListener(std::make_unique<UiEventListenerLoginProxy>(*this));
 }
 

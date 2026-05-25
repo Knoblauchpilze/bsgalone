@@ -1,11 +1,37 @@
 
 #include "StatusUiHandler.hh"
+#include "GameReadyEvent.hh"
+#include "IUiEventListener.hh"
 #include "LogoutCommand.hh"
 #include "ScreenCommon.hh"
 
 namespace bsgalone::client {
 
-StatusUiHandler::StatusUiHandler(IUiCommandQueueShPtr outputQueue)
+class UiEventListenerStatusProxy : public IUiEventListener
+{
+  public:
+  explicit UiEventListenerStatusProxy(StatusUiHandler &handler)
+    : IUiEventListener()
+    , m_handler(handler)
+  {}
+
+  ~UiEventListenerStatusProxy() override = default;
+
+  bool isEventRelevant(const UiEventType &type) const override
+  {
+    return type == UiEventType::GAME_READY;
+  }
+
+  void onEventReceived(const IUiEvent &event) override
+  {
+    m_handler.onGameReady(event.as<GameReadyEvent>().getSystemName());
+  }
+
+  private:
+  StatusUiHandler &m_handler;
+};
+
+StatusUiHandler::StatusUiHandler(IUiEventQueueShPtr inputQueue, IUiCommandQueueShPtr outputQueue)
   : IUiHandler()
   , m_queue(std::move(outputQueue))
 {
@@ -13,6 +39,8 @@ StatusUiHandler::StatusUiHandler(IUiCommandQueueShPtr outputQueue)
   {
     throw std::invalid_argument("Expected non null command queue");
   }
+
+  registerToQueue(inputQueue);
 }
 
 namespace {
@@ -29,8 +57,13 @@ void StatusUiHandler::initializeMenus(const pge::Vec2i &dimensions,
                               .dims          = statusMenuDims,
                               .layout        = ui::MenuLayout::HORIZONTAL,
                               .highlightable = false};
-  auto bg     = ui::bgConfigFromColor(almostTransparent(pge::colors::WHITE));
+  auto bg     = ui::bgConfigFromColor(pge::colors::TRANSPARENT_WHITE);
   m_statusBar = std::make_unique<ui::UiMenu>(config, bg);
+
+  auto text    = ui::textConfigFromColor("N/A", pge::colors::WHITE);
+  auto menu    = std::make_unique<ui::UiTextMenu>(config, bg, text);
+  m_systemName = menu.get();
+  m_statusBar->addMenu(std::move(menu));
 
   m_statusBar->addMenu(generateSpacer());
   m_statusBar->addMenu(generateSpacer());
@@ -56,6 +89,15 @@ void StatusUiHandler::render(pge::Renderer &engine) const
 void StatusUiHandler::updateUi()
 {
   m_logoutConfirmation->setVisible(m_logoutRequested);
+}
+
+void StatusUiHandler::registerToQueue(IUiEventQueueShPtr inputQueue)
+{
+  if (inputQueue == nullptr)
+  {
+    throw std::invalid_argument("Expected non null UI event queue");
+  }
+  inputQueue->addListener(std::make_unique<UiEventListenerStatusProxy>(*this));
 }
 
 void StatusUiHandler::generateLogoutButton(const pge::Vec2i & /*dimensions*/)
@@ -128,6 +170,11 @@ void StatusUiHandler::onLogoutConfirmed()
 void StatusUiHandler::onLogoutCanceled()
 {
   m_logoutRequested = false;
+}
+
+void StatusUiHandler::onGameReady(const std::string &systemName)
+{
+  m_systemName->setText(systemName);
 }
 
 } // namespace bsgalone::client

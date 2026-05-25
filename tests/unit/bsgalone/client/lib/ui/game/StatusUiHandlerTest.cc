@@ -3,6 +3,7 @@
 #include "LogoutCommand.hh"
 #include "MockTexturePack.hh"
 #include "TestUiCommandQueue.hh"
+#include "TestUiEventQueue.hh"
 #include "TestUiInputFactory.hh"
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
@@ -18,7 +19,8 @@ class Unit_Bsgalone_Client_Ui_Game_StatusUiHandler : public Test
   void SetUp() override
   {
     uiCommandQueue = std::make_shared<TestUiCommandQueue>(false);
-    handler        = std::make_unique<StatusUiHandler>(uiCommandQueue);
+    handler        = std::make_unique<StatusUiHandler>(std::make_shared<TestUiEventQueue>(false),
+                                                uiCommandQueue);
   }
 
   void TearDown() override
@@ -34,18 +36,23 @@ class Unit_Bsgalone_Client_Ui_Game_StatusUiHandler : public Test
 
 TEST_F(Unit_Bsgalone_Client_Ui_Game_StatusUiHandler, ThrowsWhenCommandQueueIsNull)
 {
-  EXPECT_THROW([this]() { StatusUiHandler(nullptr); }(), std::invalid_argument);
+  EXPECT_THROW([this]() { StatusUiHandler(std::make_shared<TestUiEventQueue>(false), nullptr); }(),
+               std::invalid_argument);
+}
+
+TEST_F(Unit_Bsgalone_Client_Ui_Game_StatusUiHandler, ThrowsWhenEventQueueIsNull)
+{
+  EXPECT_THROW([this]() { StatusUiHandler(nullptr, this->uiCommandQueue); }(),
+               std::invalid_argument);
 }
 
 TEST_F(Unit_Bsgalone_Client_Ui_Game_StatusUiHandler, PublishesLogoutCommandWhenLogoutIsConfirmed)
 {
   MockTexturePack pack;
-  std::cout << "creating handler\n";
   handler->initializeMenus(pge::Vec2i{1000, 1000}, pack);
-  std::cout << "handler created\n";
 
   // First click on the logout panel
-  auto data      = generateInputForClickAt(pge::Vec2i{762, 24});
+  auto data      = generateInputForClickAt(pge::Vec2i{799, 24});
   auto processed = handler->processUserInput(data);
 
   // Update the UI to make the menu visible
@@ -67,7 +74,7 @@ TEST_F(Unit_Bsgalone_Client_Ui_Game_StatusUiHandler,
   handler->initializeMenus(pge::Vec2i{1000, 1000}, pack);
 
   // First click on the logout panel
-  auto data      = generateInputForClickAt(pge::Vec2i{762, 24});
+  auto data      = generateInputForClickAt(pge::Vec2i{988, 6});
   auto processed = handler->processUserInput(data);
 
   // Update the UI to make the menu visible

@@ -36,7 +36,7 @@ void SystemDataMessageConsumer::onEventReceived(const core::IMessage &event)
 
   m_game->onSystemDataReceived(data);
 
-  m_queue->pushEvent(std::make_unique<GameReadyEvent>());
+  m_queue->pushEvent(std::make_unique<GameReadyEvent>(data.name));
 }
 
 } // namespace bsgalone::client

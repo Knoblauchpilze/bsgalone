@@ -2,15 +2,18 @@
 #pragma once
 
 #include "IUiCommandQueue.hh"
+#include "IUiEventQueue.hh"
 #include "IUiHandler.hh"
 #include "UiTextMenu.hh"
 
 namespace bsgalone::client {
 
+class UiEventListenerStatusProxy;
+
 class StatusUiHandler : public IUiHandler
 {
   public:
-  explicit StatusUiHandler(IUiCommandQueueShPtr outputQueue);
+  explicit StatusUiHandler(IUiEventQueueShPtr inputQueue, IUiCommandQueueShPtr outputQueue);
   ~StatusUiHandler() override = default;
 
   void initializeMenus(const pge::Vec2i &dimensions,
@@ -23,9 +26,12 @@ class StatusUiHandler : public IUiHandler
   bool m_logoutRequested{false};
 
   ui::UiMenuPtr m_statusBar{};
+  ui::UiTextMenu *m_systemName{};
   ui::UiMenuPtr m_logoutConfirmation{};
 
   IUiCommandQueueShPtr m_queue{};
+
+  void registerToQueue(IUiEventQueueShPtr inputQueue);
 
   void generateLogoutButton(const pge::Vec2i &dimensions);
   void generateLogoutConfirmationPanel(const pge::Vec2i &dimensions);
@@ -33,6 +39,9 @@ class StatusUiHandler : public IUiHandler
   void onLogoutRequested();
   void onLogoutConfirmed();
   void onLogoutCanceled();
+  void onGameReady(const std::string &systemName);
+
+  friend class UiEventListenerStatusProxy;
 };
 
 } // namespace bsgalone::client
