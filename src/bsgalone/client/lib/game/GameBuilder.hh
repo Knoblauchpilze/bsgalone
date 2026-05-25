@@ -2,6 +2,7 @@
 #pragma once
 
 #include "EntityRegistry.hh"
+#include "ForCreatingAsteroid.hh"
 #include "ForRunningSimulation.hh"
 #include "IGame.hh"
 
@@ -15,12 +16,14 @@ class GameBuilder
 
   auto withEntityRegistry(core::EntityRegistryShPtr entityRegistry) -> GameBuilder &;
   auto withSimulationRunner(core::ForRunningSimulationPtr coordinator) -> GameBuilder &;
+  auto withAsteroidCreator(core::ForCreatingAsteroidPtr creator) -> GameBuilder &;
 
   auto build() -> IGameShPtr;
 
   private:
   core::EntityRegistryShPtr m_entityRegistry{};
   core::ForRunningSimulationPtr m_coordinator{};
+  core::ForCreatingAsteroidPtr m_asteroidCreator{};
 
   struct ptrEnabler;
   friend class ptrEnabler;

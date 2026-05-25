@@ -47,8 +47,7 @@ void Game::createAsteroids(const std::vector<core::Asteroid> &asteroids)
 {
   for (const auto &asteroid : asteroids)
   {
-    // TODO: Handle asteroid creation
-    info("should create asteroid " + asteroid.dbId.str());
+    m_asteroidCreator->create(asteroid);
   }
 }
 

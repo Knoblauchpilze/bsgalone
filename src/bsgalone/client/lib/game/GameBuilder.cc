@@ -16,8 +16,9 @@ auto GameBuilder::build() -> IGameShPtr
 
   auto game = std::make_shared<ptrEnabler>();
 
-  game->m_entityRegistry = m_entityRegistry;
-  game->m_coordinator    = std::move(m_coordinator);
+  game->m_entityRegistry  = m_entityRegistry;
+  game->m_coordinator     = std::move(m_coordinator);
+  game->m_asteroidCreator = std::move(m_asteroidCreator);
 
   return game;
 }
@@ -34,6 +35,12 @@ auto GameBuilder::withSimulationRunner(core::ForRunningSimulationPtr coordinator
   return *this;
 }
 
+auto GameBuilder::withAsteroidCreator(core::ForCreatingAsteroidPtr creator) -> GameBuilder &
+{
+  m_asteroidCreator = std::move(creator);
+  return *this;
+}
+
 void GameBuilder::validate() const
 {
   if (m_entityRegistry == nullptr)
@@ -43,6 +50,10 @@ void GameBuilder::validate() const
   if (m_coordinator == nullptr)
   {
     throw std::invalid_argument("Expected value for coordinator");
+  }
+  if (m_asteroidCreator == nullptr)
+  {
+    throw std::invalid_argument("Expected value for asteroid creator");
   }
 }
 

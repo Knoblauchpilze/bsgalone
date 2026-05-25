@@ -1,6 +1,7 @@
 
 #include "GameBuilder.hh"
 #include "EntityRegistryFixture.hh"
+#include "MockAsteroidCreator.hh"
 #include "MockSimulationRunner.hh"
 #include <gtest/gtest.h>
 
@@ -11,7 +12,8 @@ namespace bsgalone::client {
 TEST(Unit_Bsgalone_Client_Game_GameBuilder, ThrowsWhenEntityRegistryIsNull)
 {
   GameBuilder builder;
-  builder.withSimulationRunner(std::make_unique<MockSimulationRunner>());
+  builder.withSimulationRunner(std::make_unique<MockSimulationRunner>())
+    .withAsteroidCreator(std::make_unique<MockAsteroidCreator>());
 
   EXPECT_THROW([&builder]() { builder.build(); }(), std::invalid_argument);
 }
@@ -19,7 +21,17 @@ TEST(Unit_Bsgalone_Client_Game_GameBuilder, ThrowsWhenEntityRegistryIsNull)
 TEST(Unit_Bsgalone_Client_Game_GameBuilder, ThrowsWhenSimulationRunnerIsNull)
 {
   GameBuilder builder;
-  builder.withEntityRegistry(std::make_shared<core::EntityRegistry>());
+  builder.withEntityRegistry(std::make_shared<core::EntityRegistry>())
+    .withAsteroidCreator(std::make_unique<MockAsteroidCreator>());
+
+  EXPECT_THROW([&builder]() { builder.build(); }(), std::invalid_argument);
+}
+
+TEST(Unit_Bsgalone_Client_Game_GameBuilder, ThrowsWhenAsteroidCreatorIsNull)
+{
+  GameBuilder builder;
+  builder.withEntityRegistry(std::make_shared<core::EntityRegistry>())
+    .withSimulationRunner(std::make_unique<MockSimulationRunner>());
 
   EXPECT_THROW([&builder]() { builder.build(); }(), std::invalid_argument);
 }
@@ -28,7 +40,8 @@ TEST(Unit_Bsgalone_Client_Game_GameBuilder, SuccessfullyBuildsGame)
 {
   GameBuilder builder;
   builder.withEntityRegistry(std::make_shared<core::EntityRegistry>())
-    .withSimulationRunner(std::make_unique<MockSimulationRunner>());
+    .withSimulationRunner(std::make_unique<MockSimulationRunner>())
+    .withAsteroidCreator(std::make_unique<MockAsteroidCreator>());
 
   EXPECT_NO_THROW([&builder]() { builder.build(); }());
 }

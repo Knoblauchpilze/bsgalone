@@ -2,6 +2,7 @@
 #include "Game.hh"
 #include "EntityRegistryFixture.hh"
 #include "GameBuilder.hh"
+#include "MockAsteroidCreator.hh"
 #include "MockSimulationRunner.hh"
 #include "TestDataFactory.hh"
 #include <gtest/gtest.h>
@@ -17,6 +18,7 @@ TEST_F(Unit_Bsgalone_Client_Game_Game, ThrowsWhenSystemDataHasNotBeenReceived)
   auto game = GameBuilder()
                 .withEntityRegistry(this->entityRegistry())
                 .withSimulationRunner(std::make_unique<MockSimulationRunner>())
+                .withAsteroidCreator(std::make_unique<NiceMock<MockAsteroidCreator>>())
                 .build();
 
   EXPECT_THROW([&game]() { game->update(1.0f); }(), std::invalid_argument);
@@ -40,6 +42,7 @@ TEST_F(Unit_Bsgalone_Client_Game_Game, TriggersSimulationRunnerUpdate)
   auto game = GameBuilder()
                 .withEntityRegistry(this->entityRegistry())
                 .withSimulationRunner(std::move(runner))
+                .withAsteroidCreator(std::make_unique<NiceMock<MockAsteroidCreator>>())
                 .build();
   game->onSystemDataReceived(data);
 
@@ -54,6 +57,7 @@ TEST_F(Unit_Bsgalone_Client_Game_Game, DeletesAllExistingEntitiesOnReset)
   auto game = GameBuilder()
                 .withEntityRegistry(this->entityRegistry())
                 .withSimulationRunner(std::make_unique<StrictMock<MockSimulationRunner>>())
+                .withAsteroidCreator(std::make_unique<NiceMock<MockAsteroidCreator>>())
                 .build();
   game->reset();
 
@@ -71,6 +75,7 @@ TEST_F(Unit_Bsgalone_Client_Game_Game, RequiresSystemDataAgainWhenResetHasBeenCa
   auto game = GameBuilder()
                 .withEntityRegistry(this->entityRegistry())
                 .withSimulationRunner(std::make_unique<NiceMock<MockSimulationRunner>>())
+                .withAsteroidCreator(std::make_unique<NiceMock<MockAsteroidCreator>>())
                 .build();
   game->onSystemDataReceived(data);
 
@@ -88,13 +93,16 @@ TEST_F(Unit_Bsgalone_Client_Game_Game, RegistersAsteroidWhenReceivingSystemData)
                   .step        = chrono::TimeStep{2, chrono::Duration::fromSeconds(0.5f)},
                   .asteroids   = {generateAsteroid(true), generateAsteroid()}};
 
+  auto creator = std::make_unique<StrictMock<MockAsteroidCreator>>();
+  EXPECT_CALL(*creator, create(data.asteroids.at(0))).Times(1);
+  EXPECT_CALL(*creator, create(data.asteroids.at(1))).Times(1);
+
   auto game = GameBuilder()
                 .withEntityRegistry(this->entityRegistry())
                 .withSimulationRunner(std::make_unique<NiceMock<MockSimulationRunner>>())
+                .withAsteroidCreator(std::move(creator))
                 .build();
   game->onSystemDataReceived(data);
-
-  // TODO: Should have a create use case and assert that it's called
 }
 
 } // namespace bsgalone::client

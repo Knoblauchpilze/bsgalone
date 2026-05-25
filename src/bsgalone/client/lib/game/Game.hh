@@ -3,6 +3,7 @@
 
 #include "CoreObject.hh"
 #include "EntityRegistry.hh"
+#include "ForCreatingAsteroid.hh"
 #include "ForRunningSimulation.hh"
 #include "IGame.hh"
 
@@ -22,6 +23,8 @@ class Game : public IGame, public ::core::CoreObject
   private:
   core::EntityRegistryShPtr m_entityRegistry{};
   core::ForRunningSimulationPtr m_coordinator{};
+  core::ForCreatingAsteroidPtr m_asteroidCreator{};
+
   chrono::ITimeManagerPtr m_timeManager{};
 
   Game();
