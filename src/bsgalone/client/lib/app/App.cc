@@ -83,9 +83,9 @@ void App::loadResources(const pge::Vec2i &screenDims, pge::Renderer &engine)
 
   m_dataStore = std::make_shared<ServerDataStore>();
 
-  auto coordinator = std::make_unique<core::EcsCoordinator>(
-    std::make_shared<core::EntityRegistry>());
-  m_game = std::make_shared<Game>(std::move(coordinator));
+  auto entityRegistry = std::make_shared<core::EntityRegistry>();
+  auto coordinator    = std::make_unique<core::EcsCoordinator>(entityRegistry);
+  m_game              = std::make_shared<Game>(std::move(entityRegistry), std::move(coordinator));
 
   m_networkClient = std::make_shared<GameNetworkClient>();
   initializeIncomingMessageSystem();

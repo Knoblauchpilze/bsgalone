@@ -1,5 +1,6 @@
 
 #include "Game.hh"
+#include "EntityRegistryFixture.hh"
 #include "MockSimulationRunner.hh"
 #include <gtest/gtest.h>
 
@@ -7,19 +8,26 @@ using namespace test;
 using namespace ::testing;
 
 namespace bsgalone::client {
+using Unit_Bsgalone_Client_Game_Game = EntityRegistryFixture;
 
-TEST(Unit_Bsgalone_Client_Game_Game, ThrowsWhenSimulationRunnerIsNull)
+TEST_F(Unit_Bsgalone_Client_Game_Game, ThrowsWhenEntityRegistryIsNull)
 {
-  EXPECT_THROW([]() { Game(nullptr); }(), std::invalid_argument);
+  EXPECT_THROW([]() { Game(nullptr, std::make_unique<MockSimulationRunner>()); }(),
+               std::invalid_argument);
 }
 
-TEST(Unit_Bsgalone_Client_Game_Game, ThrowsWhenSystemDataHasNotBeenReceived)
+TEST_F(Unit_Bsgalone_Client_Game_Game, ThrowsWhenSimulationRunnerIsNull)
 {
-  Game game(std::make_unique<MockSimulationRunner>());
+  EXPECT_THROW([this]() { Game(this->entityRegistry(), nullptr); }(), std::invalid_argument);
+}
+
+TEST_F(Unit_Bsgalone_Client_Game_Game, ThrowsWhenSystemDataHasNotBeenReceived)
+{
+  Game game(this->entityRegistry(), std::make_unique<MockSimulationRunner>());
   EXPECT_THROW([&game]() { game.update(1.0f); }(), std::invalid_argument);
 }
 
-TEST(Unit_Bsgalone_Client_Game_Game, TriggersSimulationRunnerUpdate)
+TEST_F(Unit_Bsgalone_Client_Game_Game, TriggersSimulationRunnerUpdate)
 {
   SystemData data{
     .name        = "test-system",
@@ -34,22 +42,31 @@ TEST(Unit_Bsgalone_Client_Game_Game, TriggersSimulationRunnerUpdate)
   };
   EXPECT_CALL(*runner, update(expectedData)).Times(1);
 
-  Game game(std::move(runner));
+  Game game(this->entityRegistry(), std::move(runner));
   game.onSystemDataReceived(data);
 
   game.update(1.0f);
 }
 
-TEST(Unit_Bsgalone_Client_Game_Game, ForwardsResetCallToSimulationRunner)
+TEST_F(Unit_Bsgalone_Client_Game_Game, ForwardsResetCallToSimulationRunner)
 {
   auto runner = std::make_unique<StrictMock<MockSimulationRunner>>();
   EXPECT_CALL(*runner, clear()).Times(1);
 
-  Game game(std::move(runner));
+  Game game(this->entityRegistry(), std::move(runner));
   game.reset();
 }
 
-TEST(Unit_Bsgalone_Client_Game_Game, RequiresSystemDataAgainWhenResetHasBeenCalled)
+TEST_F(Unit_Bsgalone_Client_Game_Game, DeletesAllExistingEntitiesOnReset)
+{
+  auto runner = std::make_unique<StrictMock<MockSimulationRunner>>();
+  EXPECT_CALL(*runner, clear()).Times(1);
+
+  Game game(this->entityRegistry(), std::move(runner));
+  game.reset();
+}
+
+TEST_F(Unit_Bsgalone_Client_Game_Game, RequiresSystemDataAgainWhenResetHasBeenCalled)
 {
   SystemData data{
     .name        = "test-system",
@@ -57,7 +74,7 @@ TEST(Unit_Bsgalone_Client_Game_Game, RequiresSystemDataAgainWhenResetHasBeenCall
     .step        = chrono::TimeStep{2, chrono::Duration::fromSeconds(0.5f)},
   };
 
-  Game game(std::make_unique<NiceMock<MockSimulationRunner>>());
+  Game game(this->entityRegistry(), std::make_unique<NiceMock<MockSimulationRunner>>());
   game.onSystemDataReceived(data);
 
   EXPECT_NO_THROW([&game]() { game.update(1.0); });
