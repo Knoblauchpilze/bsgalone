@@ -14,8 +14,6 @@ class EntityRegistryFixture : public ::testing::Test
   ~EntityRegistryFixture() override = default;
 
   protected:
-  int m_port{};
-
   void SetUp() override;
   void TearDown() override;
 
