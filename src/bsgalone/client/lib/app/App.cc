@@ -2,6 +2,7 @@
 #include "App.hh"
 #include "AsyncUiCommandQueue.hh"
 #include "AsyncUiEventQueue.hh"
+#include "CreateAsteroidUseCase.hh"
 #include "DecalRenderer.hh"
 #include "EcsCoordinator.hh"
 #include "GameBuilder.hh"
@@ -74,6 +75,21 @@ void App::onInputs(const pge::controls::State &controls, pge::CoordinateFrame &f
   }
 }
 
+namespace {
+auto createGame() -> IGameShPtr
+{
+  auto entityRegistry  = std::make_shared<core::EntityRegistry>();
+  auto coordinator     = std::make_unique<core::EcsCoordinator>(entityRegistry);
+  auto asteroidCreator = std::make_unique<core::CreateAsteroidUseCase>(entityRegistry);
+
+  return GameBuilder()
+    .withEntityRegistry(std::move(entityRegistry))
+    .withSimulationRunner(std::move(coordinator))
+    .withAsteroidCreator(std::move(asteroidCreator))
+    .build();
+}
+} // namespace
+
 void App::loadResources(const pge::Vec2i &screenDims, pge::Renderer &engine)
 {
   setLayerTint(Layer::DRAW, semiOpaque(pge::colors::WHITE));
@@ -82,14 +98,7 @@ void App::loadResources(const pge::Vec2i &screenDims, pge::Renderer &engine)
   m_uiEventQueue   = createSynchronizedUiEventQueue();
 
   m_dataStore = std::make_shared<ServerDataStore>();
-
-  auto entityRegistry = std::make_shared<core::EntityRegistry>();
-  auto coordinator    = std::make_unique<core::EcsCoordinator>(entityRegistry);
-
-  m_game = GameBuilder()
-             .withEntityRegistry(std::move(entityRegistry))
-             .withSimulationRunner(std::move(coordinator))
-             .build();
+  m_game      = createGame();
 
   m_networkClient = std::make_shared<GameNetworkClient>();
   initializeIncomingMessageSystem();
