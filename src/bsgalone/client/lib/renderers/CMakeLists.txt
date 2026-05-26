@@ -4,6 +4,7 @@ target_include_directories(bsgalone_client_lib PUBLIC
 	)
 
 target_sources(bsgalone_client_lib PRIVATE
+	${CMAKE_CURRENT_SOURCE_DIR}/AsteroidRenderer.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/DecalRenderer.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/GameRenderer.cc
 	)

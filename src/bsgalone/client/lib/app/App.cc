@@ -345,7 +345,7 @@ void App::generateRenderers(const pge::Vec2i &dimensions, pge::sprites::ITexture
   outpost->loadResources(dimensions, texturesLoader);
   m_renderers[Screen::OUTPOST] = std::move(outpost);
 
-  auto game = std::make_unique<GameRenderer>();
+  auto game = std::make_unique<GameRenderer>(m_game);
   game->loadResources(dimensions, texturesLoader);
   m_renderers[Screen::GAME] = std::move(game);
 }

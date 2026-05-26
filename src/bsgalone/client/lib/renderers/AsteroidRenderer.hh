@@ -2,19 +2,16 @@
 #pragma once
 
 #include "Asteroid.hh"
-#include "AsteroidRenderer.hh"
-#include "DecalResource.hh"
 #include "IGame.hh"
 #include "IRenderer.hh"
-#include "TiledBackground.hh"
 
 namespace bsgalone::client {
 
-class GameRenderer : public IRenderer
+class AsteroidRenderer : public IRenderer
 {
   public:
-  GameRenderer(IGameShPtr game);
-  ~GameRenderer() override = default;
+  AsteroidRenderer(IGameShPtr game);
+  ~AsteroidRenderer() override = default;
 
   void loadResources(const pge::Vec2i &dimensions,
                      pge::sprites::ITexturePack &texturesLoader) override;
@@ -25,8 +22,13 @@ class GameRenderer : public IRenderer
   private:
   IGameShPtr m_game{};
 
-  pge::TiledBackgroundPtr m_systemBackground{};
-  AsteroidRenderer m_asteroidRenderer;
+  pge::sprites::PackId m_asteroidTexturesPackId{};
+
+  void loadAsteroidResources(pge::sprites::ITexturePack &texturesLoader);
+
+  void renderAsteroid(const core::Asteroid &asteroid,
+                      pge::Renderer &engine,
+                      const pge::RenderState &state) const;
 };
 
 } // namespace bsgalone::client
