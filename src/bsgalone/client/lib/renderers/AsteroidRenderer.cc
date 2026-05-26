@@ -1,5 +1,6 @@
 
 #include "AsteroidRenderer.hh"
+#include "AxisAlignedBox.hh"
 
 namespace bsgalone::client {
 
@@ -25,8 +26,21 @@ void AsteroidRenderer::loadResources(const pge::Vec2i & /*dimensions*/,
   m_asteroidTexturesPackId = texturesLoader.registerPack(pack);
 }
 
-void AsteroidRenderer::render(pge::Renderer & /*engine*/,
-                              const pge::RenderState & /*state*/,
+namespace {
+constexpr auto DEFAULT_Z = 0.0f;
+
+auto toIBoundingBox(const pge::CoordinateFrame &frame) -> core::AxisAlignedBox
+{
+  const auto vpPos = frame.tilesViewport().center();
+  const Eigen::Vector3f p(vpPos.x, vpPos.y, DEFAULT_Z);
+  const auto vpDims = frame.tilesViewport().dims();
+  const Eigen::Vector3f dims(vpDims.x, vpDims.y, DEFAULT_Z);
+  return core::AxisAlignedBox(p, dims);
+}
+} // namespace
+
+void AsteroidRenderer::render(pge::Renderer &engine,
+                              const pge::RenderState &state,
                               const pge::RenderingPass pass) const
 {
   if (pge::RenderingPass::DECAL != pass)
@@ -34,7 +48,11 @@ void AsteroidRenderer::render(pge::Renderer & /*engine*/,
     return;
   }
 
-  // TODO: Should render asteroids
+  const auto bbox = toIBoundingBox(state.frame);
+  for (const auto &asteroid : m_game->getAsteroidsWithin(bbox))
+  {
+    renderAsteroid(asteroid, engine, state);
+  }
 }
 
 void AsteroidRenderer::renderAsteroid(const core::Asteroid &asteroid,
