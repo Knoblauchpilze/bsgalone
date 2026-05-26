@@ -21,6 +21,8 @@ auto FetchAsteroidUseCase::getAllAsteroids() const -> std::vector<Asteroid>
   std::unordered_set<Uuid> existing{};
   std::vector<Asteroid> out{};
 
+  // TODO: This iterates over all entities, we need an indication of the kind
+  // of an entity
   m_entityRegistry->applyWithId<const DbComponent,
                                 const HealthComponent,
                                 const TransformComponent,

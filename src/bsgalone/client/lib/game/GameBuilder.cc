@@ -7,7 +7,7 @@ namespace bsgalone::client {
 struct GameBuilder::ptrEnabler : public Game
 {
   ptrEnabler()
-    : Game(){};
+    : Game() {};
 };
 
 auto GameBuilder::build() -> IGameShPtr
@@ -19,6 +19,7 @@ auto GameBuilder::build() -> IGameShPtr
   game->m_entityRegistry  = m_entityRegistry;
   game->m_coordinator     = std::move(m_coordinator);
   game->m_asteroidCreator = std::move(m_asteroidCreator);
+  game->m_asteroidFetcher = std::move(m_asteroidFetcher);
 
   return game;
 }
@@ -41,6 +42,12 @@ auto GameBuilder::withAsteroidCreator(core::ForCreatingAsteroidPtr creator) -> G
   return *this;
 }
 
+auto GameBuilder::withAsteroidFetcher(core::ForFetchingAsteroidPtr fetcher) -> GameBuilder &
+{
+  m_asteroidFetcher = std::move(fetcher);
+  return *this;
+}
+
 void GameBuilder::validate() const
 {
   if (m_entityRegistry == nullptr)
@@ -54,6 +61,10 @@ void GameBuilder::validate() const
   if (m_asteroidCreator == nullptr)
   {
     throw std::invalid_argument("Expected value for asteroid creator");
+  }
+  if (m_asteroidFetcher == nullptr)
+  {
+    throw std::invalid_argument("Expected value for asteroid fetcher");
   }
 }
 

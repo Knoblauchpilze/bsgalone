@@ -5,6 +5,7 @@
 #include "CreateAsteroidUseCase.hh"
 #include "DecalRenderer.hh"
 #include "EcsCoordinator.hh"
+#include "FetchAsteroidUseCase.hh"
 #include "GameBuilder.hh"
 #include "GameRenderer.hh"
 #include "IUiCommandListener.hh"
@@ -81,11 +82,13 @@ auto createGame() -> IGameShPtr
   auto entityRegistry  = std::make_shared<core::EntityRegistry>();
   auto coordinator     = std::make_unique<core::EcsCoordinator>(entityRegistry);
   auto asteroidCreator = std::make_unique<core::CreateAsteroidUseCase>(entityRegistry);
+  auto asteroidFetcher = std::make_unique<core::FetchAsteroidUseCase>(entityRegistry);
 
   return GameBuilder()
     .withEntityRegistry(std::move(entityRegistry))
     .withSimulationRunner(std::move(coordinator))
     .withAsteroidCreator(std::move(asteroidCreator))
+    .withAsteroidFetcher(std::move(asteroidFetcher))
     .build();
 }
 } // namespace

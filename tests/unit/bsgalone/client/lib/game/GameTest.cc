@@ -3,6 +3,7 @@
 #include "EntityRegistryFixture.hh"
 #include "GameBuilder.hh"
 #include "MockAsteroidCreator.hh"
+#include "MockAsteroidFetcher.hh"
 #include "MockSimulationRunner.hh"
 #include "TestDataFactory.hh"
 #include <gtest/gtest.h>
@@ -19,6 +20,7 @@ TEST_F(Unit_Bsgalone_Client_Game_Game, ThrowsWhenSystemDataHasNotBeenReceived)
                 .withEntityRegistry(this->entityRegistry())
                 .withSimulationRunner(std::make_unique<MockSimulationRunner>())
                 .withAsteroidCreator(std::make_unique<NiceMock<MockAsteroidCreator>>())
+                .withAsteroidFetcher(std::make_unique<NiceMock<MockAsteroidFetcher>>())
                 .build();
 
   EXPECT_THROW([&game]() { game->update(1.0f); }(), std::invalid_argument);
@@ -43,6 +45,7 @@ TEST_F(Unit_Bsgalone_Client_Game_Game, TriggersSimulationRunnerUpdate)
                 .withEntityRegistry(this->entityRegistry())
                 .withSimulationRunner(std::move(runner))
                 .withAsteroidCreator(std::make_unique<NiceMock<MockAsteroidCreator>>())
+                .withAsteroidFetcher(std::make_unique<NiceMock<MockAsteroidFetcher>>())
                 .build();
   game->onSystemDataReceived(data);
 
@@ -58,6 +61,7 @@ TEST_F(Unit_Bsgalone_Client_Game_Game, DeletesAllExistingEntitiesOnReset)
                 .withEntityRegistry(this->entityRegistry())
                 .withSimulationRunner(std::make_unique<StrictMock<MockSimulationRunner>>())
                 .withAsteroidCreator(std::make_unique<NiceMock<MockAsteroidCreator>>())
+                .withAsteroidFetcher(std::make_unique<NiceMock<MockAsteroidFetcher>>())
                 .build();
   game->reset();
 
@@ -76,6 +80,7 @@ TEST_F(Unit_Bsgalone_Client_Game_Game, RequiresSystemDataAgainWhenResetHasBeenCa
                 .withEntityRegistry(this->entityRegistry())
                 .withSimulationRunner(std::make_unique<NiceMock<MockSimulationRunner>>())
                 .withAsteroidCreator(std::make_unique<NiceMock<MockAsteroidCreator>>())
+                .withAsteroidFetcher(std::make_unique<NiceMock<MockAsteroidFetcher>>())
                 .build();
   game->onSystemDataReceived(data);
 
@@ -101,6 +106,7 @@ TEST_F(Unit_Bsgalone_Client_Game_Game, RegistersAsteroidWhenReceivingSystemData)
                 .withEntityRegistry(this->entityRegistry())
                 .withSimulationRunner(std::make_unique<NiceMock<MockSimulationRunner>>())
                 .withAsteroidCreator(std::move(creator))
+                .withAsteroidFetcher(std::make_unique<NiceMock<MockAsteroidFetcher>>())
                 .build();
   game->onSystemDataReceived(data);
 }
