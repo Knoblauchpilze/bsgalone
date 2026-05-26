@@ -21,6 +21,9 @@ class Game : public IGame, public ::core::CoreObject
   void update(const float elapsedSeconds) override;
   void reset() override;
 
+  auto getAsteroidsWithin(const core::IBoundingBox &bbox) const
+    -> std::vector<core::Asteroid> override;
+
   private:
   core::EntityRegistryShPtr m_entityRegistry{};
   core::ForRunningSimulationPtr m_coordinator{};

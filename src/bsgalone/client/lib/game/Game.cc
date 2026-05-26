@@ -38,6 +38,13 @@ void Game::reset()
   m_entityRegistry->clear();
 }
 
+auto Game::getAsteroidsWithin(const core::IBoundingBox & /*bbox*/) const
+  -> std::vector<core::Asteroid>
+{
+  // TODO: Should use the bounding box to fetch asteroids.
+  return m_asteroidFetcher->getAllAsteroids();
+}
+
 void Game::createEntities(const SystemData &data)
 {
   createAsteroids(data.asteroids);

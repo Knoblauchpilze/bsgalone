@@ -1,6 +1,8 @@
 
 #pragma once
 
+#include "Asteroid.hh"
+#include "IBoundingBox.hh"
 #include "ITimeManager.hh"
 #include "SystemData.hh"
 #include <memory>
@@ -26,6 +28,13 @@ class IGame
   /// @brief - Used to ask the game to reset the simulation. This can typically be called
   /// when the user jumps from one system to the next or when a docking operation happens.
   virtual void reset() = 0;
+
+  /// @brief - Used to request the asteroids that are within the bounding box.
+  /// @param box - the bounding box describing the area in which asteroids should be
+  /// @return - the list of asteroids within the bounding box
+  virtual auto getAsteroidsWithin(const core::IBoundingBox &bbox) const
+    -> std::vector<core::Asteroid>
+    = 0;
 };
 
 using IGameShPtr = std::shared_ptr<IGame>;

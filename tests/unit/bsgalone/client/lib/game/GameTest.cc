@@ -1,5 +1,7 @@
 
 #include "Game.hh"
+#include "CircleBox.hh"
+#include "CreateAsteroidUseCase.hh"
 #include "EntityRegistryFixture.hh"
 #include "GameBuilder.hh"
 #include "MockAsteroidCreator.hh"
@@ -109,6 +111,25 @@ TEST_F(Unit_Bsgalone_Client_Game_Game, RegistersAsteroidWhenReceivingSystemData)
                 .withAsteroidFetcher(std::make_unique<NiceMock<MockAsteroidFetcher>>())
                 .build();
   game->onSystemDataReceived(data);
+}
+
+TEST_F(Unit_Bsgalone_Client_Game_Game, FetchesAsteroidsWithinBoundingBox)
+{
+  std::vector<core::Asteroid> asteroids{generateAsteroid(true), generateAsteroid()};
+  auto asteroidFetcher = std::make_unique<StrictMock<MockAsteroidFetcher>>();
+  EXPECT_CALL(*asteroidFetcher, getAllAsteroids()).Times(1).WillOnce(Return(asteroids));
+
+  auto game = GameBuilder()
+                .withEntityRegistry(this->entityRegistry())
+                .withSimulationRunner(std::make_unique<NiceMock<MockSimulationRunner>>())
+                .withAsteroidCreator(std::make_unique<NiceMock<MockAsteroidCreator>>())
+                .withAsteroidFetcher(std::move(asteroidFetcher))
+                .build();
+
+  core::CircleBox box(Eigen::Vector3f::Random(), 1.0f);
+  auto actual = game->getAsteroidsWithin(box);
+
+  EXPECT_EQ(asteroids, actual);
 }
 
 } // namespace bsgalone::client
