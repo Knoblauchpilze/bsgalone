@@ -7,7 +7,7 @@ namespace bsgalone::client {
 struct GameBuilder::ptrEnabler : public Game
 {
   ptrEnabler()
-    : Game() {};
+    : Game(){};
 };
 
 auto GameBuilder::build() -> IGameShPtr
