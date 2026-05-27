@@ -18,6 +18,22 @@ FetchAsteroidUseCase::FetchAsteroidUseCase(EntityRegistryShPtr entityRegistry)
 
 auto FetchAsteroidUseCase::getAllAsteroids() const -> std::vector<Asteroid>
 {
+  return getAsteroidsMatching([](const Asteroid &) { return true; });
+}
+
+auto FetchAsteroidUseCase::getAsteroidsWithin(const IBoundingBox &box) const
+  -> std::vector<Asteroid>
+{
+  auto matcher = [&box](const Asteroid &asteroid) {
+    /// TODO: We should probably have a 'intersects' method.
+    return box.isInside(asteroid.position);
+  };
+  return getAsteroidsMatching(matcher);
+}
+
+auto FetchAsteroidUseCase::getAsteroidsMatching(AsteroidFilter matcher) const
+  -> std::vector<Asteroid>
+{
   std::unordered_set<Uuid> existing{};
   std::vector<Asteroid> out{};
 
@@ -27,38 +43,50 @@ auto FetchAsteroidUseCase::getAllAsteroids() const -> std::vector<Asteroid>
                                 const HealthComponent,
                                 const TransformComponent,
                                 const ResourceComponent>(
-    [&out, &existing](const Uuid entityId,
-                      const DbComponent &db,
-                      const HealthComponent &health,
-                      const TransformComponent &transform,
-                      const ResourceComponent &loot) {
+    [&out, &existing, &matcher](const Uuid entityId,
+                                const DbComponent &db,
+                                const HealthComponent &health,
+                                const TransformComponent &transform,
+                                const ResourceComponent &loot) {
       existing.insert(entityId);
 
-      out.emplace_back(Asteroid{
+      Asteroid asteroid{
         .dbId      = db.dbId,
         .position  = transform.bbox->position(),
         .radius    = transform.size(),
         .health    = health.value,
         .maxHealth = health.max,
         .loot      = Loot{.resource = loot.resource, .amount = loot.amount},
-      });
+      };
+
+      if (matcher(asteroid))
+      {
+        out.emplace_back(std::move(asteroid));
+      }
     });
 
   m_entityRegistry->applyWithId<const DbComponent, const HealthComponent, const TransformComponent>(
-    [&out, &existing](const Uuid entityId,
-                      const DbComponent &db,
-                      const HealthComponent &health,
-                      const TransformComponent &transform) {
-      if (!existing.contains(entityId))
+    [&out, &existing, &matcher](const Uuid entityId,
+                                const DbComponent &db,
+                                const HealthComponent &health,
+                                const TransformComponent &transform) {
+      if (existing.contains(entityId))
       {
-        out.emplace_back(Asteroid{
-          .dbId      = db.dbId,
-          .position  = transform.bbox->position(),
-          .radius    = transform.size(),
-          .health    = health.value,
-          .maxHealth = health.max,
-          .loot      = {},
-        });
+        return;
+      }
+
+      Asteroid asteroid{
+        .dbId      = db.dbId,
+        .position  = transform.bbox->position(),
+        .radius    = transform.size(),
+        .health    = health.value,
+        .maxHealth = health.max,
+        .loot      = {},
+      };
+
+      if (matcher(asteroid))
+      {
+        out.emplace_back(std::move(asteroid));
       }
     });
 

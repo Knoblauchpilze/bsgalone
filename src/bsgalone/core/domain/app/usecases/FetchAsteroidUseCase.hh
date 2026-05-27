@@ -13,9 +13,14 @@ class FetchAsteroidUseCase : public ForFetchingAsteroid
   ~FetchAsteroidUseCase() override = default;
 
   auto getAllAsteroids() const -> std::vector<Asteroid> override;
+  auto getAsteroidsWithin(const IBoundingBox &box) const -> std::vector<Asteroid> override;
 
   private:
   EntityRegistryShPtr m_entityRegistry{};
+
+  using AsteroidFilter = std::function<bool(const Asteroid &)>;
+
+  auto getAsteroidsMatching(AsteroidFilter matcher) const -> std::vector<Asteroid>;
 };
 
 } // namespace bsgalone::core

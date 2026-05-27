@@ -1,5 +1,6 @@
 
 #include "FetchAsteroidUseCase.hh"
+#include "CircleBox.hh"
 #include "EntityRegistry.hh"
 #include "EntityRegistryFixture.hh"
 #include "TestDataFactory.hh"
@@ -57,6 +58,24 @@ TEST_F(Unit_Bsgalone_Core_Domain_App_Usecases_FetchAsteroidUseCase,
 
   EXPECT_EQ(1u, asteroids.size());
   EXPECT_EQ(asteroid, asteroids.at(0));
+}
+
+TEST_F(Unit_Bsgalone_Core_Domain_App_Usecases_FetchAsteroidUseCase,
+       DoesNotReturnAsteroidWhenNotWithinBoundingBox)
+{
+  auto asteroid1     = generateAsteroid();
+  asteroid1.position = Eigen::Vector3f(-1.0f, -0.8f, 3.0f);
+  this->registerAsteroid(asteroid1);
+
+  auto asteroid2     = generateAsteroid();
+  asteroid2.position = Eigen::Vector3f(-3.01f, 2.0f, 3.0f);
+  this->registerAsteroid(asteroid2);
+
+  CircleBox box(Eigen::Vector3f(1.0f, 2.0f, 3.0f), 4.0f);
+  const auto asteroids = usecase->getAsteroidsWithin(box);
+
+  EXPECT_EQ(1u, asteroids.size());
+  EXPECT_EQ(asteroid1, asteroids.at(0));
 }
 
 } // namespace bsgalone::core

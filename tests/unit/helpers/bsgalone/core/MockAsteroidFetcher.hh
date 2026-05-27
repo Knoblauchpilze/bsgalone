@@ -13,6 +13,10 @@ class MockAsteroidFetcher : public bsgalone::core::ForFetchingAsteroid
   ~MockAsteroidFetcher() override = default;
 
   MOCK_METHOD(std::vector<bsgalone::core::Asteroid>, getAllAsteroids, (), (const, override));
+  MOCK_METHOD(std::vector<bsgalone::core::Asteroid>,
+              getAsteroidsWithin,
+              (const bsgalone::core::IBoundingBox &),
+              (const, override));
 };
 
 } // namespace test
