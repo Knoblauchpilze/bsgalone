@@ -115,9 +115,20 @@ TEST_F(Unit_Bsgalone_Client_Game_Game, RegistersAsteroidWhenReceivingSystemData)
 
 TEST_F(Unit_Bsgalone_Client_Game_Game, FetchesAsteroidsWithinBoundingBox)
 {
+  core::CircleBox box(Eigen::Vector3f::Random(), 1.0f);
+
   std::vector<core::Asteroid> asteroids{generateAsteroid(true), generateAsteroid()};
   auto asteroidFetcher = std::make_unique<StrictMock<MockAsteroidFetcher>>();
-  EXPECT_CALL(*asteroidFetcher, getAllAsteroids()).Times(1).WillOnce(Return(asteroids));
+  EXPECT_CALL(*asteroidFetcher, getAsteroidsWithin(_))
+    .Times(1)
+    .WillOnce(Invoke([&box, &asteroids](const core::IBoundingBox &actual) {
+      auto circleBox = dynamic_cast<const core::CircleBox &>(actual);
+
+      EXPECT_EQ(box.position(), circleBox.position());
+      EXPECT_EQ(box.radius(), circleBox.radius());
+
+      return asteroids;
+    }));
 
   auto game = GameBuilder()
                 .withEntityRegistry(this->entityRegistry())
@@ -126,7 +137,6 @@ TEST_F(Unit_Bsgalone_Client_Game_Game, FetchesAsteroidsWithinBoundingBox)
                 .withAsteroidFetcher(std::move(asteroidFetcher))
                 .build();
 
-  core::CircleBox box(Eigen::Vector3f::Random(), 1.0f);
   auto actual = game->getAsteroidsWithin(box);
 
   EXPECT_EQ(asteroids, actual);
