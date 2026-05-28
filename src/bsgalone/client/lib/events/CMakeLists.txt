@@ -13,9 +13,12 @@ add_subdirectory(
 
 target_sources(bsgalone_client_lib PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/GameReadyEvent.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/HangarReadyEvent.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/LockerReadyEvent.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/LoginSucceededEvent.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/LoginFailedEvent.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/LogoutEvent.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/ShopReadyEvent.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/SignupSucceededEvent.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/SignupFailedEvent.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/UndockEvent.cc

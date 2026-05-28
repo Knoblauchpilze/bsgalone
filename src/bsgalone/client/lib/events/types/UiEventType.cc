@@ -9,12 +9,18 @@ auto str(const UiEventType type) -> std::string
   {
     case UiEventType::GAME_READY:
       return "game_ready";
+    case UiEventType::HANGAR_READY:
+      return "hangar_ready";
+    case UiEventType::LOCKER_READY:
+      return "locker_ready";
     case UiEventType::LOGIN_FAILED:
       return "login_failed";
     case UiEventType::LOGIN_SUCCEEDED:
       return "login_succeeded";
     case UiEventType::LOGOUT:
       return "logout";
+    case UiEventType::SHOP_READY:
+      return "shop_ready";
     case UiEventType::SIGNUP_FAILED:
       return "signup_failed";
     case UiEventType::SIGNUP_SUCCEEDED:
