@@ -43,6 +43,8 @@ class OutpostUiHandler : public IUiHandler
   ui::UiMenuPtr m_undockButton{};
   ui::UiMenuPtr m_quitButton{};
 
+  IUiHandlerPtr m_shopUi{};
+
   IUiCommandQueueShPtr m_queue{};
 
   void registerToQueue(IUiEventQueueShPtr inputQueue);

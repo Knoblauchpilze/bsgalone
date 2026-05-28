@@ -3,6 +3,7 @@
 #include "IUiEventListener.hh"
 #include "LogoutCommand.hh"
 #include "Palette.hh"
+#include "ShopUiHandler.hh"
 #include "UiTextMenu.hh"
 #include "UndockCommand.hh"
 
@@ -41,7 +42,8 @@ OutpostUiHandler::OutpostUiHandler(IDataStoreShPtr dataStore,
                                    IUiEventQueueShPtr inputQueue,
                                    IUiCommandQueueShPtr outputQueue)
   : IUiHandler()
-  , m_dataStore(std::move(dataStore))
+  , m_dataStore(dataStore)
+  , m_shopUi(std::make_unique<ShopUiHandler>(std::move(dataStore), inputQueue))
   , m_queue(std::move(outputQueue))
 {
   if (nullptr == m_dataStore)
@@ -61,9 +63,11 @@ OutpostUiHandler::OutpostUiHandler(IDataStoreShPtr dataStore,
 }
 
 void OutpostUiHandler::initializeMenus(const pge::Vec2i &dimensions,
-                                       pge::sprites::ITexturePack & /*texturesLoader*/)
+                                       pge::sprites::ITexturePack &texturesLoader)
 {
   generateTabsMenu(dimensions);
+
+  m_shopUi->initializeMenus(dimensions, texturesLoader);
 }
 
 bool OutpostUiHandler::processUserInput(ui::UserInputData &inputData)
@@ -78,7 +82,12 @@ bool OutpostUiHandler::processUserInput(ui::UserInputData &inputData)
     return true;
   }
 
-  return m_quitButton->processUserInput(inputData);
+  if (m_quitButton->processUserInput(inputData))
+  {
+    return true;
+  }
+
+  return m_shopUi->processUserInput(inputData);
 }
 
 void OutpostUiHandler::render(pge::Renderer &engine) const
@@ -86,11 +95,13 @@ void OutpostUiHandler::render(pge::Renderer &engine) const
   m_tabsMenu->render(engine);
   m_undockButton->render(engine);
   m_quitButton->render(engine);
+
+  m_shopUi->render(engine);
 }
 
 void OutpostUiHandler::updateUi()
 {
-  // Intentionally empty: nothing to update at this step.
+  m_shopUi->updateUi();
 }
 
 void OutpostUiHandler::registerToQueue(IUiEventQueueShPtr inputQueue)
