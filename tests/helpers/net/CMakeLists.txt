@@ -1,9 +1,9 @@
 
-target_include_directories(unitTests PUBLIC
+target_include_directories(tests_helper_lib PUBLIC
 	${CMAKE_CURRENT_SOURCE_DIR}
 	)
 
-target_sources(unitTests PUBLIC
+target_sources(tests_helper_lib PUBLIC
 	${CMAKE_CURRENT_SOURCE_DIR}/TestNetworkClient.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/TestNetworkServer.cc
 	)

@@ -1,5 +1,5 @@
 
-target_include_directories(unitTests PUBLIC
+target_include_directories(tests_helper_lib PUBLIC
 	${CMAKE_CURRENT_SOURCE_DIR}
 	)
 
@@ -15,6 +15,6 @@ add_subdirectory(
 	${CMAKE_CURRENT_SOURCE_DIR}/server
 	)
 
-target_sources(unitTests PUBLIC
+target_sources(tests_helper_lib PUBLIC
 	${CMAKE_CURRENT_SOURCE_DIR}/TestDataFactory.cc
 	)

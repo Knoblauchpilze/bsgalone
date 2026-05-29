@@ -18,10 +18,6 @@ add_subdirectory(
 	)
 
 add_subdirectory(
-	${CMAKE_CURRENT_SOURCE_DIR}/helpers
-	)
-
-add_subdirectory(
 	${CMAKE_CURRENT_SOURCE_DIR}/messaging
 	)
 
@@ -52,4 +48,5 @@ target_link_libraries(unitTests
 	bsgalone_core_lib
 	bsgalone_client_lib
 	bsgalone_server_lib
+	tests_helper_lib
 	)
