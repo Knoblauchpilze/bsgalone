@@ -3,8 +3,6 @@
 #include "IUiEventListener.hh"
 #include "ScreenCommon.hh"
 
-#include <iostream>
-
 namespace bsgalone::client {
 
 class UiEventListenerShopProxy : public IUiEventListener
@@ -81,7 +79,6 @@ bool ShopUiHandler::processUserInput(ui::UserInputData &inputData)
 
 void ShopUiHandler::render(pge::Renderer &engine) const
 {
-  std::cout << "render shop\n";
   m_resourcesMenu->render(engine);
   m_menu->render(engine);
 }

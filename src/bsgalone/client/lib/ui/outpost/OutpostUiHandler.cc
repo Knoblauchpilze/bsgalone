@@ -2,6 +2,7 @@
 #include "OutpostUiHandler.hh"
 #include "HangarUiHandler.hh"
 #include "IUiEventListener.hh"
+#include "LockerUiHandler.hh"
 #include "LogoutCommand.hh"
 #include "Palette.hh"
 #include "ShopUiHandler.hh"
@@ -45,6 +46,7 @@ OutpostUiHandler::OutpostUiHandler(IDataStoreShPtr dataStore,
   : IUiHandler()
   , m_dataStore(dataStore)
   , m_shopUi(std::make_unique<ShopUiHandler>(dataStore, inputQueue))
+  , m_lockerUi(std::make_unique<LockerUiHandler>(dataStore, inputQueue))
   , m_hangarUi(std::make_unique<HangarUiHandler>(dataStore, inputQueue))
   , m_queue(std::move(outputQueue))
 {
@@ -70,6 +72,7 @@ void OutpostUiHandler::initializeMenus(const pge::Vec2i &dimensions,
   generateTabsMenu(dimensions);
 
   m_shopUi->initializeMenus(dimensions, texturesLoader);
+  m_lockerUi->initializeMenus(dimensions, texturesLoader);
   m_hangarUi->initializeMenus(dimensions, texturesLoader);
 }
 
@@ -96,6 +99,9 @@ bool OutpostUiHandler::processUserInput(ui::UserInputData &inputData)
     case ActiveScreen::SHOP:
       out = m_shopUi->processUserInput(inputData);
       break;
+    case ActiveScreen::LOCKER:
+      out = m_lockerUi->processUserInput(inputData);
+      break;
     case ActiveScreen::HANGAR:
       out = m_hangarUi->processUserInput(inputData);
       break;
@@ -117,6 +123,9 @@ void OutpostUiHandler::render(pge::Renderer &engine) const
     case ActiveScreen::SHOP:
       m_shopUi->render(engine);
       break;
+    case ActiveScreen::LOCKER:
+      m_lockerUi->render(engine);
+      break;
     case ActiveScreen::HANGAR:
       m_hangarUi->render(engine);
       break;
@@ -131,6 +140,9 @@ void OutpostUiHandler::updateUi()
   {
     case ActiveScreen::SHOP:
       m_shopUi->updateUi();
+      break;
+    case ActiveScreen::LOCKER:
+      m_lockerUi->updateUi();
       break;
     case ActiveScreen::HANGAR:
       m_hangarUi->updateUi();

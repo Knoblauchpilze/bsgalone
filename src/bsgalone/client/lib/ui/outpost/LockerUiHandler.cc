@@ -1,35 +1,35 @@
 
-#include "HangarUiHandler.hh"
+#include "LockerUiHandler.hh"
 #include "IUiEventListener.hh"
 #include "ScreenCommon.hh"
 
 namespace bsgalone::client {
 
-class UiEventListenerHangarProxy : public IUiEventListener
+class UiEventListenerLockerProxy : public IUiEventListener
 {
   public:
-  explicit UiEventListenerHangarProxy(HangarUiHandler &handler)
+  explicit UiEventListenerLockerProxy(LockerUiHandler &handler)
     : IUiEventListener()
     , m_handler(handler)
   {}
 
-  ~UiEventListenerHangarProxy() override = default;
+  ~UiEventListenerLockerProxy() override = default;
 
   bool isEventRelevant(const UiEventType &type) const override
   {
-    return type == UiEventType::HANGAR_READY;
+    return type == UiEventType::LOCKER_READY;
   }
 
   void onEventReceived(const IUiEvent & /*event*/) override
   {
-    m_handler.onHangarReady();
+    m_handler.onLockerReady();
   }
 
   private:
-  HangarUiHandler &m_handler;
+  LockerUiHandler &m_handler;
 };
 
-HangarUiHandler::HangarUiHandler(IDataStoreShPtr dataStore, IUiEventQueueShPtr inputQueue)
+LockerUiHandler::LockerUiHandler(IDataStoreShPtr dataStore, IUiEventQueueShPtr inputQueue)
   : IUiHandler()
   , m_dataStore(std::move(dataStore))
 {
@@ -53,7 +53,7 @@ constexpr auto VIEW_TO_RIGHT_OF_SCREEN_IN_PIXELS  = 20;
 constexpr auto VIEW_TO_BOTTOM_OF_SCREEN_IN_PIXELS = 20;
 } // namespace
 
-void HangarUiHandler::initializeMenus(const pge::Vec2i &dimensions,
+void LockerUiHandler::initializeMenus(const pge::Vec2i &dimensions,
                                       pge::sprites::ITexturePack & /*texturesLoader*/)
 {
   const auto viewWidth  = static_cast<int>(MAIN_VIEW_WIDTH_TO_SCREEN_WIDTH_RATIO * dimensions.x);
@@ -71,31 +71,31 @@ void HangarUiHandler::initializeMenus(const pge::Vec2i &dimensions,
   m_menu = generateBlankVerticalMenu(pos, dims);
 }
 
-bool HangarUiHandler::processUserInput(ui::UserInputData &inputData)
+bool LockerUiHandler::processUserInput(ui::UserInputData &inputData)
 {
   // The resources menu can't take input.
   return m_menu->processUserInput(inputData);
 }
 
-void HangarUiHandler::render(pge::Renderer &engine) const
+void LockerUiHandler::render(pge::Renderer &engine) const
 {
   m_resourcesMenu->render(engine);
   m_menu->render(engine);
 }
 
-void HangarUiHandler::updateUi()
+void LockerUiHandler::updateUi()
 {
   // TODO: Add logic to update UI
 }
 
-void HangarUiHandler::registerToQueue(IUiEventQueueShPtr inputQueue)
+void LockerUiHandler::registerToQueue(IUiEventQueueShPtr inputQueue)
 {
-  inputQueue->addListener(std::make_unique<UiEventListenerHangarProxy>(*this));
+  inputQueue->addListener(std::make_unique<UiEventListenerLockerProxy>(*this));
 }
 
-void HangarUiHandler::onHangarReady()
+void LockerUiHandler::onLockerReady()
 {
-  // TODO: Should handle building the hangar UI
+  // TODO: Should handle building the locker UI
 }
 
 } // namespace bsgalone::client
