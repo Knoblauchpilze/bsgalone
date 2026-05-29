@@ -4,7 +4,6 @@
 
 namespace bsgalone::core {
 
-// TODO: Add tests for this class
 // TODO: Add entries in the message parser/deseralizer
 ShopDataMessage::ShopDataMessage()
   : IMessage(MessageType::SHOP_DATA)

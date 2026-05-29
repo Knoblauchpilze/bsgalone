@@ -4,7 +4,6 @@
 
 namespace bsgalone::core {
 
-// TODO: Add tests for this class
 // TODO: Add entries in the message parser/deseralizer
 HangarDataMessage::HangarDataMessage()
   : IMessage(MessageType::HANGAR_DATA)
