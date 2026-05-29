@@ -5,6 +5,7 @@ target_include_directories(bsgalone_client_lib PUBLIC
 
 target_sources(bsgalone_client_lib PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/HangarDataMessageConsumer.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/LockerDataMessageConsumer.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/LoginMessageConsumer.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/LogoutMessageConsumer.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/SignupMessageConsumer.cc

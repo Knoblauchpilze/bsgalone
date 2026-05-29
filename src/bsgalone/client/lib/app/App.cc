@@ -12,6 +12,7 @@
 #include "IUiCommandListener.hh"
 #include "IUiEventListener.hh"
 #include "LoadingUiHandler.hh"
+#include "LockerDataMessageConsumer.hh"
 #include "LoginMessageConsumer.hh"
 #include "LoginUiHandler.hh"
 #include "LogoutMessageConsumer.hh"
@@ -297,6 +298,8 @@ void App::initializeIncomingMessageSystem()
   m_networkClient->addListener(std::make_unique<SystemDataMessageConsumer>(m_game, m_uiEventQueue));
   m_networkClient->addListener(
     std::make_unique<HangarDataMessageConsumer>(m_dataStore, m_uiEventQueue));
+  m_networkClient->addListener(
+    std::make_unique<LockerDataMessageConsumer>(m_dataStore, m_uiEventQueue));
 }
 
 void App::initializeOutgoingMessageSystem()
