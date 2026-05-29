@@ -1,5 +1,5 @@
 
-#include "ShopUiHandler.hh"
+#include "HangarUiHandler.hh"
 #include "IUiEventListener.hh"
 #include "ScreenCommon.hh"
 
@@ -7,31 +7,31 @@
 
 namespace bsgalone::client {
 
-class UiEventListenerShopProxy : public IUiEventListener
+class UiEventListenerHangarProxy : public IUiEventListener
 {
   public:
-  explicit UiEventListenerShopProxy(ShopUiHandler &handler)
+  explicit UiEventListenerHangarProxy(HangarUiHandler &handler)
     : IUiEventListener()
     , m_handler(handler)
   {}
 
-  ~UiEventListenerShopProxy() override = default;
+  ~UiEventListenerHangarProxy() override = default;
 
   bool isEventRelevant(const UiEventType &type) const override
   {
-    return type == UiEventType::SHOP_READY;
+    return type == UiEventType::HANGAR_READY;
   }
 
   void onEventReceived(const IUiEvent & /*event*/) override
   {
-    m_handler.onShopReady();
+    m_handler.onHangarReady();
   }
 
   private:
-  ShopUiHandler &m_handler;
+  HangarUiHandler &m_handler;
 };
 
-ShopUiHandler::ShopUiHandler(IDataStoreShPtr dataStore, IUiEventQueueShPtr inputQueue)
+HangarUiHandler::HangarUiHandler(IDataStoreShPtr dataStore, IUiEventQueueShPtr inputQueue)
   : IUiHandler()
   , m_dataStore(std::move(dataStore))
 {
@@ -55,8 +55,8 @@ constexpr auto VIEW_TO_RIGHT_OF_SCREEN_IN_PIXELS  = 20;
 constexpr auto VIEW_TO_BOTTOM_OF_SCREEN_IN_PIXELS = 20;
 } // namespace
 
-void ShopUiHandler::initializeMenus(const pge::Vec2i &dimensions,
-                                    pge::sprites::ITexturePack & /*texturesLoader*/)
+void HangarUiHandler::initializeMenus(const pge::Vec2i &dimensions,
+                                      pge::sprites::ITexturePack & /*texturesLoader*/)
 {
   const auto viewWidth  = static_cast<int>(MAIN_VIEW_WIDTH_TO_SCREEN_WIDTH_RATIO * dimensions.x);
   const auto viewHeight = static_cast<int>(MAIN_VIEW_HEIGHT_TO_SCREEN_HEIGHT_RATIO * dimensions.y);
@@ -73,30 +73,30 @@ void ShopUiHandler::initializeMenus(const pge::Vec2i &dimensions,
   m_menu = generateBlankVerticalMenu(pos, dims);
 }
 
-bool ShopUiHandler::processUserInput(ui::UserInputData &inputData)
+bool HangarUiHandler::processUserInput(ui::UserInputData &inputData)
 {
   // The resources menu can't take input.
   return m_menu->processUserInput(inputData);
 }
 
-void ShopUiHandler::render(pge::Renderer &engine) const
+void HangarUiHandler::render(pge::Renderer &engine) const
 {
-  std::cout << "render shop\n";
+  std::cout << "render hangar\n";
   m_resourcesMenu->render(engine);
   m_menu->render(engine);
 }
 
-void ShopUiHandler::updateUi()
+void HangarUiHandler::updateUi()
 {
   // TODO: Add logic to update UI
 }
 
-void ShopUiHandler::registerToQueue(IUiEventQueueShPtr inputQueue)
+void HangarUiHandler::registerToQueue(IUiEventQueueShPtr inputQueue)
 {
-  inputQueue->addListener(std::make_unique<UiEventListenerShopProxy>(*this));
+  inputQueue->addListener(std::make_unique<UiEventListenerHangarProxy>(*this));
 }
 
-void ShopUiHandler::onShopReady()
+void HangarUiHandler::onHangarReady()
 {
   // TODO: Should handle building the shop UI
 }

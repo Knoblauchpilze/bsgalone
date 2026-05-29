@@ -44,6 +44,7 @@ class OutpostUiHandler : public IUiHandler
   ui::UiMenuPtr m_quitButton{};
 
   IUiHandlerPtr m_shopUi{};
+  IUiHandlerPtr m_hangarUi{};
 
   IUiCommandQueueShPtr m_queue{};
 
