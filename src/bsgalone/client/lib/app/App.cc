@@ -19,6 +19,7 @@
 #include "OutpostUiHandler.hh"
 #include "OutputUiCommandAdapter.hh"
 #include "ServerDataStore.hh"
+#include "ShopDataMessageConsumer.hh"
 #include "SignupMessageConsumer.hh"
 #include "StatusUiHandler.hh"
 #include "SynchronizedUiCommandQueue.hh"
@@ -300,6 +301,8 @@ void App::initializeIncomingMessageSystem()
     std::make_unique<HangarDataMessageConsumer>(m_dataStore, m_uiEventQueue));
   m_networkClient->addListener(
     std::make_unique<LockerDataMessageConsumer>(m_dataStore, m_uiEventQueue));
+  m_networkClient->addListener(
+    std::make_unique<ShopDataMessageConsumer>(m_dataStore, m_uiEventQueue));
 }
 
 void App::initializeOutgoingMessageSystem()
