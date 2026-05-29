@@ -8,6 +8,7 @@
 #include "FetchAsteroidUseCase.hh"
 #include "GameBuilder.hh"
 #include "GameRenderer.hh"
+#include "HangarDataMessageConsumer.hh"
 #include "IUiCommandListener.hh"
 #include "IUiEventListener.hh"
 #include "LoadingUiHandler.hh"
@@ -294,6 +295,8 @@ void App::initializeIncomingMessageSystem()
     std::make_unique<LogoutMessageConsumer>(m_dataStore, m_game, m_uiEventQueue));
   m_networkClient->addListener(std::make_unique<UndockMessageConsumer>(m_dataStore, m_uiEventQueue));
   m_networkClient->addListener(std::make_unique<SystemDataMessageConsumer>(m_game, m_uiEventQueue));
+  m_networkClient->addListener(
+    std::make_unique<HangarDataMessageConsumer>(m_dataStore, m_uiEventQueue));
 }
 
 void App::initializeOutgoingMessageSystem()
