@@ -15,6 +15,8 @@ using Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_PlayerRepo
 
 namespace {
 const core::Uuid MUNNIN_UUID = core::Uuid::fromDbId("52863732-d4a0-4835-a19a-c423d23f0e9d");
+const core::Uuid TYLIUM_UUID = core::Uuid::fromDbId("f9f7636d-5a23-453e-b934-840b8b3ce74b");
+const core::Uuid TITANE_UUID = core::Uuid::fromDbId("d38effc7-6463-4c20-9794-472806c80ca7");
 
 void insertTestPlayerRole(DbConnection &dbConnection, Player &player)
 {
@@ -66,6 +68,23 @@ auto insertTestPlayer(DbConnection &dbConnection, const core::Uuid accountDbId, 
   }
 
   return out;
+}
+
+void insertTestPlayerResource(DbConnection &dbConnection,
+                              const core::Uuid playerDbId,
+                              const PlayerResource &resource)
+{
+  constexpr auto QUERY = R"(
+      INSERT INTO player_resource ("player", "resource", "amount")
+        VALUES ($1, $2, $3)
+    )";
+
+  const auto query = [&playerDbId, &resource](pqxx::nontransaction &work) {
+    return work
+      .exec(QUERY, pqxx::params{playerDbId.toDbId(), resource.resource.toDbId(), resource.amount})
+      .no_rows();
+  };
+  dbConnection.executeQuery(query);
 }
 } // namespace
 
@@ -148,6 +167,44 @@ TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_PlayerRep
   EXPECT_EQ(expectedPlayer.faction, actual.faction);
   EXPECT_EQ(expectedPlayer.role, actual.role);
   EXPECT_EQ(MUNNIN_UUID, actual.systemDbId);
+  EXPECT_TRUE(actual.resources.empty());
+}
+
+TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_PlayerRepository,
+       FindOneById_FetchesExistingPlayerWithResources)
+{
+  const auto account        = insertTestAccount(*this->dbConnection());
+  const auto expectedPlayer = insertTestPlayer(*this->dbConnection(), account.dbId, true);
+  insertTestShip(*this->dbConnection(),
+                 expectedPlayer.dbId,
+                 expectedPlayer.faction,
+                 true,
+                 MUNNIN_UUID);
+  PlayerResource tylium{
+    .resource = TYLIUM_UUID,
+    .name     = "tylium",
+    .amount   = 147,
+  };
+  insertTestPlayerResource(*this->dbConnection(), expectedPlayer.dbId, tylium);
+  PlayerResource titane{
+    .resource = TITANE_UUID,
+    .name     = "titane",
+    .amount   = 35,
+  };
+  insertTestPlayerResource(*this->dbConnection(), expectedPlayer.dbId, titane);
+
+  PlayerRepository repo(this->dbConnection());
+  repo.initialize();
+  const auto actual = repo.findOneById(expectedPlayer.dbId);
+
+  EXPECT_EQ(expectedPlayer.dbId, actual.dbId);
+  EXPECT_EQ(expectedPlayer.account, actual.account);
+  EXPECT_EQ(expectedPlayer.name, actual.name);
+  EXPECT_EQ(expectedPlayer.faction, actual.faction);
+  EXPECT_EQ(expectedPlayer.role, actual.role);
+  EXPECT_EQ(MUNNIN_UUID, actual.systemDbId);
+  std::vector<PlayerResource> expectedResources{titane, tylium};
+  EXPECT_EQ(expectedResources, actual.resources);
 }
 
 TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_PlayerRepository,
@@ -214,6 +271,43 @@ TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_PlayerRep
   EXPECT_EQ(expectedPlayer.name, actual.name);
   EXPECT_EQ(expectedPlayer.faction, actual.faction);
   EXPECT_EQ(expectedPlayer.role, actual.role);
+  EXPECT_TRUE(actual.resources.empty());
+}
+
+TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_PlayerRepository,
+       FindOneByAccount_FetchesExistingPlayerWithResources)
+{
+  const auto account        = insertTestAccount(*this->dbConnection());
+  const auto expectedPlayer = insertTestPlayer(*this->dbConnection(), account.dbId, true);
+  insertTestShip(*this->dbConnection(),
+                 expectedPlayer.dbId,
+                 expectedPlayer.faction,
+                 true,
+                 MUNNIN_UUID);
+  PlayerResource tylium{
+    .resource = TYLIUM_UUID,
+    .name     = "tylium",
+    .amount   = 147,
+  };
+  insertTestPlayerResource(*this->dbConnection(), expectedPlayer.dbId, tylium);
+  PlayerResource titane{
+    .resource = TITANE_UUID,
+    .name     = "titane",
+    .amount   = 35,
+  };
+  insertTestPlayerResource(*this->dbConnection(), expectedPlayer.dbId, titane);
+
+  PlayerRepository repo(this->dbConnection());
+  repo.initialize();
+  const auto actual = repo.findOneByAccount(account.dbId);
+
+  EXPECT_EQ(expectedPlayer.dbId, actual.dbId);
+  EXPECT_EQ(expectedPlayer.account, actual.account);
+  EXPECT_EQ(expectedPlayer.name, actual.name);
+  EXPECT_EQ(expectedPlayer.faction, actual.faction);
+  EXPECT_EQ(expectedPlayer.role, actual.role);
+  std::vector<PlayerResource> expectedResources{titane, tylium};
+  EXPECT_EQ(expectedResources, actual.resources);
 }
 
 TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_PlayerRepository,
@@ -223,10 +317,15 @@ TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_PlayerRep
 
   const auto name = std::format("random-player-{:%F%T}", ::core::now());
   Player player{
-    .account = account.dbId,
-    .name    = name,
-    .faction = core::Faction::CYLON,
-    .role    = core::GameRole::GUNNER,
+    .account   = account.dbId,
+    .name      = name,
+    .faction   = core::Faction::CYLON,
+    .role      = core::GameRole::GUNNER,
+    .resources = std::vector<PlayerResource>{PlayerResource{
+      .resource = TYLIUM_UUID,
+      .name     = "tylium",
+      .amount   = 689,
+    }},
   };
 
   PlayerRepository repo(this->dbConnection());
@@ -241,6 +340,7 @@ TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_PlayerRep
   EXPECT_EQ(player.name, dbPlayer.name);
   EXPECT_EQ(player.faction, dbPlayer.faction);
   EXPECT_EQ(player.role, dbPlayer.role);
+  EXPECT_EQ(player.resources, dbPlayer.resources);
 }
 
 TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_PlayerRepository,
@@ -319,6 +419,38 @@ TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_PlayerRep
 
   const auto dbPlayer = repo.findOneById(player.dbId);
   EXPECT_EQ(updatedPlayer.role, dbPlayer.role);
+}
+
+TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_PlayerRepository,
+       Save_UpdatesResourcesWhenPlayerAlreadyExists)
+{
+  const auto account = insertTestAccount(*this->dbConnection());
+  const auto player  = insertTestPlayer(*this->dbConnection(), account.dbId, true);
+  insertTestShip(*this->dbConnection(), player.dbId, player.faction, true, MUNNIN_UUID);
+
+  PlayerResource titane{
+    .resource = TITANE_UUID,
+    .name     = "titane",
+    .amount   = 35,
+  };
+  insertTestPlayerResource(*this->dbConnection(), player.dbId, titane);
+  PlayerResource tylium{
+    .resource = TYLIUM_UUID,
+    .name     = "tylium",
+    .amount   = 27,
+  };
+  insertTestPlayerResource(*this->dbConnection(), player.dbId, titane);
+
+  auto updatedPlayer                   = player;
+  updatedPlayer.resources.at(0).amount = 49;
+
+  PlayerRepository repo(this->dbConnection());
+  repo.initialize();
+  repo.save(updatedPlayer);
+
+  const auto dbPlayer = repo.findOneById(player.dbId);
+  EXPECT_EQ(updatedPlayer.resources.at(0).amount, dbPlayer.resources.at(0).amount);
+  EXPECT_EQ(player.resources.at(1).amount, dbPlayer.resources.at(1).amount);
 }
 
 TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_PlayerRepository,

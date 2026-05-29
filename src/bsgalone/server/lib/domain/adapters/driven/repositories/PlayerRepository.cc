@@ -46,6 +46,21 @@ WHERE
   AND ps.active = true
 )";
 
+constexpr auto FIND_RESOURCES_BY_PLAYER_QUERY_NAME = "player_resource_by_player";
+constexpr auto FIND_RESOURCES_BY_PLAYER_QUERY      = R"(
+SELECT
+  r.id,
+  r.name,
+  pr.amount
+FROM
+  player_resource AS pr
+  LEFT JOIN resource AS r ON pr.resource = r.id
+WHERE
+  pr.player = $1
+ORDER BY
+  r.name ASC
+)";
+
 constexpr auto UPDATE_PLAYER_QUERY_NAME = "player_update";
 constexpr auto UPDATE_PLAYER_QUERY      = R"(
 INSERT INTO player (id, account, name, faction)
@@ -63,14 +78,29 @@ INSERT INTO player_role (player, role)
   SET
     role = excluded.role
 )";
+
+constexpr auto UPDATE_PLAYER_RESOURCES_QUERY_NAME = "player_update_resource";
+// https://stackoverflow.com/questions/1109061/insert-on-duplicate-update-in-postgresql
+constexpr auto UPDATE_PLAYER_RESOURCES_QUERY = R"(
+INSERT INTO player_resource (player, resource, amount)
+  VALUES ($1, $2, $3)
+  ON CONFLICT (player, resource) DO UPDATE
+  SET
+    amount = excluded.amount
+  WHERE
+    player_resource.player = excluded.player
+    AND player_resource.resource = excluded.resource
+)";
 } // namespace
 
 void PlayerRepository::initialize()
 {
   m_connection->prepare(FIND_ONE_QUERY_NAME, FIND_ONE_QUERY);
   m_connection->prepare(FIND_ONE_BY_ACCOUNT_QUERY_NAME, FIND_ONE_BY_ACCOUNT_QUERY);
+  m_connection->prepare(FIND_RESOURCES_BY_PLAYER_QUERY_NAME, FIND_RESOURCES_BY_PLAYER_QUERY);
   m_connection->prepare(UPDATE_PLAYER_QUERY_NAME, UPDATE_PLAYER_QUERY);
   m_connection->prepare(UPDATE_PLAYER_ROLE_QUERY_NAME, UPDATE_PLAYER_ROLE_QUERY);
+  m_connection->prepare(UPDATE_PLAYER_RESOURCES_QUERY_NAME, UPDATE_PLAYER_RESOURCES_QUERY);
 }
 
 namespace {
@@ -100,7 +130,8 @@ auto PlayerRepository::findOneById(const core::Uuid playerDbId) const -> Player
   };
   const auto record = m_connection->executeQueryReturningSingleRow(query);
 
-  return buildPlayerFromDbRow(record);
+  auto player = buildPlayerFromDbRow(record);
+  return loadResourcesFor(std::move(player));
 }
 
 auto PlayerRepository::findOneByAccount(const core::Uuid accountDbId) const -> Player
@@ -112,7 +143,8 @@ auto PlayerRepository::findOneByAccount(const core::Uuid accountDbId) const -> P
   };
   const auto record = m_connection->executeQueryReturningSingleRow(query);
 
-  return buildPlayerFromDbRow(record);
+  auto player = buildPlayerFromDbRow(record);
+  return loadResourcesFor(std::move(player));
 }
 
 void PlayerRepository::save(Player player) const
@@ -132,6 +164,14 @@ void PlayerRepository::save(Player player) const
                          toDbFaction(player.faction)})
       .no_rows();
 
+    for (const auto &resource : player.resources)
+    {
+      transaction
+        .exec(pqxx::prepped{UPDATE_PLAYER_RESOURCES_QUERY_NAME},
+              pqxx::params{player.dbId.toDbId(), resource.resource.toDbId(), resource.amount})
+        .no_rows();
+    }
+
     return transaction
       .exec(pqxx::prepped{UPDATE_PLAYER_ROLE_QUERY_NAME},
             pqxx::params{player.dbId.toDbId(), toDbGameRole(player.role)})
@@ -143,6 +183,27 @@ void PlayerRepository::save(Player player) const
   {
     error("Failed to save player: " + *res.error);
   }
+}
+
+auto PlayerRepository::loadResourcesFor(Player player) const -> Player
+{
+  const auto query = [&player](pqxx::nontransaction &work) {
+    return work.exec(pqxx::prepped{FIND_RESOURCES_BY_PLAYER_QUERY_NAME},
+                     pqxx::params{player.dbId.toDbId()});
+  };
+
+  const auto rows = m_connection->executeQuery(query);
+
+  for (const auto &record : rows)
+  {
+    const auto dbId   = core::Uuid::fromDbId(record[0].view());
+    const auto name   = record[1].as<std::string>();
+    const auto amount = record[2].as<int>();
+
+    player.resources.emplace_back(dbId, name, amount);
+  }
+
+  return player;
 }
 
 } // namespace bsgalone::server

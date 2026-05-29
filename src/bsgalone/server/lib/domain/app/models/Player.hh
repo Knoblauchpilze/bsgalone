@@ -3,6 +3,7 @@
 
 #include "Faction.hh"
 #include "GameRole.hh"
+#include "PlayerResource.hh"
 #include "Uuid.hh"
 #include <optional>
 #include <string>
@@ -17,6 +18,7 @@ struct Player
   core::Faction faction{};
   core::GameRole role{};
   core::Uuid systemDbId{};
+  std::vector<PlayerResource> resources{};
 
   bool operator==(const Player &rhs) const = default;
 };

@@ -32,6 +32,9 @@ class PlayerRepository : public ForManagingPlayer, public AbstractRepository
   /// already has a role, it will be updated.
   /// @param player - the player to save
   void save(Player player) const override;
+
+  private:
+  auto loadResourcesFor(Player player) const -> Player;
 };
 
 using PlayerRepositoryShPtr = std::shared_ptr<PlayerRepository>;
