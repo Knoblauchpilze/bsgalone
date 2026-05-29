@@ -8,10 +8,13 @@ namespace bsgalone::core {
 
 enum class MessageType
 {
+  HANGAR_DATA,
+  LOCKER_DATA,
   LOGIN,
   LOGIN_REQUEST,
   LOGOUT,
   LOGOUT_REQUEST,
+  SHOP_DATA,
   SIGNUP,
   SIGNUP_REQUEST,
   SYSTEM_DATA,
