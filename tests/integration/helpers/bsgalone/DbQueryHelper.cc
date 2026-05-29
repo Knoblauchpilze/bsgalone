@@ -1,53 +1,54 @@
 
 #include "DbQueryHelper.hh"
+#include "TestDataFactory.hh"
 #include "TimeUtils.hh"
 
 namespace test {
 
 auto insertTestAccount(bsgalone::server::DbConnection &dbConnection) -> bsgalone::server::Account
 {
-  const bsgalone::core::Uuid uuid;
-  const auto username = std::format("random-account-{:%F%T}", core::now());
+  const auto account = generateAccount();
 
   constexpr auto QUERY = R"(
       INSERT INTO account ("id", "name", "password")
-        VALUES ($1, $2, 'password')
+        VALUES ($1, $2, $3)
     )";
 
-  const auto query = [&uuid, &username](pqxx::nontransaction &work) {
-    return work.exec(QUERY, pqxx::params{uuid.toDbId(), username});
+  const auto query = [&account](pqxx::nontransaction &work) {
+    return work.exec(QUERY,
+                     pqxx::params{
+                       account.dbId.toDbId(),
+                       account.username,
+                       account.password,
+                     });
   };
   dbConnection.executeQuery(query);
 
-  return bsgalone::server::Account{
-    .dbId     = uuid,
-    .username = username,
-    .password = "password",
-  };
+  return account;
 }
 
 auto insertTestSystem(bsgalone::server::DbConnection &dbConnection) -> bsgalone::server::System
 {
-  const bsgalone::core::Uuid uuid;
-  // https://stackoverflow.com/questions/34857119/how-to-convert-stdchronotime-point-to-string
-  // https://en.cppreference.com/w/cpp/chrono/system_clock/formatter.html
-  const auto name = std::format("random-system-{:%F%T}", core::now());
+  auto system = generateSystem({});
 
   constexpr auto QUERY = R"(
       INSERT INTO system ("id", "name", "x_pos", "y_pos", "z_pos")
-        VALUES ($1, $2, 2.5, -1.2, 3.4)
+        VALUES ($1, $2, $3, $4, $5)
     )";
 
-  const auto query = [&uuid, &name](pqxx::nontransaction &work) {
-    return work.exec(QUERY, pqxx::params{uuid.toDbId(), name});
+  const auto query = [&system](pqxx::nontransaction &work) {
+    return work.exec(QUERY,
+                     pqxx::params{
+                       system.dbId.toDbId(),
+                       system.name,
+                       system.position(0),
+                       system.position(1),
+                       system.position(2),
+                     });
   };
   dbConnection.executeQuery(query);
 
-  return bsgalone::server::System{
-    .dbId     = uuid,
-    .name     = name,
-    .position = Eigen::Vector3f(2.5f, -1.2f, 3.4f),
-  };
+  return system;
 }
 
 namespace {

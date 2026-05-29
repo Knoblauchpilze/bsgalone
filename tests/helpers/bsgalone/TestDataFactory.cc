@@ -18,6 +18,15 @@ auto randomFloat(const int min, const int max, const int decimals = 2) -> float
 }
 } // namespace
 
+auto generateAccount() -> bsgalone::server::Account
+{
+  return bsgalone::server::Account{
+    // https://en.cppreference.com/w/cpp/chrono/system_clock/formatter.html
+    .username = std::format("random-account-{:%F%T}", core::now()),
+    .password = "secure-password",
+  };
+}
+
 auto generatePlayer(const std::optional<bsgalone::core::Uuid> &maybeAccount)
   -> bsgalone::server::Player
 {
