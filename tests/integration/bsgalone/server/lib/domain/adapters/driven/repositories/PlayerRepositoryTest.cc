@@ -425,7 +425,7 @@ TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_PlayerRep
        Save_UpdatesResourcesWhenPlayerAlreadyExists)
 {
   const auto account = insertTestAccount(*this->dbConnection());
-  const auto player  = insertTestPlayer(*this->dbConnection(), account.dbId, true);
+  auto player        = insertTestPlayer(*this->dbConnection(), account.dbId, true);
   insertTestShip(*this->dbConnection(), player.dbId, player.faction, true, MUNNIN_UUID);
 
   PlayerResource titane{
@@ -439,7 +439,8 @@ TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_PlayerRep
     .name     = "tylium",
     .amount   = 27,
   };
-  insertTestPlayerResource(*this->dbConnection(), player.dbId, titane);
+  insertTestPlayerResource(*this->dbConnection(), player.dbId, tylium);
+  player.resources = std::vector<PlayerResource>{titane, tylium};
 
   auto updatedPlayer                   = player;
   updatedPlayer.resources.at(0).amount = 49;
