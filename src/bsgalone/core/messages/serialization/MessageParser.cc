@@ -1,10 +1,13 @@
 
 #include "MessageParser.hh"
+#include "HangarDataMessage.hh"
+#include "LockerDataMessage.hh"
 #include "LoginMessage.hh"
 #include "LoginRequest.hh"
 #include "LogoutMessage.hh"
 #include "LogoutRequest.hh"
 #include "SerializationUtils.hh"
+#include "ShopDataMessage.hh"
 #include "SignupMessage.hh"
 #include "SignupRequest.hh"
 #include "SystemDataMessage.hh"
@@ -86,6 +89,10 @@ auto MessageParser::tryReadMessage(const MessageType &type, std::istream &in)
 {
   switch (type)
   {
+    case MessageType::HANGAR_DATA:
+      return HangarDataMessage::readFromStream(in);
+    case MessageType::LOCKER_DATA:
+      return LockerDataMessage::readFromStream(in);
     case MessageType::LOGIN:
       return LoginMessage::readFromStream(in);
     case MessageType::LOGIN_REQUEST:
@@ -94,6 +101,8 @@ auto MessageParser::tryReadMessage(const MessageType &type, std::istream &in)
       return LogoutMessage::readFromStream(in);
     case MessageType::LOGOUT_REQUEST:
       return LogoutRequest::readFromStream(in);
+    case MessageType::SHOP_DATA:
+      return ShopDataMessage::readFromStream(in);
     case MessageType::SIGNUP:
       return SignupMessage::readFromStream(in);
     case MessageType::SIGNUP_REQUEST:

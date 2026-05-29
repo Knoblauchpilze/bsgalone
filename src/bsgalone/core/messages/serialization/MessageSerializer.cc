@@ -1,9 +1,12 @@
 
 #include "MessageSerializer.hh"
+#include "HangarDataMessage.hh"
+#include "LockerDataMessage.hh"
 #include "LoginMessage.hh"
 #include "LoginRequest.hh"
 #include "LogoutMessage.hh"
 #include "LogoutRequest.hh"
+#include "ShopDataMessage.hh"
 #include "SignupMessage.hh"
 #include "SignupRequest.hh"
 #include "SystemDataMessage.hh"
@@ -27,6 +30,12 @@ auto MessageSerializer::serializeMessage(const IMessage &message) -> std::vector
 
   switch (message.type())
   {
+    case MessageType::HANGAR_DATA:
+      serialize(out, message.as<HangarDataMessage>());
+      break;
+    case MessageType::LOCKER_DATA:
+      serialize(out, message.as<LockerDataMessage>());
+      break;
     case MessageType::LOGIN:
       serialize(out, message.as<LoginMessage>());
       break;
@@ -38,6 +47,9 @@ auto MessageSerializer::serializeMessage(const IMessage &message) -> std::vector
       break;
     case MessageType::LOGOUT_REQUEST:
       serialize(out, message.as<LogoutRequest>());
+      break;
+    case MessageType::SHOP_DATA:
+      serialize(out, message.as<ShopDataMessage>());
       break;
     case MessageType::SIGNUP:
       serialize(out, message.as<SignupMessage>());

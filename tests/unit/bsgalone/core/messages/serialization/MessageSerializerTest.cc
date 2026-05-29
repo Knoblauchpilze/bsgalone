@@ -1,10 +1,13 @@
 
 
 #include "MessageSerializer.hh"
+#include "HangarDataMessage.hh"
+#include "LockerDataMessage.hh"
 #include "LoginMessage.hh"
 #include "LoginRequest.hh"
 #include "LogoutMessage.hh"
 #include "LogoutRequest.hh"
+#include "ShopDataMessage.hh"
 #include "SignupMessage.hh"
 #include "SignupRequest.hh"
 #include "SystemDataMessage.hh"
@@ -17,6 +20,36 @@
 using namespace test;
 
 namespace bsgalone::core {
+
+TEST(Unit_Bsgalone_Core_Messages_Serialization_MessageSerializer, SerializesHangarDataMessage)
+{
+  MessageSerializer serializer{};
+
+  HangarDataMessage message(Uuid{});
+
+  const auto actual = serializer.serializeMessage(message);
+
+  std::stringstream out;
+  out << message;
+  const auto serialized = out.str();
+  std::vector<char> expected(serialized.begin(), serialized.end());
+  EXPECT_EQ(expected, actual);
+}
+
+TEST(Unit_Bsgalone_Core_Messages_Serialization_MessageSerializer, SerializesLockerDataMessage)
+{
+  MessageSerializer serializer{};
+
+  LockerDataMessage message(Uuid{});
+
+  const auto actual = serializer.serializeMessage(message);
+
+  std::stringstream out;
+  out << message;
+  const auto serialized = out.str();
+  std::vector<char> expected(serialized.begin(), serialized.end());
+  EXPECT_EQ(expected, actual);
+}
 
 TEST(Unit_Bsgalone_Core_Messages_Serialization_MessageSerializer, SerializesLoginMessage)
 {
@@ -71,6 +104,21 @@ TEST(Unit_Bsgalone_Core_Messages_Serialization_MessageSerializer, SerializesLogo
   MessageSerializer serializer{};
 
   LogoutRequest message(Uuid{});
+
+  const auto actual = serializer.serializeMessage(message);
+
+  std::stringstream out;
+  out << message;
+  const auto serialized = out.str();
+  std::vector<char> expected(serialized.begin(), serialized.end());
+  EXPECT_EQ(expected, actual);
+}
+
+TEST(Unit_Bsgalone_Core_Messages_Serialization_MessageSerializer, SerializesShopDataMessage)
+{
+  MessageSerializer serializer{};
+
+  ShopDataMessage message(Uuid{});
 
   const auto actual = serializer.serializeMessage(message);
 

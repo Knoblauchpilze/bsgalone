@@ -1,10 +1,13 @@
 
 
 #include "MessageParser.hh"
+#include "HangarDataMessage.hh"
+#include "LockerDataMessage.hh"
 #include "LoginMessage.hh"
 #include "LoginRequest.hh"
 #include "LogoutMessage.hh"
 #include "LogoutRequest.hh"
+#include "ShopDataMessage.hh"
 #include "SignupMessage.hh"
 #include "SignupRequest.hh"
 #include "SystemDataMessage.hh"
@@ -63,6 +66,38 @@ TEST(Unit_Bsgalone_Core_Messages_Serialization_MessageParser,
   EXPECT_EQ(loginBytes.size(), maybeResult.bytesProcessed);
   EXPECT_TRUE(maybeResult.message.has_value());
   EXPECT_EQ(MessageType::LOGIN_REQUEST, (*maybeResult.message)->type());
+}
+
+TEST(Unit_Bsgalone_Core_Messages_Serialization_MessageParser, DeserializesHangarDataMessage)
+{
+  MessageParser parser{};
+
+  HangarDataMessage message(Uuid{});
+  const auto bytes = serializeMessage(message);
+
+  const auto maybeResult = parser.tryParseMessage(bytes);
+
+  EXPECT_EQ(bytes.size(), maybeResult.bytesProcessed);
+  EXPECT_TRUE(maybeResult.message.has_value());
+  EXPECT_EQ(MessageType::HANGAR_DATA, (*maybeResult.message)->type());
+  const auto &actual = (*maybeResult.message)->as<HangarDataMessage>();
+  EXPECT_EQ(message.getPlayerDbId(), actual.getPlayerDbId());
+}
+
+TEST(Unit_Bsgalone_Core_Messages_Serialization_MessageParser, DeserializesLockerDataMessage)
+{
+  MessageParser parser{};
+
+  LockerDataMessage message(Uuid{});
+  const auto bytes = serializeMessage(message);
+
+  const auto maybeResult = parser.tryParseMessage(bytes);
+
+  EXPECT_EQ(bytes.size(), maybeResult.bytesProcessed);
+  EXPECT_TRUE(maybeResult.message.has_value());
+  EXPECT_EQ(MessageType::LOCKER_DATA, (*maybeResult.message)->type());
+  const auto &actual = (*maybeResult.message)->as<LockerDataMessage>();
+  EXPECT_EQ(message.getPlayerDbId(), actual.getPlayerDbId());
 }
 
 TEST(Unit_Bsgalone_Core_Messages_Serialization_MessageParser, DeserializesLoginMessage)
@@ -154,6 +189,22 @@ TEST(Unit_Bsgalone_Core_Messages_Serialization_MessageParser, DeserializesLogout
   EXPECT_TRUE(maybeResult.message.has_value());
   EXPECT_EQ(MessageType::LOGOUT_REQUEST, (*maybeResult.message)->type());
   const auto &actual = (*maybeResult.message)->as<LogoutRequest>();
+  EXPECT_EQ(message.getPlayerDbId(), actual.getPlayerDbId());
+}
+
+TEST(Unit_Bsgalone_Core_Messages_Serialization_MessageParser, DeserializesShopDataMessage)
+{
+  MessageParser parser{};
+
+  ShopDataMessage message(Uuid{});
+  const auto bytes = serializeMessage(message);
+
+  const auto maybeResult = parser.tryParseMessage(bytes);
+
+  EXPECT_EQ(bytes.size(), maybeResult.bytesProcessed);
+  EXPECT_TRUE(maybeResult.message.has_value());
+  EXPECT_EQ(MessageType::SHOP_DATA, (*maybeResult.message)->type());
+  const auto &actual = (*maybeResult.message)->as<ShopDataMessage>();
   EXPECT_EQ(message.getPlayerDbId(), actual.getPlayerDbId());
 }
 

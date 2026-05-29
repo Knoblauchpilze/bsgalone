@@ -4,7 +4,6 @@
 
 namespace bsgalone::core {
 
-// TODO: Add entries in the message parser/deseralizer
 LockerDataMessage::LockerDataMessage()
   : IMessage(MessageType::LOCKER_DATA)
 {}
