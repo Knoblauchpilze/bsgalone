@@ -90,12 +90,20 @@ bool OutpostUiHandler::processUserInput(ui::UserInputData &inputData)
     return true;
   }
 
-  if (m_shopUi->processUserInput(inputData))
+  bool out{false};
+  switch (m_activeScreen)
   {
-    return true;
+    case ActiveScreen::SHOP:
+      out = m_shopUi->processUserInput(inputData);
+      break;
+    case ActiveScreen::HANGAR:
+      out = m_hangarUi->processUserInput(inputData);
+      break;
+    default:
+      break;
   }
 
-  return m_hangarUi->processUserInput(inputData);
+  return out;
 }
 
 void OutpostUiHandler::render(pge::Renderer &engine) const
@@ -104,14 +112,32 @@ void OutpostUiHandler::render(pge::Renderer &engine) const
   m_undockButton->render(engine);
   m_quitButton->render(engine);
 
-  m_shopUi->render(engine);
-  m_hangarUi->render(engine);
+  switch (m_activeScreen)
+  {
+    case ActiveScreen::SHOP:
+      m_shopUi->render(engine);
+      break;
+    case ActiveScreen::HANGAR:
+      m_hangarUi->render(engine);
+      break;
+    default:
+      break;
+  }
 }
 
 void OutpostUiHandler::updateUi()
 {
-  m_shopUi->updateUi();
-  m_hangarUi->updateUi();
+  switch (m_activeScreen)
+  {
+    case ActiveScreen::SHOP:
+      m_shopUi->updateUi();
+      break;
+    case ActiveScreen::HANGAR:
+      m_hangarUi->updateUi();
+      break;
+    default:
+      break;
+  }
 }
 
 void OutpostUiHandler::registerToQueue(IUiEventQueueShPtr inputQueue)
