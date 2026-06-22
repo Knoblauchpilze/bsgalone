@@ -13,22 +13,22 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   make=4.3-4.1build2 \
   cmake=3.28.3-1build7 \
   pkg-config=1.8.1-2build1 \
-  libpq-dev=16.13-0ubuntu0.24.04.1 \
+  libpq-dev=16.14-0ubuntu0.24.04.1 \
   libx11-dev=2:1.8.7-1build1 \
   libgl-dev=1.7.0-1build1 \
   libasio-dev=1:1.28.1-0.2 \
   libeigen3-dev=3.4.0-4build0.1 \
-  libpng-dev=1.6.43-5ubuntu0.5 \
+  libpng-dev=1.6.43-5ubuntu0.6 \
   libgtest-dev=1.14.0-1 \
   libgmock-dev=1.14.0-1 \
   postgresql=16+257build1.1 \
-  rsync=3.2.7-1ubuntu1.2 \
+  rsync=3.2.7-1ubuntu1.5 \
   lcov=2.0-4ubuntu2 \
   # https://github.com/linux-test-project/lcov/issues/193
   libcpanel-json-xs-perl=4.37-1build3 \
   python3=3.12.3-0ubuntu2.1 \
   # https://superuser.com/questions/801159/cannot-decompress-tar-xz-file-getting-xz-cannot-exec-no-such-file-or-direct
-  xz-utils=5.6.1+really5.4.5-1ubuntu0.2 \
+  xz-utils=5.6.1+really5.4.5-1ubuntu0.3 \
   git=1:2.43.0-1ubuntu7.3 \
   && rm -rf /var/lib/apt/lists/*
 # https://www.dedicatedcore.com/blog/install-gcc-compiler-ubuntu/
